@@ -251,3 +251,4 @@ BBI_EXE_MODE_INVALID_ERR_MSG <- paste(
 )
 NONMEM_MODEL_TYPE_ERR_MSG <- "IF THIS IS NOT A NONMEM MODEL please pass the appropriate type to `.model_type`"
 MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are missing"
+STAN_SCAFFOLD_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are only scaffolds:"
