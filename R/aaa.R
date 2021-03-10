@@ -245,3 +245,4 @@ BBI_EXE_MODE_INVALID_ERR_MSG <- paste(
   "Invalid value passed to `.mode` argument. Please either pass or set `options('bbr.bbi_exe_mode')` to one of:",
   paste(BBI_VALID_MODES, collapse = ", ")
 )
+NONMEM_MODEL_TYPE_ERR_MSG <- "IF THIS IS NOT A NONMEM MODEL please pass the appropriate type to `.model_type`"
