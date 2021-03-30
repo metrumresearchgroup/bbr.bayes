@@ -33,7 +33,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.0:latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'never'"'"')'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
     BBI_EXE_PATH: /ephemeral/bbi
@@ -46,7 +46,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'never'"'"')'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
     BBI_EXE_PATH: /ephemeral/bbi
@@ -99,7 +99,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.0:2020-06-08
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'never'"'"')'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
     BBI_EXE_PATH: /ephemeral/bbi
@@ -154,7 +154,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.0:cran-latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'always'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'always'"'"')'
   - R -s -e 'devtools::load_all(); sessioninfo::session_info()'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
@@ -169,7 +169,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cran-latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'always'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'always'"'"')'
   - R -s -e 'devtools::load_all(); sessioninfo::session_info()'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
@@ -224,7 +224,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - R -s -e 'devtools::install_deps(dependencies = TRUE, upgrade = '"'"'never'"'"')'
   - R -s -e 'covr::codecov()'
   environment:
     BBI_EXE_PATH: /ephemeral/bbi
