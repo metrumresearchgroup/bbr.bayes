@@ -50,9 +50,7 @@ Suggests:
     methods,
     rmarkdown,
     testthat (>= 2.1.0),
-    withr,
-    mrgvalidate,
-    mrgvalprep (>= 0.0.4)
+    withr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
