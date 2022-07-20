@@ -1,0 +1,316 @@
+---
+title: "Getting Started with bbr"
+author: "Seth Green"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This "Getting Started with bbr" vignette takes the user through some basic scenarios for modeling with NONMEM using `bbr`, introducing you to its standard workflow and functionality. 
+
+```{r setup, include=FALSE}
+# NOTE: if running chunks interactively we need to load the package first
+#   because renv isolation prevents us from finding an bbr installation
+if (interactive()) {
+  devtools::load_all()
+}
+```
+```{r load packages, results = 'hide', message=FALSE, warning=FALSE}
+library(bbr)
+library(dplyr)
+library(purrr)
+```
+
+`bbr` is an R interface for running `bbi`. Together they provide a solution for managing projects involving modeling and simulation with a number of software solutions used in pharmaceutical sciences. Currently, only NONMEM is supported, so this vignette will only address that. 
+
+# Setup
+
+```{r set paths and define cleanup, include = FALSE}
+options(
+  'bbr.bbi_exe_path' = read_bbi_path(),
+  'bbr.verbose' = FALSE
+)
+MODEL_DIR <- system.file("model", "nonmem", "basic", package = "bbr")
+
+# delete old files
+cleanup <- function() {
+  if (fs::file_exists(file.path(MODEL_DIR, "1.yaml"))) fs::file_delete(file.path(MODEL_DIR, "1.yaml"))
+  if (fs::file_exists(file.path(MODEL_DIR, "2.yaml"))) fs::file_delete(file.path(MODEL_DIR, "2.yaml"))
+  if (fs::file_exists(file.path(MODEL_DIR, "3.yaml"))) fs::file_delete(file.path(MODEL_DIR, "3.yaml"))
+  if (fs::file_exists(file.path(MODEL_DIR, "2.ctl"))) fs::file_delete(file.path(MODEL_DIR, "2.ctl"))
+  if (fs::file_exists(file.path(MODEL_DIR, "3.ctl"))) fs::file_delete(file.path(MODEL_DIR, "3.ctl"))
+  if (fs::dir_exists(file.path(MODEL_DIR, "2"))) fs::dir_delete(file.path(MODEL_DIR, "2"))
+  if (fs::dir_exists(file.path(MODEL_DIR, "3"))) fs::dir_delete(file.path(MODEL_DIR, "3"))
+  if (fs::file_exists(file.path(MODEL_DIR, "bbi.yaml"))) fs::file_delete(file.path(MODEL_DIR, "bbi.yaml"))
+}
+cleanup()
+```
+
+
+## Installing bbi
+
+The _first time_ you use `bbr` on a system or disk, you must first install `bbi`.
+
+### Setting bbi_exe_path
+
+The `bbi` executable is a single binary file, you just need to tell `bbr` where to find it. This can be done by setting the `bbr.bbi_exe_path` option like so:
+
+```{r bbi_exe_path, eval = FALSE}
+options("bbr.bbi_exe_path" = "/data/apps/bbi")
+```
+
+Please note that **this must be set for every new R session, so it's recommended to include the above snippet in your .Rprofile**, replacing the `"/data/apps/bbi"` with the absolute path from your system/project, if you have installed it somewhere different.
+
+Also note that this can be pointed to anywhere on your system; installing to `/data/apps/bbi` is merely a convention used at Metrum Research Group, where `bbr` was developed.
+
+### Installing with `use_bbi()`
+
+`bbr` provides an installer function named `use_bbi()` that makes it easy to install `bbi` from within R.
+
+```{r, eval = FALSE}
+bbr::use_bbi()
+```
+
+With no arguments passed, `use_bbi()` will default to installing `bbi` at the path you have set in `options("bbr.bbi_exe_path")`. This is why we recommend setting this first (and putting it in your `.Rprofile` so that it is sourced for every new R session). If this option is _not_ set, `use_bbi()` will fall back to the `bbi` in my `$PATH` (accessed via `Sys.which("bbi")`) and then an OS-dependent default, in that order. See `?use_bbi()` if you would like more details.
+
+The `use_bbi()` function also optionally takes the _absolute path_ where you want to install `bbi`, though we recommend most users to follow the pattern above: first specifying a path in `options("bbr.bbi_exe_path")`, and then letting `use_bbi()` install to that path by default.
+
+
+### Updating bbi or checking if it's installed
+
+If you're not sure if you have `bbi` installed, you can use `bbi_version()` to check. This will return the version number of your installation, if one is found, or an empty string if you do _not_ have `bbi` installed. You can also use `bbi_current_release()` to see the most current version available and run `use_bbi()` as specified above if you want to update.
+
+You can also check the [bbi documentation](https://github.com/metrumresearchgroup/bbi) for manual installation instructions from the command line.
+
+## bbi.yaml configuration file
+
+To actually submit models with `bbi`, you will also need a `bbi.yaml` configuration file. Think of this as containing "global default settings" for your `bbi` runs.  Those settings will not be discussed here, but know that they can be modified globally by editing that file, or model-by-model as described in the "Passing arguments to bbi" section below.
+
+### bbi_init()
+
+The `bbi_init()` function will create a `bbi.yaml`, with the default settings, in the specified directory. Optionally, you can pass the path to a `bbi.yaml` to the `.config_path` argument of any `bbr` function that needs one. However, by default these functions will look for one in the same folder as the model being submitted or manipulated. Therefore, if you will have a number of models in the same folder, it is easiest to put a `bbi.yaml` that folder.
+
+```{r configure bbi fake, eval = FALSE}
+MODEL_DIR <- "../model/nonmem/basic"  # this should be relative to your working directory
+
+bbi_init(.dir = MODEL_DIR,            # the directory to create the bbi.yaml in
+         .nonmem_dir = "/opt/NONMEM", # location of NONMEM installation
+         .nonmem_version = "nm74gf")  # default NONMEM version to use
+```
+
+Here we define a define variable `MODEL_DIR` with the path to the directory containing our models. Notice that you must also pass the path to a working installation of NONMEM, and a default NONMEM version to use.
+
+Note **this only needs to be done once** for each folder you are modeling in. Once the `bbi.yaml` exists, you will _not_ need to run `bbi_init()` again unless you want to create another one; for example if you move to modeling in a different directory, or if you want a different set of default settings for some specific subset of models.
+
+# Initial modeling run
+
+## Create model object
+To begin modeling, first create a model object using `new_model()`. This is an S3 object which you will pass to all of the other `bbr` functions that submit, summarize, or manipulate models.
+
+The first argument (`.path`) must be the path to your model control stream _without file extension_. For instance, the call below assumes you have a control stream named `1.ctl` or `1.mod` in the directory you just assigned to `MODEL_DIR` above. 
+
+```{r first model}
+mod1 <- new_model(file.path(MODEL_DIR, 1))
+```
+
+This `new_model()` call will also create a `1.yaml` file in that same directory, which stores model metadata like description and tags (discussed below). If you ever need to recreate this model object in memory, just run `mod1 <- read_model(file.path(MODEL_DIR, 1))` to rebuild it from the YAML file on disk. 
+
+The model object you have just created can be passed to various functions which you will see in a minute. Now that we've created a model, the first thing we will do is submit the model to be run.
+
+## Submit model
+
+```{r submit_model_fake, eval = FALSE}
+mod1 %>% submit_model()
+```
+
+This will return a process object. We won't discuss this object in this vignette, but it contains some information about the submission call. Please note that **checking on a model run in progress is not fully implemented.** For now, users should check on their runs manually (by looking at the output directory) and only proceed to the next steps once it has successfully completed. 
+
+### Passing arguments to bbi
+
+There are a number of arguments that `bbi` can take to modify how models are run. You can print a list of available arguments using the `print_bbi_args()` helper function.
+
+```{r print_bbi_args}
+print_bbi_args()
+```
+
+As discussed in "Setup" above, these can be set globally in the `bbi.yaml` file, and you can see the default values of them in that file. However, **specific arguments can also be set or changed for each model.** This can be done in two ways:
+
+* Attaching them to a model object with `add_bbi_args()` or `replace_bbi_args()`
+* Passing them as a named list to the `.bbi_args` argument of one of the following functions
+  * `new_model()` or `copy_model_from()`
+  * `submit_model()` or `submit_models()`
+  * `model_summary()` or `model_summaries()`
+
+Note that any `bbi_args` attached to a model object will override the relevant settings in `bbi.yaml`, and that `.bbi_args` passed into a `submit_` or `_summary` call will override the relevant settings in both `bbi.yaml` _and_ `bbi_args` attached to the model object.
+
+See the docs for any of the functions just mentioned for more details on usage and syntax.
+
+### Overwriting output from a previously run model
+
+It is common to run a model, make some tweaks to it, and then run it again. However, to avoid accidentally deleting model outputs, `bbr` will error by default if it sees existing output when trying to submit a model. To automatically overwrite any previous model output, just pass `overwrite = TRUE` to the `.bbi_args` argument described in the previous section. For example:
+
+```{r overwrite true, eval = FALSE}
+mod1 %>% submit_model(.bbi_args = list(overwrite = TRUE))
+```
+
+You can also change this setting globally by setting `overwrite: true` in the `bbi.yaml` file for your project.
+
+## Summarize model
+Once the model run has completed, users can get a summary object containing much of the commonly used diagnostic information in a named list.
+
+```{r model_summary}
+sum1 <- mod1 %>% model_summary()
+print(names(sum1))
+```
+
+These elements can be accessed manually or extracted with built-in helper functions like so:
+
+```{r param_estimates}
+param_df1 <- sum1 %>% param_estimates()
+param_df1
+```
+
+To see how to load summaries of multiple models to an easy-to-read tibble, see the [Creating a Model Summary Log](https://metrumresearchgroup.github.io/bbr/articles/using-summary-log.html) vignette.
+
+You can also use the [`nm_join()`](https://metrumresearchgroup.github.io/bbr/reference/nm_join.html) function to load the input data and any output tables from your model into a single tibble.
+
+```{r nm_join()}
+join_df <- nm_join(mod1) 
+join_df %>% 
+  select(ID, TIME, DV, CL, V, NPDE, CWRES)
+```
+
+# Iteration
+
+Much of the benefit of `bbr` is leveraged in the model iteration workflow, and the run log summaries that can be created afterwards. For example, imagine you look at these model results and want to begin iterating on them with a new model. 
+
+If you are now in a new R session and no longer have your `mod1` object in memory, you can easily rebuild it from the YAML file on disk with `read_model()`:
+
+```{r read_model fake, eval=FALSE}
+mod1 <- read_model(file.path(MODEL_DIR, 1))
+```
+
+## copy_model_from()
+
+Now you can create a new model object, based on the original, copying and renaming the control stream in the process. By default, the `copy_model_from()` function will increment the name of the new model to the next available integer in your modeling directory, but you can also pass a custom name to the `.new_model` argument. See [`?copy_model_from`](https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html) for more details this, and other optional arguments.
+
+The `copy_model_from()` call below will create both `2.ctl` and `2.yaml` files in the same directory as the parent model, and return the model object corresponding to them. (`copy_model_from()` also stores the model's "ancestry" which can be useful later in the project, as shown in the [Using the based_on field](https://metrumresearchgroup.github.io/bbr/articles/using-based-on.html) vignette.)
+
+```{r copy_model 2}
+mod2 <- copy_model_from(mod1) %>%
+  update_model_id()
+```
+
+The new control stream file `2.ctl` will be identical to its parent model, though you can use [`update_model_id()`](https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html) (as above) to update to the new model ID in places like `$TABLE` statements. 
+
+Your new control stream can now be edited with any desired changes and then submitted and summarized exactly as above. At any time, you can also see the difference between a model and its parent using [`model_diff()`](https://metrumresearchgroup.github.io/bbr/reference/model_diff.html).
+
+```{r submit 2, eval = FALSE}
+# manually edit control stream, then...
+model_diff(mod2)
+mod2 %>% submit_model()
+mod2 %>% model_summary()
+```
+
+## Adding tags and notes
+
+After looking at these results, the user can add tags, which can later be used to organize your modeling runs.
+
+```{r add_tags 2}
+mod1 <- mod1 %>% add_tags("orig acop model")
+mod2 <- mod2 %>% add_tags("2 compartment")
+```
+
+Note that using free text for your tags is discouraged, for reasons mentioned in the `?modify_tags` help page. For simplicity's sake, we ignore that advice here, but please read it before using tags extensively in the wild.
+
+In addition to tags, the user can add notes that can be referenced later.
+
+```{r}
+mod2 <- mod2 %>% 
+  add_notes("2 compartment model more appropriate than 1 compartment")
+```
+
+The `model_diff()` and `tags_diff()` function make it easy to compare models to their parent model. See the ["Using based_on" vignette](https://metrumresearchgroup.github.io/bbr/articles/using-based-on.html) for examples.
+
+## Continue to iterate...
+
+Now the iteration process continues with a third model. Note that you can tell `copy_model_from()` to inherit the tags from the parent model and automatically add them to the new model.
+
+```{r copy_model 3}
+mod3 <- copy_model_from(mod2, .inherit_tags = TRUE)
+```
+
+Submit and summarize as before.
+
+```{r submit 3, eval = FALSE}
+# manually edit control stream, then...
+mod3 %>% submit_model()
+mod3 %>% model_summary()
+```
+
+Add tags and notes for filtering in run log, described next.
+
+```{r add_tags 3}
+mod3 <- mod3 %>% 
+        add_tags(c("combined RUV", "iiv CL")) %>%
+        add_notes("Added combined error structure because it seemed like a good idea")
+```
+
+# Run log
+
+At any point, the user can easily construct a "run log" tibble to summarize all models run up to this point. 
+
+Before we move on, note that you can get even more information about your models from the `config_log()` and `summary_log()` functions, as well as `add_config()` and `add_summary()` which automatically join the columns output from those functions against the tibble output from `run_log()`.  See the "Further Reading" section below for links to vignettes demonstrating those functions.
+
+```{r run_log} 
+log_df <- run_log(MODEL_DIR)
+log_df
+```
+
+The `run_log()` returns a tibble which can be manipulated like any other tibble. However, several of the columns (`tags`, `notes`, and `based_on` for example) are list columns, which complicates how you can interact with them. We provide some helper functions to more seamlessly interact with these log tibbles, as well as some sample `tidyverse` code below.
+
+## Viewing tags example
+
+The `bbr::collapse_to_string()` function can collapse any list column into a string representation of its contents. It is specifically designed for collapsing columns like `tags`, `notes`, and `based_on` into a more human-readable format.
+
+```{r viewing tags new} 
+log_df %>% 
+  collapse_to_string(tags, notes) %>%
+  select(run, tags, notes)
+```
+
+
+## Filtering tags example
+
+This code uses `purrr::map_lgl` to filter the run log to only rows containing a specific tag (`"2 compartment"`).
+
+```{r filtering}
+log_df %>% 
+  filter(map_lgl(tags, ~ "2 compartment" %in% .x)) %>%
+  collapse_to_string(tags, notes) %>%
+  select(run, tags, notes)
+```
+
+
+```{r cleanup bottom, include=FALSE}
+# delete old files
+cleanup()
+```
+
+# Further reading
+
+Hopefully this has given you a good start on understanding the capabilities and basic workflow of `bbr`. Please see the other vignettes for demonstrations of more advanced or specific functionality.
+
+* [Using the based_on field](https://metrumresearchgroup.github.io/bbr/articles/using-based-on.html) -- How to use the `based_on` field to track a model's ancestry through the model development process, as well as using `model_diff()` and `tags_diff()` to compare models. Also demonstrates leveraging `config_log()` to check whether older models are still up-to-date.
+* [Creating a Model Summary Log](https://metrumresearchgroup.github.io/bbr/articles/using-summary-log.html) -- How to use `summary_log()` to extract model diagnostics like the objective function value, condition number, and parameter counts.

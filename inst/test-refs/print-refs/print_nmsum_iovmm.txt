@@ -1,0 +1,29 @@
+Dataset: ../MixSim.csv
+
+Records: 13500	 Observations: 12600	 Subjects: 300
+
+Objective Function Value (final est. method): 14722.149
+
+Estimation Method(s):
+
+– First Order Conditional Estimation 
+
+**Heuristic Problem(s) Detected:**
+
+– parameter_near_boundary 
+
+– has_final_zero_gradient 
+
+|parameter_names |estimate |stderr |shrinkage |
+|:---------------|:--------|:------|:---------|
+|THETA1          |14.4     |       |          |
+|THETA2          |101      |       |          |
+|THETA3          |0.823    |       |          |
+|THETA4          |1.04     |       |          |
+|THETA5          |1.68     |       |          |
+|THETA6          |0.857    |       |          |
+|OMEGA(1,1)      |0.0484   |       |          |
+|OMEGA(2,2)      |0.0438   |       |          |
+|OMEGA(3,3)      |0.0385   |       |          |
+|SIGMA(1,1)      |0.0482   |       |          |
+|SIGMA(2,2)      |0.00100  |       |          |

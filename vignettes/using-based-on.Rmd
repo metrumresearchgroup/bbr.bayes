@@ -1,0 +1,260 @@
+---
+title: "Using the based_on field"
+author: "Seth Green"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{using-based-on}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette demonstrates how to use the `based_on` field to track a model's ancestry through the model development process. You will also see one common use for this: using the tibble output from `config_log()` to check that your models are up-to-date. By "up-to-date" we mean that none of the model files or data files have changed since the model was run. 
+
+If you are new to `bbr`, the ["Getting Started with bbr"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html) vignette will take you through some basic scenarios for modeling with NONMEM using `bbr`, introducing you to its standard workflow and functionality.
+
+## Setup
+
+There is some initial set up necessary for using `bbr`. Please refer to the ["Getting Started"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#setup) vignette, mentioned above, if you have not done this yet. Once this is done, load the library.
+
+```{r setup, include=FALSE}
+# NOTE: if running chunks interactively we need to load the package first
+#   because renv isolation prevents us from finding an bbr installation
+if (interactive()) {
+  devtools::load_all()
+}
+```
+```{r load packages, results = 'hide', message=FALSE, warning=FALSE}
+library(bbr)
+library(dplyr)
+library(purrr)
+```
+
+```{r set up and define cleanup, include = FALSE}
+MODEL_DIR <- system.file("model", "nonmem", "basic", package = "bbr")
+
+# set bbi execution path
+if (Sys.which("bbi") == "") {
+  options('bbr.bbi_exe_path' = read_bbi_path())
+}
+
+# delete old files
+cleanup <- function() {
+  if (fs::file_exists(file.path(MODEL_DIR, "1.yaml"))) fs::file_delete(file.path(MODEL_DIR, "1.yaml"))
+  if (fs::file_exists(file.path(MODEL_DIR, "bbi.yaml"))) fs::file_delete(file.path(MODEL_DIR, "bbi.yaml"))
+  
+  mods_to_kill <- purrr::map_chr(seq(2,6), ~ file.path(MODEL_DIR, .x))
+  for (.m in mods_to_kill) {
+    if (fs::file_exists(paste0(.m, ".yaml"))) fs::file_delete(paste0(.m, ".yaml"))
+    if (fs::file_exists(paste0(.m, ".ctl"))) fs::file_delete(paste0(.m, ".ctl"))
+    if (fs::dir_exists(.m)) fs::dir_delete(.m)
+  }
+}
+cleanup()
+```
+
+# Modeling process
+The modeling process will always start with an initial model, which we create with the `new_model()` call.
+
+```{r fake model dir, eval = FALSE}
+MODEL_DIR <- "../nonmem"
+```
+```{r first model}
+mod1 <- new_model(file.path(MODEL_DIR, 1))
+```
+
+From there, the iterative model development process proceeds. The `copy_model_from()` function will do several things, including creating a new model file and filling in some relevant metadata. Notably, it will also add the model that you copied _from_ into the `based_on` field for the new model.
+
+```{r copy_model 2}
+mod2 <- copy_model_from(.parent_mod = mod1, .new_model = 2)
+
+get_based_on(mod2)
+```
+
+## diff helpers
+
+There are several helper functions for comparing a model to its parent. `tags_diff()` compares the tags attached to the two models, while `model_diff()` compares the model files on disk.
+
+```{r}
+mod1 <- add_tags(mod1, c("the same tag", "an old tag"))
+mod2 <- add_tags(mod2, c("the same tag", "a new tag"))
+tags_diff(mod2)
+```
+
+```{r, results = "asis"}
+model_diff(mod2)
+```
+
+By default both functions compare the model to whatever model is returned from `get_based_on()`, but they also have a `.mod2` argument which can take any arbitrary model object and compare with that instead. See `?tags_diff` and `?model_diff` for more details on usage.
+
+## More iteration
+
+Now we continue iterating on our model. *NOTE:* In a real model development process, these models would obviously be run and the diagnostics examined before moving on. For the sake of brevity, imagine that all happens "behind the curtain" in this example. In other words, _in between_ each of the calls to `copy_model_from()` you would be doing all of the normal iterative modeling work.
+
+
+```{r big copy}
+# ...submit mod2...look at diagnostics...decide on changes for next iteration...
+
+mod3 <- copy_model_from(mod2, 3)
+
+# ...submit mod3...look at diagnostics...decide on changes for next iteration...
+
+mod4 <- copy_model_from(mod3, 4)
+
+# ...submit mod4...look at diagnostics...decide to go back to mod2 as basis for next iteration...
+
+mod5 <- copy_model_from(mod2, 5)
+
+# ...submit mod5...look at diagnostics...decide on changes for next iteration...
+
+mod6 <- copy_model_from(mod5, 6)
+
+# ...submit mod6...look at diagnostics...decide you're done!
+```
+
+Now that you have arrived at your final model, you can add a description to identify it, which will be used shortly for filtering the `run_log()` tibble.
+
+```{r final tag}
+mod6 <- mod6 %>% add_description("Final model")
+```
+
+# Operating on a model object
+
+As seen above, you can simply use `mod$based_on` to see what is stored in the `based_on` field of a given model. However, there are two additional helper functions that are useful to know.
+
+## get_based_on
+First, by using `get_based_on()` you can retrieve the absolute path to all models in the `based_on` field.
+```{r mod object demo 1}
+mod6 %>% get_based_on()
+```
+
+This is useful because the path(s) retrieved will unambiguously identify the parent model(s) and can therefore be passed to things like `read_model()` or `model_summary()` like so:
+
+```{r mod object demo 2}
+parent_mod <- mod6 %>% get_based_on() %>% read_model()
+str(parent_mod)
+```
+
+## get_model_ancestry
+
+The second helper function walks up the tree of inheritence by iteratively calling `get_based_on()` on each parent model to determine the full set of models that led up to the current model.
+
+```{r mod object demo 3}
+mod6 %>% get_model_ancestry()
+```
+
+In this case, model `6` was based on `5`, which was based on `2`, which in turn was based on `1`. You will see one example of how this can be useful in the "Final model family" section below.
+
+# Using the run log
+
+While it may be useful to look at the ancestry of a single model object, it may be even more useful to use the `based_on` field later in the modeling process when you are looking back and trying to summarize the model activities as a whole. The `run_log()` function is helpful for this. It returns a tibble with metadata about each model.
+
+```{r run_log} 
+log_df <- run_log(MODEL_DIR)
+log_df
+```
+
+Among other things, the run log contains any descriptions that have been assigned to each model. Here we use `dplyr::filter()` and `dplyr::pull()` to get the path to the final model.
+
+```{r filtering}
+final_model_path <- 
+  log_df %>% 
+  filter(description == "Final model") %>%
+  pull(absolute_model_path)
+
+final_model_path
+```
+
+Next we can use the `get_model_ancestry()` function to filter the tibble to only the models that led up to the final model.
+
+```{r filter to ancestry 1}
+log_df %>% 
+  filter(absolute_model_path %in% get_model_ancestry(final_model_path)) %>%
+  collapse_to_string(based_on) %>% # collapses list column for easier printing
+  select(run, based_on)
+```
+
+As you can see, models 3 and 4 are discarded because they did not lead to the final model. Review "Modeling Process" section above if you are not sure why this is the case. We will use the two techniques together in the "Final model family" section below.
+
+## Checking if models are up-to-date with `check_up_to_date()` and `config_log()`
+
+Now imagine you are coming back to this project some time later and want to make sure that all of the outputs you have are still up-to-date with the model files and data currently in the project.
+
+When `bbi` runs a model, it creates a file named `bbi_config.json` in the output directory. This file contains a lot of information about the state and configuration at the time when the model was run. Notably, it contains an md5 digest of both the model file _and_ the data file at execution time. The following functions compare the md5 digests (stored during model execution) against the model and data files _as they currently exist on disk_ at the time these functions are called.
+
+### `check_up_to_date()` for a single model
+
+The `check_up_to_date()` function takes a model object and invisibly returns a two-element logical vector. The return is invisible because, if there are any changes, it will also print a message telling you which files have changed. Either way, you can also inspect the returned object like so.
+
+```{r}
+res <- check_up_to_date(mod1)
+print(res)
+```
+
+
+### `config_log()` for multiple models
+
+The `config_log()` function parses these `bbi_config.json` files and extracts some relevant information to a `bbi_config_log_df` tibble. It contains `model_has_changed` and `data_has_changed` columns that serve as a check that the outputs are up-to-date with the current model and data.
+
+You can call `config_log` directly, but it is often useful to join it to a run log automatically with `run_log() %>% add_config()`.
+
+```{r add_config fake prep, include=FALSE}
+# read in original json (which was actually fake a.k.a. copied from somewhere else)
+orig_json <- jsonlite::fromJSON(file.path(MODEL_DIR, "1", "bbi_config.json"))
+
+# fix data path (just in case)
+orig_json$data_path <- stringr::str_replace(orig_json$data_path, "/data/", "/extdata/")
+
+# copying the outputs from the original run 
+# and setting model md5 to match control stream (remember this "original" is fake)
+for (i in seq_len(6)) {
+  out_dir <- file.path(MODEL_DIR, i)
+  if (!fs::dir_exists(out_dir)) fs::dir_create(out_dir)
+  new_json <- orig_json
+  if (!(i %in% c(3,4))) {
+    new_json$model_md5 <- tools::md5sum(ctl_ext(out_dir))  
+  }
+  readr::write_file(jsonlite::toJSON(new_json), file.path(out_dir, "bbi_config.json"))
+}
+```
+
+```{r add_config}
+log_df <- log_df %>% add_config()
+log_df %>% select(run, model_has_changed, data_has_changed)
+```
+
+One important note: `check_up_to_date()` and `config_log()` return opposite boolean values. `check_up_to_date()` returns `TRUE` if the files are _up to date_, whereas the `*_has_changed` columns contain `TRUE` if something _has changed_.
+
+## Final model family
+
+From the `model_has_changed` column in the previous example, you can see that some of the model files have changed since they were run. However, you may only care about your final model and the models that led to it. You can use the `description` and `based_on` columns from the `run_log()` to filter to only those models.
+
+```{r filter to ancestry 2}
+final_model_family <- bind_rows(
+  log_df %>% 
+    filter(absolute_model_path %in% get_model_ancestry(final_model_path)), # the ancestors of the final model
+  log_df %>% 
+    filter(description == "Final model") # the final model itself
+)
+
+final_model_family %>% 
+  collapse_to_string(based_on) %>%
+  select(run, based_on, description, model_has_changed, data_has_changed)
+```
+
+When we filter to only those models, you can see that they are all still up-to-date. Great news.
+
+
+```{r cleanup bottom, include=FALSE}
+# delete old files
+cleanup()
+```
+

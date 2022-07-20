@@ -1,0 +1,83 @@
+Type: Package
+Package: bbr
+Title: R package for bbi
+Version: 1.3.1.9001
+Authors@R: 
+    c(person(given = "Seth",
+             family = "Green",
+             role = c("aut", "cre"),
+             email = "sethg@metrumrg.com"),
+      person(given = "Kyle",
+             family = "Meyer",
+             role = "aut",
+             email = "kylem@metrumrg.com"),
+      person(given = "Devin",
+             family = "Pastoor",
+             role = "aut",
+             email = "devin.pastoor@gmail.com"),
+      person(given = "Anna-Christina",
+             family = "Nevison",
+             role = "aut",
+             email = "annanev@umich.edu"),
+      person(given = "Sean",
+             family = "Wilson",
+             role = "aut",
+             email = "copernican@gmail.com"),
+      person(given = "Samuel",
+             family = "Callisto",
+             role = "aut",
+             email = "samc@metrumrg.com"),
+      person(given = "Tim",
+             family = "Waterhouse",
+             role = "aut",
+             email = "timw@metrumrg.com"),
+      person(given = "Kyle T",
+           family = "Baron",
+           role = c("aut"),
+           email = "kyleb@metrumrg.com"))
+Description: R package for making calls to bbi for running
+    NONMEM and other models. Also manages model metadata, workflow, and
+    run logs.
+License: MIT + file LICENSE
+Depends:
+    R (>= 3.5)
+Imports: 
+    checkmate,
+    cli,
+    data.table,
+    digest,
+    diffobj,
+    dplyr (>= 1.0.0),
+    fs,
+    glue,
+    jsonlite,
+    lifecycle,
+    magrittr,
+    processx,
+    purrr,
+    readr,
+    rlang,
+    stringr,
+    tibble,
+    tidyr,
+    tidyselect (>= 1.0.0),
+    xfun,
+    yaml
+Suggests: 
+    covr,
+    devtools,
+    forcats,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0),
+    withr,
+    mrgvalidate,
+    mrgvalprep (>= 0.0.4)
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+SystemRequirements: bbi (>= 3.0.2)
