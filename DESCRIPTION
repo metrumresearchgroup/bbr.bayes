@@ -10,31 +10,7 @@ Authors@R:
       person(given = "Kyle",
              family = "Meyer",
              role = "aut",
-             email = "kylem@metrumrg.com"),
-      person(given = "Devin",
-             family = "Pastoor",
-             role = "aut",
-             email = "devin.pastoor@gmail.com"),
-      person(given = "Anna-Christina",
-             family = "Nevison",
-             role = "aut",
-             email = "annanev@umich.edu"),
-      person(given = "Sean",
-             family = "Wilson",
-             role = "aut",
-             email = "copernican@gmail.com"),
-      person(given = "Samuel",
-             family = "Callisto",
-             role = "aut",
-             email = "samc@metrumrg.com"),
-      person(given = "Tim",
-             family = "Waterhouse",
-             role = "aut",
-             email = "timw@metrumrg.com"),
-      person(given = "Kyle T",
-           family = "Baron",
-           role = c("aut"),
-           email = "kyleb@metrumrg.com"))
+             email = "kylem@metrumrg.com"))
 Description: R package for making calls to bbi for running
     NONMEM and other models. Also manages model metadata, workflow, and
     run logs.
