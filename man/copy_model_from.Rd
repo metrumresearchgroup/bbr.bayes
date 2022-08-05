@@ -3,6 +3,7 @@
 \name{copy_model_from}
 \alias{copy_model_from}
 \alias{copy_model_from.bbi_nonmem_model}
+\alias{copy_model_from.bbi_stan_model}
 \title{Create new model by copying existing model}
 \usage{
 copy_model_from(
@@ -20,6 +21,18 @@ copy_model_from(
 \method{copy_model_from}{bbi_nonmem_model}(
   .parent_mod,
   .new_model = NULL,
+  .description = NULL,
+  .based_on_additional = NULL,
+  .add_tags = NULL,
+  .star = NULL,
+  .inherit_tags = FALSE,
+  .update_model_file = TRUE,
+  .overwrite = FALSE
+)
+
+\method{copy_model_from}{bbi_stan_model}(
+  .parent_mod,
+  .new_model,
   .description = NULL,
   .based_on_additional = NULL,
   .add_tags = NULL,
@@ -57,10 +70,11 @@ no need to include that here.}
 tags passed to \code{.add_tags} argument. If \code{TRUE} inherit any tags from
 \code{.parent_mod}, with any tags passed to \code{.add_tags} appended.}
 
-\item{.update_model_file}{If \code{TRUE}, the default, update the newly created
-model file. If \code{FALSE}, new model file will be an exact copy of its parent.
-For a NONMEM model, this currently means only the \verb{$PROBLEM} line in the
-new control stream will be updated to read \verb{See \{.new_model\}.yaml. Created by bbr.}.}
+\item{.update_model_file}{\strong{Only relevant to NONMEM models.} If \code{TRUE}, the
+default, update the newly created model file. If \code{FALSE}, new model file
+will be an exact copy of its parent. For a NONMEM model, this currently
+means only the \verb{$PROBLEM} line in the new control stream will be updated to
+read \verb{See \{.new_model\}.yaml. Created by bbr.}.}
 
 \item{.overwrite}{If \code{FALSE}, the default,  function will error if a model
 file already exists at specified \code{.new_model} path. If \code{TRUE} any existing
@@ -74,6 +88,8 @@ ancestry. See \href{../articles/using-based-on.html}{"Using based_on field" vign
 \section{Methods (by class)}{
 \itemize{
 \item \code{copy_model_from(bbi_nonmem_model)}: \code{.parent_mod} takes a \code{bbi_nonmem_model} object to use as a basis for the copy.
+
+\item \code{copy_model_from(bbi_stan_model)}: \code{.parent_mod} takes a \code{bbi_stan_model} object to use as a basis for the copy.
 
 }}
 \examples{

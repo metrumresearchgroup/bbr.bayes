@@ -107,9 +107,9 @@ CONFIG_COLS <- 9L
 SUM_LOG_COLS <- 23L
 
 ref_json <- jsonlite::fromJSON(system.file("test-refs", "ref_values.json", package = "bbr"))
-CONFIG_DATA_PATH <- ref_json$CONFIG_DATA_PATH
-CONFIG_DATA_MD5 <- ref_json$CONFIG_DATA_MD5
-CONFIG_MODEL_MD5 <- ref_json$CONFIG_MODEL_MD5
+CONFIG_DATA_PATH_REF <- ref_json$CONFIG_DATA_PATH
+CONFIG_DATA_MD5_REF <- ref_json$CONFIG_DATA_MD5
+CONFIG_MODEL_MD5_REF <- ref_json$CONFIG_MODEL_MD5
 MOD_BBI_VERSION <- ref_json$MOD_BBI_VERSION
 MOD1_PARAM_COUNT <- ref_json$MOD1_PARAM_COUNT
 MOD1_PARAM_COUNT_FIXED <- ref_json$MOD1_PARAM_COUNT_FIXED
@@ -152,6 +152,25 @@ REF_LIST_TMP <- list(
 )
 class(REF_LIST_TMP) <- NM_MOD_CLASS_LIST
 
+
+#################
+# Stan constants
+#################
+
+if (requireNamespace("cmdstanr", quietly = TRUE) && Sys.getenv("SKIP_STAN_TESTS") != "true") {
+  STAN_ABS_MODEL_DIR <- system.file("model", "stan",   package = "bbr")
+
+  STAN_MOD_ID <- "fxa"
+  STAN_MODEL_DIR <-   fs::path_rel(STAN_ABS_MODEL_DIR, getwd()) %>% as.character()
+  STAN_MOD1_PATH <- file.path(STAN_MODEL_DIR, STAN_MOD_ID)
+  STAN_MOD1 <- read_model(STAN_MOD1_PATH)
+  STAN_MOD_ID2 <- paste0(STAN_MOD_ID, "2")
+
+  STAN_ABS_RUN_ROOT <- file.path(STAN_ABS_MODEL_DIR, STAN_MOD_ID, STAN_MOD_ID)
+
+  STAN_SMP_DIAG_CLASS <- "draws_array"
+  STAN_SMP_DIAG_DIM <- c(100, 4, 6)
+}
 
 #####################
 # utils.R constants
@@ -342,6 +361,7 @@ cleanup_model <- function(.mod) {
   if (fs::file_exists(get_yaml_path(.mod, .check_exists = FALSE)))  fs::file_delete(get_yaml_path(.mod))
   if (fs::file_exists(get_model_path(.mod, .check_exists = FALSE))) fs::file_delete(get_model_path(.mod))
   if (fs::dir_exists(get_output_dir(.mod, .check_exists = FALSE)))  fs::dir_delete(get_output_dir(.mod))
+  if (fs::dir_exists(.mod[[ABS_MOD_PATH]]))  fs::dir_delete(.mod[[ABS_MOD_PATH]])
   rm(.mod)
 }
 
