@@ -48,10 +48,6 @@ build_data.bbi_stan_model <- function(.mod, .out_path = NULL, ...) {
 
   # optionally write to json
   if (!is.null(.out_path)) {
-    if (!requireNamespace("cmdstanr", quietly = TRUE)) {
-      stop("Must have cmdstanr installed to use build_data.bbi_stan_model()")
-    }
-
     checkmate::assert_string(.out_path)
     if (!str_detect(.out_path, ".json$")) {
       stop(glue("build_data.bbi_stan_model(.out_path) must end in '.json' because a JSON file will be written. Got {.out_path}"), .call = FALSE)
