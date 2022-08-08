@@ -1,7 +1,5 @@
 context("checking Stan model integrity")
 
-skip_if_no_stan("check_stan_model() tests")
-
 test_that("check_stan_object messages missing files", {
   mod_name <- "testmod_check_stan_model1"
   suppressMessages(

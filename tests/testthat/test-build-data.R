@@ -1,16 +1,12 @@
 context("building data objects for modeling")
 
 test_that("build_data.bbi_stan_model returns correct list", {
-  skip_if_no_stan("build_data.bbi_stan_model returns correct list")
-
   res <- suppressMessages(build_data(STAN_MOD1))
   ref <- jsonlite::fromJSON(get_data_path(STAN_MOD1))
   expect_equal(res, ref)
 })
 
 test_that("build_data.bbi_stan_model write to disk", {
-  skip_if_no_stan("build_data.bbi_stan_model write to disk")
-
   tmp_path <- tempfile()
 
   # check for json error first
@@ -31,8 +27,6 @@ test_that("build_data.bbi_stan_model write to disk", {
 })
 
 test_that("build_data.bbi_stan_model errors with flawed -standata.R", {
-  skip_if_no_stan("build_data.bbi_stan_model returns correct list")
-
   new_mod <- copy_model_from(STAN_MOD1, tempfile())
   on.exit(cleanup_model(new_mod))
 

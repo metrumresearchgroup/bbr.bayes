@@ -1,6 +1,5 @@
 
 test_that("config_log() works with Stan", {
-  skip_if_no_stan("config_log() works with Stan")
   log_df <- config_log(STAN_ABS_MODEL_DIR)
   expect_equal(log_df[[RUN_ID_COL]], STAN_MOD_ID)
   expect_equal(log_df[['bbi_version']], STAN_BBI_VERSION_STRING)
@@ -9,7 +8,6 @@ test_that("config_log() works with Stan", {
 })
 
 test_that("config_log() builds Stan data", {
-  skip_if_no_stan("config_log() builds Stan data")
   perturb_file(
     system.file("extdata", "fxa.data.csv", package = "bbr.bayes"),
     txt = paste(rep(99, 8), collapse = ",")

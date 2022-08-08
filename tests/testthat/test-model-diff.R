@@ -1,6 +1,5 @@
 
 test_that("model_diff.bbi_stan_model happy path based_on", {
-  skip_if_no_stan("model_diff.bbi_stan_model happy path based_on")
   new_mod_name <- "model_diff_stan1"
   mod2 <- copy_model_from(STAN_MOD1, new_mod_name)
   on.exit(cleanup_model(mod2))
@@ -10,7 +9,6 @@ test_that("model_diff.bbi_stan_model happy path based_on", {
 })
 
 test_that("model_diff.bbi_stan_model happy path .mod2 arg", {
-  skip_if_no_stan("model_diff.bbi_stan_model happy path .mod2 arg")
   new_mod_name <- "model_diff_stan2"
   mod2 <- copy_model_from(STAN_MOD1, new_mod_name)
   on.exit(cleanup_model(mod2))
@@ -20,7 +18,6 @@ test_that("model_diff.bbi_stan_model happy path .mod2 arg", {
 })
 
 test_that("model_diff.bbi_stan_model works with other files", {
-  skip_if_no_stan("model_diff.bbi_stan_model works with other files")
   new_mod_name <- "model_diff_stan3"
   mod2 <- copy_model_from(STAN_MOD1, new_mod_name)
   on.exit(cleanup_model(mod2))

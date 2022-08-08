@@ -5,7 +5,6 @@ withr::with_options(list(bbr.bbi_exe_path = read_bbi_path()), {
   withr::local_envvar(c("NO_COLOR" = "true"))
 
   test_that("print.bbi_stan_model contains proper fields", {
-    skip_if_no_stan("print.bbi_stan_model")
     fields <- c('Status',
                 'Absolute Model Path',
                 'YAML & Model Files',

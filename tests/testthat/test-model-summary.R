@@ -2,7 +2,6 @@
 skip_if_not_drone_or_metworx("test-model-summary")
 
 test_that("model_summary.bbi_stan_model correctly calls read_fit_model", {
-  skip_if_no_stan("model_summary.bbi_stan_model correctly calls read_fit_model")
   expect_warning(
     res <- model_summary(STAN_MOD1)
   )
