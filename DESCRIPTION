@@ -21,6 +21,7 @@ Imports:
     bbr,
     checkmate,
     cli,
+    cmdstanr,
     data.table,
     digest,
     diffobj,
@@ -43,7 +44,6 @@ Imports:
     xfun,
     yaml
 Suggests: 
-    cmdstanr,
     covr,
     devtools,
     forcats,
