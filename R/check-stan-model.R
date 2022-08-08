@@ -13,7 +13,6 @@
 #' @param .mod A [bbi_stan_model] object
 #' @param .error If `FALSE`, the default, will warn if any necessary files are
 #'   missing. If `TRUE` will error instead.
-#' @importFrom stringr str_replace
 #' @importFrom purrr map_lgl
 #' @export
 check_stan_model <- function(.mod, .error = FALSE) {

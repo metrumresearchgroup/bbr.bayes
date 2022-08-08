@@ -34,8 +34,6 @@ build_data <- function(.mod, .out_path = NULL, ...) {
 #'   `cmdstanr::sample()`. Also optionally writes the returned data list to json
 #'   with [cmdstanr::write_stan_json()] if an `.out_path` is passed.
 #'
-#' @importFrom stringr str_detect
-#'
 #' @export
 build_data.bbi_stan_model <- function(.mod, .out_path = NULL, ...) {
   # source and call function
