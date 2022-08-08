@@ -18,6 +18,7 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.5)
 Imports: 
+    bbr,
     checkmate,
     cli,
     data.table,
