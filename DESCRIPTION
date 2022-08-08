@@ -31,6 +31,7 @@ Imports:
     jsonlite,
     lifecycle,
     magrittr,
+    methods,
     processx,
     purrr,
     readr,
@@ -48,7 +49,6 @@ Suggests:
     forcats,
     ggplot2,
     knitr,
-    methods,
     rmarkdown,
     testthat (>= 2.1.0),
     withr
