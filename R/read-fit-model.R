@@ -22,7 +22,6 @@ read_fit_model <- function(.mod, ...) {
 #' @describeIn read_fit_model Takes a file path that will be passed to
 #'   [read_model()]. The loaded model is then passed directly to the relevant
 #'   `read_fit_model()` dispatch.
-#' @importFrom checkmate assert_string
 #' @export
 read_fit_model.character <- function(.mod, ...) {
   checkmate::assert_string(.mod)

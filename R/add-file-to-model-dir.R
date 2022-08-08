@@ -59,8 +59,6 @@ add_stan_init <- function(.mod, .source_file = NULL) {
 #'
 #' Implementation function for [add_file_to_model_dir()].
 #'
-#' @importFrom checkmate assert_class assert_string
-#'
 #' @inheritParams add_file_to_model_dir
 #' @param .model_class Function will assert that `.mod` inherits from this class.
 #' @param .file_suffix Destination path is created with `build_path_from_model(.mod, .file_suffix)`
@@ -119,9 +117,6 @@ add_file_to_model_dir_impl <- function(
 #' Private helper to add scaffolds of any missing stan files
 #'
 #' This is used when setting up a new model.
-#' @importFrom rlang list2
-#' @importFrom purrr walk
-#' @importFrom fs file_exists
 #'
 #' @param .mod a `bbi_stan_model`
 #' @keywords internal

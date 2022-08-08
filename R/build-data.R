@@ -24,7 +24,6 @@
 #'   written.
 #' @param ... Arguments passed through to methods (currently none).
 #'
-#' @importFrom checkmate assert_string
 #' @export
 build_data <- function(.mod, .out_path = NULL, ...) {
   UseMethod("build_data")

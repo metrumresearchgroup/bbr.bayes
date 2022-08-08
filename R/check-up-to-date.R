@@ -9,7 +9,6 @@
 #'   but do _not_ run the `-standata.R` script. This option is less secure and
 #'   primarily exists for quicker checking if building the data is time
 #'   consuming for certain models.
-#' @importFrom ellipsis check_dots_empty
 #' @export
 check_up_to_date.bbi_stan_model <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
@@ -30,9 +29,6 @@ check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, .
 #' it to the hashes stored in `bbi_config.json`. The details of which files are
 #' "model files" and which are "data files" are detailed in the
 #' [check_up_to_date()] docs.
-#'
-#' @importFrom jsonlite fromJSON
-#' @importFrom fs file_exists path_ext_set
 #'
 #' @inheritParams check_up_to_date
 #'
