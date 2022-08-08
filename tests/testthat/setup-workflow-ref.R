@@ -1,6 +1,6 @@
 
 if (requireNamespace("cmdstanr", quietly = TRUE) && Sys.getenv("SKIP_STAN_TESTS") != "true") {
-  STAN_ABS_MODEL_DIR <- system.file("model", "stan",   package = "bbr")
+  STAN_ABS_MODEL_DIR <- system.file("model", "stan",   package = "bbr.bayes")
 
   STAN_MOD_ID <- "fxa"
   STAN_MODEL_DIR <-   fs::path_rel(STAN_ABS_MODEL_DIR, getwd()) %>% as.character()

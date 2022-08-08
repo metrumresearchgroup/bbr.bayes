@@ -37,7 +37,7 @@ library(purrr)
 
 ```{r set paths and define cleanup, include = FALSE}
 #options('bbr.bbi_exe_path' = read_bbi_path())
-MODEL_DIR <- system.file("model", "stan", package = "bbr")
+MODEL_DIR <- system.file("model", "stan", package = "bbr.bayes")
 # delete old files
 cleanup <- function() {
   # delete new model
@@ -194,10 +194,11 @@ fxa_res <- fxaInc %>%
 fxa_res <- read_fit_model(fxa)
 
 # load the fake posteriors
-fake_summary_df <- readRDS(system.file("vignette-fakes", "cmdstanr-summary-tibble.RDS", package = "bbr"))
+fake_summary_df <- readRDS(system.file("vignette-fakes", "cmdstanr-summary-tibble.RDS",
+                                       package = "bbr.bayes"))
 
 # fake printout so that we don't have to actually run the model
-system.file("vignette-fakes", "cmdstanr-sample-output.txt", package = "bbr") %>%
+system.file("vignette-fakes", "cmdstanr-sample-output.txt", package = "bbr.bayes") %>%
   readLines() %>%
   cat(sep = "\n")
 ```

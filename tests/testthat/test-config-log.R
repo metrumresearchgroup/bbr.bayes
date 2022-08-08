@@ -11,7 +11,7 @@ test_that("config_log() works with Stan", {
 test_that("config_log() builds Stan data", {
   skip_if_no_stan("config_log() builds Stan data")
   perturb_file(
-    system.file("extdata", "fxa.data.csv", package = "bbr"),
+    system.file("extdata", "fxa.data.csv", package = "bbr.bayes"),
     txt = paste(rep(99, 8), collapse = ",")
   )
   log_df <- config_log(STAN_ABS_MODEL_DIR)

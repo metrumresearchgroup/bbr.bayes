@@ -21,7 +21,7 @@ test_that("check_up_to_date.bbi_stan_model() with mismatched model", {
 test_that("check_up_to_date.bbi_stan_model() with mismatched data .build_data=TRUE", {
   skip_if_no_stan("check_up_to_date.bbi_stan_model() with mismatched data .build_data=TRUE")
   perturb_file(
-    system.file("extdata", "fxa.data.csv", package = "bbr"),
+    system.file("extdata", "fxa.data.csv", package = "bbr.bayes"),
     txt = paste(rep(99, 8), collapse = ",")
   )
 
