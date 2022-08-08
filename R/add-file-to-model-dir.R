@@ -60,7 +60,6 @@ add_stan_init <- function(.mod, .source_file = NULL) {
 #' Implementation function for [add_file_to_model_dir()].
 #'
 #' @importFrom checkmate assert_class assert_string
-#' @importFrom digest digest
 #'
 #' @inheritParams add_file_to_model_dir
 #' @param .model_class Function will assert that `.mod` inherits from this class.

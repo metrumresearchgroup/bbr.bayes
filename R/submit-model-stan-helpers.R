@@ -43,7 +43,6 @@ import_stan_init <- function(.mod, .standata) {
 #' the resulting list of args to a file for reproducibility checking.
 #'
 #' @importFrom rlang list2
-#' @importFrom digest digest
 #'
 #' @param .mod the `bbi_stan_model` object
 #' @param .valid_stanargs A character vector of valid arguments to pass
