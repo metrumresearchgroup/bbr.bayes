@@ -1,6 +1,11 @@
 
-#' @describeIn submit_model Takes a `bbi_stan_model` object. All arguments
-#'   passed through `...` will be passed to [cmdstanr::sample()] method.
+#' Submit model based on a `bbi_stan_model` object
+#'
+#' The model is executed via [cmdstanr::sample()].
+#'
+#' @param ... args passed through to [cmdstanr::sample()].
+#' @inheritParams bbr::submit_model
+#'
 #' @export
 submit_model.bbi_stan_model <- function(
   .mod,

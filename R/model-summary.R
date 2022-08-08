@@ -1,6 +1,15 @@
 
-#' @describeIn model_summary _Not fully implemented;_ calls [read_fit_model()]
-#'   instead. See "Details" section.
+#' Summarize a `bbi_stan_model`
+#'
+#' There is currently no functionality for summarizing Stan outputs with `bbr`.
+#' Calling `model_summary()` on a `bbi_stan_model` instead calls
+#' [read_fit_model()] and return the resulting fit object, which has various
+#' methods for summarizing the outputs. See the `?cmdstanr::CmdStanMCMC` docs
+#' for methods and information on this object. A warning will also be printed to
+#' notify the user of this.
+#'
+#' @inheritParams bbr::model_summary
+#'
 #' @export
 model_summary.bbi_stan_model <- function(
   .mod,

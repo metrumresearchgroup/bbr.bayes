@@ -1,5 +1,4 @@
 
-#' @describeIn copy_model_from `.parent_mod` takes a `bbi_stan_model` object to use as a basis for the copy.
 #' @export
 copy_model_from.bbi_stan_model <- function(
   .parent_mod,

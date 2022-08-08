@@ -1,21 +1,25 @@
 
-#' @rdname check_up_to_date
-#' @param .build_data **Only relevant to Stan models.** If `TRUE`, the default,
-#'   run `-standata.R` and save the output to a temp file and check the hash of
-#'   _the temp file_ against the `bbi_config.json` hash. This option actually
-#'   runs the code and, importantly, verifies that the input data to
-#'   `-standata.R` has not changed either. If `FALSE`, check the hashes of the
-#'   `-standata.R` and `-standata.json` against the hashes in `bbi_config.json`
-#'   but do _not_ run the `-standata.R` script. This option is less secure and
-#'   primarily exists for quicker checking if building the data is time
-#'   consuming for certain models.
+#' Check that Stan model is up to date
+#'
+#' The details of which files are "model files" and which are "data files" are
+#' detailed in the [bbr::check_up_to_date()] docs.
+#'
+#' @param .build_data If `TRUE`, the default, run `-standata.R` and save the
+#'   output to a temp file and check the hash of _the temp file_ against the
+#'   `bbi_config.json` hash. This option actually runs the code and,
+#'   importantly, verifies that the input data to `-standata.R` has not changed
+#'   either. If `FALSE`, check the hashes of the `-standata.R` and
+#'   `-standata.json` against the hashes in `bbi_config.json` but do _not_ run
+#'   the `-standata.R` script. This option is less secure and primarily exists
+#'   for quicker checking if building the data is time consuming for certain
+#'   models.
+#' @inheritParams bbr::check_up_to_date
 #' @export
 check_up_to_date.bbi_stan_model <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
   check_up_to_date_stan(.bbi_object, .build_data)
 }
 
-#' @rdname check_up_to_date
 #' @export
 check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
@@ -28,9 +32,9 @@ check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, .
 #' model was run. This is accomplished by taking their md5 hashes and comparing
 #' it to the hashes stored in `bbi_config.json`. The details of which files are
 #' "model files" and which are "data files" are detailed in the
-#' [check_up_to_date()] docs.
+#' [bbr::check_up_to_date()] docs.
 #'
-#' @inheritParams check_up_to_date
+#' @inheritParams bbr::check_up_to_date
 #'
 #' @return A (named) logical vector of length 2. The first element (named
 #'   `"model"`) refers to the model files mentioned above. The second element

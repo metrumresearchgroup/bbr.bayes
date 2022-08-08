@@ -1,5 +1,4 @@
 
-#' @rdname model_diff
 #' @export
 model_diff.bbi_stan_model <- function(
   .mod,
