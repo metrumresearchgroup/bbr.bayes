@@ -53,10 +53,9 @@ test_that("submit_model.bbi_stan_model works with copied model", {
   expect_equal(dim(smp2), STAN_SMP_DIAG_DIM)
 
   # check the output for mention of all the chains
-  expect_true(all(
-    purrr::map_lgl(paste("Chain", 1:4),
-                   ~ any(stringr::str_detect(res_output, .x)))
-  ))
+  expect_true(
+    purrr::every(paste("Chain", 1:4),
+                 ~ any(stringr::str_detect(res_output, .x))))
 
   # saves a fit object
   expect_true(fs::file_exists(build_path_from_model(mod2, STAN_MODEL_FIT_RDS)))
