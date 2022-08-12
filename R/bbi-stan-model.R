@@ -23,7 +23,7 @@
 #' point to the model directory (named `<run>`) containing all of the files
 #' described below, as well as a `<run>.yaml` file that `bbr` uses to persist
 #' model metadata. A model is loaded or created by passing a relative path to
-#' this directory to either [read_model()] or [new_model()], both of which
+#' this directory to either [bbr::read_model()] or [bbr::new_model()], both of which
 #' return the `bbi_stan_model` object. When this object is created, it checks
 #' the model directory for the relevant files and populates
 #' `absolute_model_path`.
