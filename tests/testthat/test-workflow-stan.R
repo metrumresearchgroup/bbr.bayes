@@ -75,8 +75,8 @@ test_that("cmdstanr fit object can be reloaded", {
 
 test_that("run_log() captures runs correctly", {
   log_df <- run_log(MODEL_DIR_STAN_TEST)
-  expect_equal(nrow(log_df), 2)
-  expect_equal(ncol(log_df), RUN_LOG_COLS)
+  expect_equal(nrow(log_df), 2L)
+  expect_equal(ncol(log_df), 10L)
   expect_identical(basename(log_df[[ABS_MOD_PATH]]), c(STAN_MOD_ID, STAN_MOD_ID2))
 })
 

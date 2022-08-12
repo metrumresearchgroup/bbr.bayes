@@ -10,7 +10,7 @@ test_that("read_model() works for Stan model", {
 test_that("new_model() errors for Stan model without .model_type", {
   expect_error(
     new_model(file.path(STAN_MODEL_DIR, "testmod_new_model1")),
-    regexp = NONMEM_MODEL_TYPE_ERR_MSG
+    regexp = "IF THIS IS NOT A NONMEM MODEL"
   )
 })
 
