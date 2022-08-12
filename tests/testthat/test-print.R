@@ -1,6 +1,4 @@
 
-skip_if_not_drone_or_metworx("test-print")
-
 withr::local_envvar(c("NO_COLOR" = "true"))
 
 test_that("print.bbi_stan_model contains proper fields", {
