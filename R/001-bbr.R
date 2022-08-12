@@ -2,6 +2,7 @@
 # Generics
 
 #' @importFrom bbr check_up_to_date
+#' @importFrom bbr config_log_make_entry
 #' @importFrom bbr copy_model_from
 #' @importFrom bbr get_model_path
 #' @importFrom bbr get_output_dir
@@ -14,6 +15,7 @@ NULL
 
 #' @importFrom bbr build_path_from_model
 #' @importFrom bbr config_log
+#' @importFrom bbr get_config_path
 #' @importFrom bbr get_data_path
 #' @importFrom bbr get_model_id
 #' @importFrom bbr get_yaml_path

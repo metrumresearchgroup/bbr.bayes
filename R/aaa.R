@@ -1,6 +1,6 @@
 
 #' @importFrom glue glue
-#' @importFrom rlang :=
+#' @importFrom rlang := %||%
 NULL
 
 STAN_MOD_CLASS <- "bbi_stan_model"
