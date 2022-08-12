@@ -8,6 +8,7 @@
 #' @importFrom bbr get_output_dir
 #' @importFrom bbr model_diff
 #' @importFrom bbr model_summary
+#' @importFrom bbr print_model_files
 #' @importFrom bbr submit_model
 NULL
 
