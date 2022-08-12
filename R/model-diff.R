@@ -11,7 +11,7 @@ model_diff.bbi_stan_model <- function(
 
   .mod2 <- model_diff_get_comp(.mod, .mod2)
 
-  diff_args <- map(list(.mod, .mod2), function(.m) {
+  diff_args <- purrr::map(list(.mod, .mod2), function(.m) {
     if (.file == "model") {
       return(build_path_from_model(.m, ".stan"))
     } else {

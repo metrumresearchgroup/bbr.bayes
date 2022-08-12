@@ -49,7 +49,7 @@ build_data.bbi_stan_model <- function(.mod, .out_path = NULL, ...) {
   # optionally write to json
   if (!is.null(.out_path)) {
     checkmate::assert_string(.out_path)
-    if (!str_detect(.out_path, ".json$")) {
+    if (!stringr::str_detect(.out_path, ".json$")) {
       stop(glue("build_data.bbi_stan_model(.out_path) must end in '.json' because a JSON file will be written. Got {.out_path}"), .call = FALSE)
     }
     cmdstanr::write_stan_json(standata_list, .out_path)

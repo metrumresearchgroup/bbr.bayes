@@ -24,7 +24,7 @@ on.exit({
 
 # copy model file into new model dir
 fs::dir_copy(STAN_MOD1_PATH, file.path(MODEL_DIR_STAN_TEST, "fxa"))
-fs::file_copy(yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
+fs::file_copy(bbr::yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
 
 #######################
 # create model from R
@@ -54,7 +54,8 @@ test_that("submit_model.bbi_stan_model works with copied model", {
 
   # check the output for mention of all the chains
   expect_true(all(
-    purrr::map_lgl(paste("Chain", 1:4), ~any(str_detect(res_output, .x)))
+    purrr::map_lgl(paste("Chain", 1:4),
+                   ~ any(stringr::str_detect(res_output, .x)))
   ))
 
   # saves a fit object
@@ -62,7 +63,7 @@ test_that("submit_model.bbi_stan_model works with copied model", {
 
   # saves a config with some md5 hashes in it
   cfg_res <- jsonlite::fromJSON(file.path(get_output_dir(mod2), "bbi_config.json"))
-  expect_true(any(str_detect(names(cfg_res), "md5$")))
+  expect_true(any(stringr::str_detect(names(cfg_res), "md5$")))
 
 })
 
