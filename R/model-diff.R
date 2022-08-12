@@ -1,4 +1,19 @@
 
+#' Compare Stan models
+#'
+#' Diff files between `bbi_stan_model` objects.
+#'
+#' @param .mod,.mod2 Show how `.mod2` has changed compared `.mod`. If `mod2` is
+#'   `NULL`, compare `.mod` to the model returned by `get_based_on(.mod)`.
+#' @param .file Which files to compare:
+#'
+#'   * model: `<run>.stan`
+#'   * standata: `<run>-standata.R`
+#'   * init: `<run>-init.R`
+#'   * stanargs: `<run>-stanargs.R`
+#'
+#' @inheritParams bbr::model_diff
+#' @seealso [bbr::model_diff()]
 #' @export
 model_diff.bbi_stan_model <- function(
   .mod,
