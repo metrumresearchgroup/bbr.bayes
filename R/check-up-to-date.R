@@ -4,6 +4,15 @@
 #' The details of which files are "model files" and which are "data files" are
 #' detailed in the [bbr::check_up_to_date()] docs.
 #'
+#' * The model files:
+#'   * `<run>.stan`
+#'   * `<run>-init.R`
+#'   * `<run>-stanargs.R`
+#'
+#' * The data files (see `.build_data` argument):
+#'   * `<run>-standata.R`
+#'   * `<run>-standata.json`
+#'
 #' @param .build_data If `TRUE`, the default, run `-standata.R` and save the
 #'   output to a temp file and check the hash of _the temp file_ against the
 #'   `bbi_config.json` hash. This option actually runs the code and,
@@ -14,12 +23,17 @@
 #'   for quicker checking if building the data is time consuming for certain
 #'   models.
 #' @inheritParams bbr::check_up_to_date
+#' @name check_up_to_date_stan_model
+NULL
+
+#' @rdname check_up_to_date_stan_model
 #' @export
 check_up_to_date.bbi_stan_model <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
   check_up_to_date_stan(.bbi_object, .build_data)
 }
 
+#' @rdname check_up_to_date_stan_model
 #' @export
 check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
