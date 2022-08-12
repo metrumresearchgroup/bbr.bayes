@@ -4,6 +4,7 @@
 #' @importFrom bbr check_up_to_date
 #' @importFrom bbr config_log_make_entry
 #' @importFrom bbr copy_model_from
+#' @importFrom bbr create_model_hook
 #' @importFrom bbr get_model_path
 #' @importFrom bbr get_output_dir
 #' @importFrom bbr model_diff
