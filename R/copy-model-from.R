@@ -26,7 +26,8 @@ copy_model_from.bbi_stan_model <- function(
     .inherit_tags = .inherit_tags,
     .update_model_file = .update_model_file,
     .overwrite = .overwrite,
-    .model_type = "stan"
+    .model_type = "stan",
+    setup_fn = function() copy_stan_files(.parent_mod, .new_model, .overwrite)
   )
 
   return(.mod)
