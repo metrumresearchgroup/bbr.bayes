@@ -27,6 +27,7 @@ if (interactive() || (isTRUE(getOption('knitr.in.progress') && Sys.getenv("DRONE
 ```
 ```{r load packages, results = 'hide', message=FALSE, warning=FALSE}
 library(bbr)
+library(bbr.bayes)
 library(dplyr)
 library(purrr)
 ```
@@ -63,7 +64,7 @@ setup <- function() {
 
   fs::dir_create(file.path(MODEL_DIR, "fxaInc"))
 
-  writeLines(bbr:::STANINIT_SCAFFOLD_STRING, file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
+  writeLines(bbr.bayes:::STANINIT_SCAFFOLD_STRING, file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
   
   readLines(file.path(MODEL_DIR, "fxa", "fxa.stan")) %>%
     stringr::str_replace("uniform", "cauchy") %>%
@@ -246,7 +247,7 @@ fake_summary_df %>%
 
 ### Using `read_fit_model()`
 
-The `submit_model()` call automatically saves this fit object to disk as well. You can pass either a path or model object to `bbr::read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
+The `submit_model()` call automatically saves this fit object to disk as well. You can pass either a path or model object to `bbr.bayes::read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
 
 ```{r}
 new_res <- read_fit_model(file.path(MODEL_DIR, "fxa"))
