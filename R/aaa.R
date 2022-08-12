@@ -1,3 +1,8 @@
+
+#' @importFrom glue glue
+#' @importFrom rlang :=
+NULL
+
 STAN_MOD_CLASS <- "bbi_stan_model"
 STAN_SUM_CLASS <- "bbi_stan_summary"
 STAN_FIT_CLASS <- "CmdStanMCMC"
