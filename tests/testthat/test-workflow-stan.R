@@ -1,9 +1,6 @@
 context("testing submitting Stan models")
 
 skip_long_tests("skipping long-running Stan submit_model tests")
-if (Sys.getenv("METWORX_VERSION") == "") {
-  skip("test-workflow-stan only runs on Metworx because it needs cmdstan installed")
-}
 
 # define constants
 MODEL_DIR_STAN_TEST <- file.path(dirname(STAN_ABS_MODEL_DIR), "test-workflow-stan-models")
