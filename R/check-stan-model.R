@@ -13,8 +13,6 @@
 #' @param .mod A [bbi_stan_model] object
 #' @param .error If `FALSE`, the default, will warn if any necessary files are
 #'   missing. If `TRUE` will error instead.
-#' @importFrom stringr str_replace
-#' @importFrom purrr map_lgl
 #' @export
 check_stan_model <- function(.mod, .error = FALSE) {
   # check if output dir exists and if not create an empty one
@@ -36,7 +34,7 @@ check_stan_model <- function(.mod, .error = FALSE) {
 
   # checking if any of the files found are only scaffolds
   files_to_check <- build_path_from_model(.mod, STAN_MODEL_FILES_TO_CHECK)
-  scaffold_bool <- map_lgl(files_to_check, function(.f) {
+  scaffold_bool <- purrr::map_lgl(files_to_check, function(.f) {
     tools::md5sum(.f) %in% STAN_SCAFFOLD_MD5_VEC
   })
 

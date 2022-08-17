@@ -24,7 +24,6 @@
 #'   written.
 #' @param ... Arguments passed through to methods (currently none).
 #'
-#' @importFrom checkmate assert_string
 #' @export
 build_data <- function(.mod, .out_path = NULL, ...) {
   UseMethod("build_data")
@@ -34,8 +33,6 @@ build_data <- function(.mod, .out_path = NULL, ...) {
 #'   returns the list that will be passed to the `data` argument of
 #'   `cmdstanr::sample()`. Also optionally writes the returned data list to json
 #'   with [cmdstanr::write_stan_json()] if an `.out_path` is passed.
-#'
-#' @importFrom stringr str_detect
 #'
 #' @export
 build_data.bbi_stan_model <- function(.mod, .out_path = NULL, ...) {
@@ -51,12 +48,8 @@ build_data.bbi_stan_model <- function(.mod, .out_path = NULL, ...) {
 
   # optionally write to json
   if (!is.null(.out_path)) {
-    if (!requireNamespace("cmdstanr", quietly = TRUE)) {
-      stop("Must have cmdstanr installed to use build_data.bbi_stan_model()")
-    }
-
     checkmate::assert_string(.out_path)
-    if (!str_detect(.out_path, ".json$")) {
+    if (!stringr::str_detect(.out_path, ".json$")) {
       stop(glue("build_data.bbi_stan_model(.out_path) must end in '.json' because a JSON file will be written. Got {.out_path}"), .call = FALSE)
     }
     cmdstanr::write_stan_json(standata_list, .out_path)

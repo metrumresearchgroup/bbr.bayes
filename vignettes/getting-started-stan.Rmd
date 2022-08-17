@@ -27,6 +27,7 @@ if (interactive() || (isTRUE(getOption('knitr.in.progress') && Sys.getenv("DRONE
 ```
 ```{r load packages, results = 'hide', message=FALSE, warning=FALSE}
 library(bbr)
+library(bbr.bayes)
 library(dplyr)
 library(purrr)
 ```
@@ -37,7 +38,7 @@ library(purrr)
 
 ```{r set paths and define cleanup, include = FALSE}
 #options('bbr.bbi_exe_path' = read_bbi_path())
-MODEL_DIR <- system.file("model", "stan", package = "bbr")
+MODEL_DIR <- system.file("model", "stan", package = "bbr.bayes")
 # delete old files
 cleanup <- function() {
   # delete new model
@@ -63,7 +64,7 @@ setup <- function() {
 
   fs::dir_create(file.path(MODEL_DIR, "fxaInc"))
 
-  writeLines(bbr:::STANINIT_SCAFFOLD_STRING, file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
+  writeLines(bbr.bayes:::STANINIT_SCAFFOLD_STRING, file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
   
   readLines(file.path(MODEL_DIR, "fxa", "fxa.stan")) %>%
     stringr::str_replace("uniform", "cauchy") %>%
@@ -194,10 +195,11 @@ fxa_res <- fxaInc %>%
 fxa_res <- read_fit_model(fxa)
 
 # load the fake posteriors
-fake_summary_df <- readRDS(system.file("vignette-fakes", "cmdstanr-summary-tibble.RDS", package = "bbr"))
+fake_summary_df <- readRDS(system.file("vignette-fakes", "cmdstanr-summary-tibble.RDS",
+                                       package = "bbr.bayes"))
 
 # fake printout so that we don't have to actually run the model
-system.file("vignette-fakes", "cmdstanr-sample-output.txt", package = "bbr") %>%
+system.file("vignette-fakes", "cmdstanr-sample-output.txt", package = "bbr.bayes") %>%
   readLines() %>%
   cat(sep = "\n")
 ```
@@ -245,7 +247,7 @@ fake_summary_df %>%
 
 ### Using `read_fit_model()`
 
-The `submit_model()` call automatically saves this fit object to disk as well. You can pass either a path or model object to `bbr::read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
+The `submit_model()` call automatically saves this fit object to disk as well. You can pass either a path or model object to `bbr.bayes::read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
 
 ```{r}
 new_res <- read_fit_model(file.path(MODEL_DIR, "fxa"))

@@ -1,255 +1,119 @@
-BBI_DEFAULT_PATH <- if (.Platform$OS.type == "windows") {
-  "bbi.exe"
-} else {
-  "bbi"
-}
 
-BBI_DEFAULT_MODE <- "sge"
-BBI_VALID_MODES <- c("local", "sge")
-
-CACHE_ENV <- new.env(parent = emptyenv())
-CACHE_ENV$bbi_exe_paths <- list()
-
-BBI_ARGS = list(
-  additional_post_work_envs = list(type = "character", flag="--additional_post_work_envs", description = "Any additional values (as ENV KEY=VALUE) to provide for the post execution environment"),
-  background = list(type = "logical", flag="--background", description = "RAW NMFE OPTION - Tells nonmem not to scan StdIn for control characters"),
-  clean_lvl = list(type = "numeric", flag="--clean_lvl", description = "clean level used for file output from a given (set of) runs (default 1)"),
-  config = list(type = "character", flag="--config", description = "Path (relative or absolute) to another bbi.yaml to load"),
-  copy_lvl = list(type = "numeric", flag="--copy_lvl", description = "copy level used for file output from a given (set of) runs"),
-  debug = list(type = "logical", flag="--debug", description = "debug mode"),
-  delay = list(type = "numeric", flag="--delay", description = "Selects a random number of seconds between 1 and this value to stagger / jitter job execution. Assists in dealing with large volumes of work dealing with the same data set. May avoid NMTRAN issues about not being able read / close files"),
-  ext_file = list(type = "character", flag="--ext-file", description = "name of custom ext-file"),
-  git = list(type = "logical", flag="--git", description = "whether git is used"),
-  json = list(type = "logical", flag="--json", description = "json tree of output, if possible"),
-  licfile = list(type = "character", flag="--licfile", description = "RAW NMFE OPTION - Specify a license file to use with NMFE (Nonmem)"),
-  log_file = list(type = "character", flag="--log_file", description = "If populated, specifies the file into which to store the output / logging details from bbi"),
-  maxlim = list(type = "numeric", flag="--maxlim", description = "RAW NMFE OPTION - Set the maximum values set for the buffers used by Nonmem (default 100)"),
-  mpi_exec_path = list(type = "character", flag="--mpi_exec_path", description = "The fully qualified path to mpiexec. Used for nonmem parallel operations (default '/usr/local/mpich3/bin/mpiexec')"),
-  nm_version = list(type = "character", flag="--nm_version", description = "Version of nonmem from the configuration list to use"),
-  nm_qual = list(type = "logical", flag="--nmqual", description = "Whether or not to execute with nmqual (autolog.pl"),
-  nobuild = list(type = "logical", flag="--nobuild", description = "RAW NMFE OPTION - Skips recompiling and rebuilding on nonmem executable"),
-  no_ext_file = list(type = "logical", flag="--no-ext-file", description = "do not use ext file"),
-  no_grd_file = list(type = "logical", flag="--no-grd-file", description = "do not use grd file"),
-  no_shk_file = list(type = "logical", flag="--no-shk-file", description = "do not use shk file"),
-  overwrite = list(type = "logical", flag="--overwrite", description = "Whether or not to remove existing output directories if they are present"),
-  parafile = list(type = "character", flag="--parafile", description = "Location of a user-provided parafile to use for parallel execution"),
-  parallel = list(type = "logical", flag="--parallel", description = "Whether or not to run nonmem in parallel mode"),
-  parallel_timeout = list(type = "numeric", flag="--parallel_timeout", description = "The amount of time to wait for parallel operations in nonmem before timing out (default 2147483647)"),
-  post_work_executable = list(type = "character", flag="--post_work_executable", description = "A script or binary to run when job execution completes or fails"),
-  prcompile = list(type = "logical", flag="--prcompile", description = "RAW NMFE OPTION - Forces PREDPP compilation"),
-  prsame = list(type = "logical", flag="--prsame", description = "RAW NMFE OPTION - Indicates to nonmem that the PREDPP compilation step should be skipped"),
-  preview = list(type = "logical", flag="--preview", description = "preview action, but don't actually run command"),
-  save_config = list(type = "logical", flag="--save_config", description = "Whether or not to save the existing configuration to a file with the model (default true)"),
-  threads = list(type = "numeric", flag="--threads", description = "number of threads to execute with (default 4)"),
-  verbose = list(type = "logical", flag="--verbose", description = "verbose output")
-)
-
-# S3 classes
-BBI_PARENT_CLASS <- "bbi_model"
-NM_MOD_CLASS <- "bbi_nonmem_model"
-NM_SUM_CLASS <- "bbi_nonmem_summary"
+#' @importFrom glue glue
+#' @importFrom rlang := %||%
+NULL
 
 STAN_MOD_CLASS <- "bbi_stan_model"
 STAN_SUM_CLASS <- "bbi_stan_summary"
 STAN_FIT_CLASS <- "CmdStanMCMC"
 
-SL_CLASS <- "bbi_summary_list"
-PROC_CLASS <- "bbi_process"
-RUN_LOG_CLASS <- "bbi_run_log_df"
-CONF_LOG_CLASS <- "bbi_config_log_df"
-SUM_LOG_CLASS <- "bbi_summary_log_df"
-LOG_DF_CLASS <- "bbi_log_df"
+STANMOD_SUFFIX <- ".stan"
+STANDATA_R_SUFFIX <- "-standata.R"
+STANDATA_JSON_SUFFIX <- "-standata.json"
+STANINIT_SUFFIX <- "-init.R"
+STANARGS_SUFFIX <- "-stanargs.R"
+STAN_OUTDIR_SUFFIX <- "-output"
+STAN_MODEL_FIT_RDS <- file.path(STAN_OUTDIR_SUFFIX, "fit.RDS")
 
-# YAML keys that are hard-coded
-YAML_YAML_MD5 <- "yaml_md5"
-YAML_DESCRIPTION <- "description"
-YAML_BASED_ON <- "based_on"
-YAML_TAGS <- "tags"
-YAML_NOTES <- "notes"
-YAML_BBI_ARGS <- "bbi_args"
-YAML_MOD_TYPE <- "model_type"
-YAML_STAR <- 'star'
-
-YAML_REQ_INPUT_KEYS <- c(
-  YAML_MOD_TYPE
+STAN_MODEL_REQ_FILES <- c(
+  STANMOD_SUFFIX,
+  STANDATA_R_SUFFIX
 )
 
-ABS_MOD_PATH <- "absolute_model_path"
-RUN_ID_COL <- "run"
-
-# keys required to create a model object
-MODEL_REQ_INPUT_KEYS <- c(
-  ABS_MOD_PATH,
-  YAML_MOD_TYPE
+STAN_MODEL_FILES_TO_CHECK <- c(
+  STAN_MODEL_REQ_FILES,
+  STANINIT_SUFFIX
 )
 
-# keys required for a model object to have
-MODEL_REQ_KEYS <- c(
-  ABS_MOD_PATH,
-  YAML_YAML_MD5,
-  YAML_MOD_TYPE
+STAN_RESERVED_ARGS <- c(
+  "data",
+  "init",
+  "output_dir"
 )
 
-# columns required for a run log df
-RUN_LOG_REQ_COLS <- c(
-  ABS_MOD_PATH,
-  RUN_ID_COL,
-  YAML_YAML_MD5,
-  YAML_MOD_TYPE,
-  YAML_DESCRIPTION,
-  YAML_BBI_ARGS,
-  YAML_BASED_ON,
-  YAML_TAGS,
-  YAML_NOTES,
-  YAML_STAR
+STANCFG_DATA_MD5 <- "standata_script_md5"
+STANCFG_INIT_MD5 <- "init_script_md5"
+STANCFG_ARGS_MD5 <- "stanargs_md5"
+
+STAN_BBI_VERSION_STRING <- "STAN"
+
+############
+# SCAFFOLDS
+############
+
+STANMOD_SCAFFOLD_STRING <- "//
+// This Stan program defines a simple model, with a
+// vector of values 'y' modeled as normally distributed
+// with mean 'mu' and standard deviation 'sigma'.
+//
+
+// The input data is a vector 'y' of length 'N'.
+data {
+  int<lower=0> N;
+  vector[N] y;
+}
+
+// The parameters accepted by the model. Our model
+// accepts two parameters 'mu' and 'sigma'.
+parameters {
+  real mu;
+  real<lower=0> sigma;
+}
+
+// The model to be estimated. We model the output
+// 'y' to be normally distributed with mean 'mu'
+// and standard deviation 'sigma'.
+model {
+  y ~ normal(mu, sigma);
+}"
+
+STANMOD_SCAFFOLD_MD5 <- "cb1c31e0f34cd0c196b64b6cd5492669"
+
+
+STANDATA_SCAFFOLD_STRING <- "# Create Stan data
+#
+# This function must return the list that will be passed to `data` argument
+#   of `cmdstanr::sample()`
+#
+# The `.dir` argument represents the absolute path to the directory containing
+#   this file. This is useful for building file paths to the input files you will
+#   load. Note: you _don't_ need to pass anything to this argument, you only use
+#   it within the function. `bbr` will pass in the correct path when it calls
+#   `make_standata()` under the hood.
+make_standata <- function(.dir) {
+  # read in any input data
+  in_data <- readr::read_csv(file.path(.dir, '..', 'my_data.csv'))
+  # do any transformations
+  # return the list that can be passed to cmdstanr
+}"
+
+STANDATA_SCAFFOLD_MD5 <- "44721f8445919647cc59ecc3ecc44072"
+
+
+STANINIT_SCAFFOLD_STRING <- "# Create Stan initial values
+#
+# This function must return something that can be passed to the `init` argument
+#   of `cmdstanr::sample()`. There are several options; see `?cmdstanr::sample`
+#   for details.
+#
+# The `.data` represents the list returned from `make_standata()` for this model.
+#   This is provided in case any of your initial values are dependant on some
+#   aspect of the data (e.g. the number of rows). Note: you _don't_ need to pass
+#   anything to this argument, you only use it within the function. `bbr` will
+#   pass in the correct data when it calls `make_init()` under the hood.
+make_init <- function(.data) {
+  # return list of initial estimates that can be passed to cmdstanr
+}"
+
+STANINIT_SCAFFOLD_MD5 <- "72b7704cd334fbecf8d7b8ace7138629"
+
+STAN_SCAFFOLD_MD5_VEC <- c(
+  STANMOD_SCAFFOLD_MD5,
+  STANDATA_SCAFFOLD_MD5,
+  STANINIT_SCAFFOLD_MD5
 )
 
-
-# keys that get erased when saving a model YAML on disk
-YAML_ERASE_OUT_KEYS <- c(
-  ABS_MOD_PATH,
-  YAML_YAML_MD5
-)
-
-# keys that need to be coerced to arrays when saving a model YAML on disk
-YAML_SCALAR_TO_LIST_KEYS <- c(
-  YAML_BASED_ON,
-  YAML_TAGS,
-  YAML_NOTES,
-  YAML_STAR
-)
-
-
-SUPPORTED_MOD_TYPES <- c("nonmem", "stan")
-
-VALID_MOD_CLASSES <- purrr::map_chr(SUPPORTED_MOD_TYPES,
-                                    function(.model_type) {
-                                      as.character(glue::glue("bbi_{.model_type}_model"))
-                                    })
-
-VALID_SUM_CLASSES <- purrr::map_chr(SUPPORTED_MOD_TYPES,
-                                    function(.model_type) {
-                                      as.character(glue::glue("bbi_{.model_type}_summary"))
-                                    })
-
-
-SUMMARY_DETAILS <- "run_details"
-SUMMARY_HEURISTICS <- "run_heuristics"
-SUMMARY_COND_NUM <- "condition_number"
-SUMMARY_PARAM_NAMES <- "parameter_names"
-SUMMARY_PARAM_DATA <- "parameters_data"
-SUMMARY_EST_METHOD <- "estimation_method"
-SUMMARY_SHRINKAGE <- "shrinkage_details"
-SUMMARY_PARAM_DIAG <- "diag"
-SUMMARY_PARAM_SHRINKAGE <- "shrinkage"
-SUMMARY_SHRINKAGE_OMEGA <- "eta_sd"
-SUMMARY_SHRINKAGE_SIGMA <- "eps_sd"
-SUMMARY_PARAM_PVAL <- "pval"
-SUMMARY_SHRINKAGE_PVAL <- "pval"
-SUMMARY_PARAM_ETASIG <- "ETASIG"
-
-CONFIG_MODEL_PATH <- "model_path"
-CONFIG_MODEL_MD5 <- "model_md5"
-CONFIG_DATA_PATH <- "data_path"
-CONFIG_DATA_MD5 <- "data_md5"
-
-# keys required for a summary object to have
-SUMMARY_REQ_KEYS <- c(
-  ABS_MOD_PATH,
-  SUMMARY_DETAILS,
-  SUMMARY_HEURISTICS
-)
-
-OFV_COL <- "ofv"
-PARAM_COUNT_COL <- "param_count"
-
-DETAILS_ELEMENTS <- c(
-  "estimation_method",
-  "problem_text",
-  "number_of_subjects",
-  "number_of_obs"
-)
-
-
-ANY_HEURISTICS <- "any_heuristics"
-
-BBI_NULL_NUM <- -999999999
-BBI_NULL_STR <- "-999999999"
-
-SL_SUMMARY <- "bbi_summary"
-SL_ERROR <- "error_msg"
-SL_FAIL_FLAGS <- "needed_fail_flags"
-
-SUMMARY_LIST_REQ_KEYS <- c(
-  ABS_MOD_PATH,
-  SL_SUMMARY,
-  SL_ERROR,
-  SL_FAIL_FLAGS
-)
-
-# columns required for a summary log df
-SUMMARY_LOG_REQ_COLS <- c(
-  ABS_MOD_PATH,
-  RUN_ID_COL,
-  SL_SUMMARY,
-  SL_ERROR,
-  SL_FAIL_FLAGS,
-  DETAILS_ELEMENTS,
-  PARAM_COUNT_COL,
-  OFV_COL,
-  ANY_HEURISTICS
-)
-
-# define json keys to keep as from bbi_config.json
-CONFIG_KEEPERS <- c(
-  "model_md5",
-  CONFIG_DATA_PATH,
-  "data_md5",
-  "bbi_version"
-)
-
-CONFIG_LOG_REQ_COLS <- c(
-  ABS_MOD_PATH,
-  RUN_ID_COL,
-  CONFIG_KEEPERS
-)
-
-TAGS_ADD <- "tags_added"
-TAGS_REM <- "tags_removed"
-
-# keys added when creating a process object
-PROC_PROCESS <- "process"
-PROC_STDOUT <- "stdout"
-PROC_BBI <- "bbi"
-PROC_CMD_ARGS <- "cmd_args"
-PROC_WD <- "working_dir"
-PROC_CALL <- "call"
-
-
-# keys required for process object to have
-PROCESS_REQ_KEYS <- c(
-  PROC_PROCESS,
-  PROC_STDOUT,
-  PROC_BBI,
-  PROC_CMD_ARGS,
-  PROC_WD
-)
-
-# error messages that we grep for
-NO_NONMEM_ERR_MSG <- "No version was supplied and no default value exists in the configset"
-MOD_ALREADY_EXISTS_ERR_MSG <- "already exist, but we are configured not to overwrite"
-NO_STAN_ERR_MSG <- "stan support not yet implemented."
-PARAM_BAYES_ERR_MSG <- "param_estimates() is not currently implemented for Bayesian methods."
-CHECK_UP_TO_DATE_ERR_MSG <- "Cannot check if up-to-date because model has not been run yet."
-MODEL_DIFF_ERR_MSG <- "Please pass a single `bbi_model` object to the `.mod2` to compare models."
-BBI_EXE_MODE_NULL_ERR_MSG <- paste(
-  "Nothing was passed to `.mode` argument and `options('bbr.bbi_exe_mode')` is NULL. Please either pass or set to one of:",
-  paste(BBI_VALID_MODES, collapse = ", ")
-)
-BBI_EXE_MODE_INVALID_ERR_MSG <- paste(
-  "Invalid value passed to `.mode` argument. Please either pass or set `options('bbr.bbi_exe_mode')` to one of:",
-  paste(BBI_VALID_MODES, collapse = ", ")
-)
-NONMEM_MODEL_TYPE_ERR_MSG <- "IF THIS IS NOT A NONMEM MODEL please pass the appropriate type to `.model_type`"
 MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are missing"
 STAN_SCAFFOLD_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are only scaffolds:"
+
+utils::globalVariables("make_standata")

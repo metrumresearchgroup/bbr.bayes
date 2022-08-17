@@ -6,17 +6,6 @@
 \usage{
 check_up_to_date_stan(.mod, .build_data = FALSE)
 }
-\arguments{
-\item{.build_data}{\strong{Only relevant to Stan models.} If \code{TRUE}, the default,
-run \code{-standata.R} and save the output to a temp file and check the hash of
-\emph{the temp file} against the \code{bbi_config.json} hash. This option actually
-runs the code and, importantly, verifies that the input data to
-\code{-standata.R} has not changed either. If \code{FALSE}, check the hashes of the
-\code{-standata.R} and \code{-standata.json} against the hashes in \code{bbi_config.json}
-but do \emph{not} run the \code{-standata.R} script. This option is less secure and
-primarily exists for quicker checking if building the data is time
-consuming for certain models.}
-}
 \value{
 A (named) logical vector of length 2. The first element (named
 \code{"model"}) refers to the model files mentioned above. The second element
@@ -29,6 +18,6 @@ Specifically, check that required files on disk have not changed since the
 model was run. This is accomplished by taking their md5 hashes and comparing
 it to the hashes stored in \code{bbi_config.json}. The details of which files are
 "model files" and which are "data files" are detailed in the
-\code{\link[=check_up_to_date]{check_up_to_date()}} docs.
+\code{\link[bbr:check_up_to_date]{bbr::check_up_to_date()}} docs.
 }
 \keyword{internal}

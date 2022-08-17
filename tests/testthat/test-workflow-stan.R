@@ -1,10 +1,6 @@
 context("testing submitting Stan models")
 
-skip_if_no_stan("skipping Stan submit_model tests because no Stan")
 skip_long_tests("skipping long-running Stan submit_model tests")
-if (Sys.getenv("METWORX_VERSION") == "") {
-  skip("test-workflow-stan only runs on Metworx because it needs cmdstan installed")
-}
 
 # define constants
 MODEL_DIR_STAN_TEST <- file.path(dirname(STAN_ABS_MODEL_DIR), "test-workflow-stan-models")
@@ -25,7 +21,7 @@ on.exit({
 
 # copy model file into new model dir
 fs::dir_copy(STAN_MOD1_PATH, file.path(MODEL_DIR_STAN_TEST, "fxa"))
-fs::file_copy(yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
+fs::file_copy(bbr::yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
 
 #######################
 # create model from R
@@ -54,16 +50,16 @@ test_that("submit_model.bbi_stan_model works with copied model", {
   expect_equal(dim(smp2), STAN_SMP_DIAG_DIM)
 
   # check the output for mention of all the chains
-  expect_true(all(
-    purrr::map_lgl(paste("Chain", 1:4), ~any(str_detect(res_output, .x)))
-  ))
+  expect_true(
+    purrr::every(paste("Chain", 1:4),
+                 ~ any(stringr::str_detect(res_output, .x))))
 
   # saves a fit object
   expect_true(fs::file_exists(build_path_from_model(mod2, STAN_MODEL_FIT_RDS)))
 
   # saves a config with some md5 hashes in it
   cfg_res <- jsonlite::fromJSON(file.path(get_output_dir(mod2), "bbi_config.json"))
-  expect_true(any(str_detect(names(cfg_res), "md5$")))
+  expect_true(any(stringr::str_detect(names(cfg_res), "md5$")))
 
 })
 
@@ -79,8 +75,8 @@ test_that("cmdstanr fit object can be reloaded", {
 
 test_that("run_log() captures runs correctly", {
   log_df <- run_log(MODEL_DIR_STAN_TEST)
-  expect_equal(nrow(log_df), 2)
-  expect_equal(ncol(log_df), RUN_LOG_COLS)
+  expect_equal(nrow(log_df), 2L)
+  expect_equal(ncol(log_df), 10L)
   expect_identical(basename(log_df[[ABS_MOD_PATH]]), c(STAN_MOD_ID, STAN_MOD_ID2))
 })
 

@@ -26,7 +26,7 @@ will carry around only an absolute path to the model directory. This will
 point to the model directory (named \verb{<run>}) containing all of the files
 described below, as well as a \verb{<run>.yaml} file that \code{bbr} uses to persist
 model metadata. A model is loaded or created by passing a relative path to
-this directory to either \code{\link[=read_model]{read_model()}} or \code{\link[=new_model]{new_model()}}, both of which
+this directory to either \code{\link[bbr:read_model]{bbr::read_model()}} or \code{\link[bbr:new_model]{bbr::new_model()}}, both of which
 return the \code{bbi_stan_model} object. When this object is created, it checks
 the model directory for the relevant files and populates
 \code{absolute_model_path}.
@@ -77,7 +77,7 @@ your \code{make_init()} function must return \emph{the function} described, \emp
 }
 
 \strong{\verb{<run>-stanargs.R}} - A file to capture the arguments passed into
-\code{cmdstanr::sample()} (\code{nChains}, etc.) through \code{\link[=submit_model]{submit_model()}}. This
+\code{cmdstanr::sample()} (\code{nChains}, etc.) through \code{\link[bbr:submit_model]{bbr::submit_model()}}. This
 will be written to file with \code{dput()} so that it can be compared, and
 possibly re-used, in the future.
 
