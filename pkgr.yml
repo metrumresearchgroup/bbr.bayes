@@ -5,7 +5,6 @@ Descriptions:
 Packages:
   - devtools
   - pkgdown
-  - styler
 
 Repos:
   - CRAN: https://cran.rstudio.com

@@ -36,51 +36,6 @@ import_stan_init <- function(.mod, .standata) {
 }
 
 
-#' Parse args to be passed to cmdstanr
-#'
-#' Any arguments destined for [cmdstanr::sample()] will be passed in
-#' via `...`. This function checks that those are valid and then writes
-#' the resulting list of args to a file for reproducibility checking.
-#'
-#' @param .mod the `bbi_stan_model` object
-#' @param .valid_stanargs A character vector of valid arguments to pass
-#'   through to [cmdstanr::sample()]
-#' @param ... The arguments to capture and check
-#'
-#' @return the named list of parsed and checked args
-#' @keywords internal
-parse_stanargs <- function(.mod, valid_stanargs, ...) {
-
-  stanargs <- rlang::list2(...)
-  if (length(stanargs) == 0) {
-    return(stanargs)
-  }
-
-  if (any(names(stanargs) %in% STAN_RESERVED_ARGS)) {
-    stop(paste(
-      "Cannot pass any of the following through submit_model() to cmdstanr",
-      glue("because they are parsed internally from the model object: {paste(STAN_RESERVED_ARGS, collapse = ', ')}")
-    ))
-  }
-
-  invalid_stanargs <- setdiff(names(stanargs), valid_stanargs)
-  if (length(invalid_stanargs) > 0) {
-    stop(paste(
-      "Attempting to pass invalid arguments through to Stan via submit_model(...)",
-      "  The following are not accepted by cmdstanr::sample():",
-      paste(invalid_stanargs, collapse = ", "),
-      sep = "\n"
-    ), call. = FALSE)
-  }
-
-  # reorder list and write to disk
-  stanargs <- stanargs[order(names(stanargs))]
-  dput(stanargs, build_path_from_model(.mod, STANARGS_SUFFIX))
-
-  return(stanargs)
-}
-
-
 #' Private helper to compile a stan model and save a gitignore that ignores the
 #' binary and posterior csv's
 #' @keywords internal
