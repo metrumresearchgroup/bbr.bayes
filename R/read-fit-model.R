@@ -31,5 +31,20 @@ read_fit_model.character <- function(.mod, ...) {
 #' @describeIn read_fit_model Returns a `cmdstanr::CmdStanMCMC` object.
 #' @export
 read_fit_model.bbi_stan_model <- function(.mod, ...) {
-  readRDS(build_path_from_model(.mod, STAN_MODEL_FIT_RDS))
+  res <- readRDS(build_path_from_model(.mod, STAN_MODEL_FIT_RDS))
+  # FIXME: This hopefully temporary kludge makes it possible to read the fit
+  # from a different location than the one used for the original run (e.g.,
+  # different user or machine). This is necessary because the CmdStanRun object
+  # points to absolute paths and doesn't have a public way to re-root them.
+  #
+  # https://github.com/metrumresearchgroup/bbr.bayes/issues/3
+  files <- res$output_files(include_failed = TRUE)
+  if (!identical(files, res$runset$.__enclos_env__$private$output_files_)) {
+    stop("bug: output_files() result unexpectedly differs from private value")
+  }
+  res$runset$.__enclos_env__$private$output_files_ <- file.path(
+    build_path_from_model(.mod, STAN_OUTDIR_SUFFIX),
+    basename(files))
+
+  return(res)
 }
