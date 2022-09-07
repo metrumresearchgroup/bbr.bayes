@@ -70,6 +70,7 @@ model {
 
 STANMOD_SCAFFOLD_MD5 <- "cb1c31e0f34cd0c196b64b6cd5492669"
 
+
 STANDATA_SCAFFOLD_STRING <- "# Create Stan data
 #
 # This function must return the list that will be passed to `data` argument

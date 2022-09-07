@@ -63,7 +63,7 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   stanmod <- compile_stanmod(.mod)
 
-  # construct input data set and initial estimates
+  # build args to pass to cmdstanr::sample()
   stanargs <- get_stanargs(.mod)
 
   if(is.null(stanargs$seed)) {
@@ -77,8 +77,14 @@ submit_stan_model_cmdstanr <- function(.mod,
   stanargs[["output_dir"]] <- get_output_dir(.mod)
   stanargs[["data"]] <- standata_json_path
 
+  # construct input data set and initial estimates
   standata_list <- build_data(.mod, .out_path = standata_json_path)
-  # TODO: add special handling for passing inits (non-function?) through args
+  # TODO: call the init function ourselves intead of passing it through
+  # # IF they've passed in a function
+  # withr::with_seed(stanargs$seed, {
+  #   # loop over chains and call the func we get from import_stan_init(.mod, .standata = standata_list)
+  #   # and then pass the resulting list to stanargs[["init"]]
+  # })
   stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list)
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
 
