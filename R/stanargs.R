@@ -56,7 +56,7 @@ get_stanargs <- function(.mod) {
 }
 
 #' @export
-print.bbr_stanargs <- function(x) {
+print.bbr_stanargs <- function(x, ...) {
   # TODO: Make this more robust to different possible values
   purrr::imap_chr(x, ~ {
     glue::glue("{cli::col_blue(.y)} = {.x}")
