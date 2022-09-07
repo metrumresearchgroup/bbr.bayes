@@ -140,7 +140,7 @@ scaffold_missing_stan_files <- function(.mod) {
   return(invisible(NULL))
 }
 
-#' Creates a starter -stanargs.R with only seed in it
+#' Creates a starter -stanargs.R with empty list
 #'
 #' @param .mod a `bbi_stan_model`
 stanargs_scaffold <- function(.mod) {

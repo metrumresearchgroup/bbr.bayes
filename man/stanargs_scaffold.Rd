@@ -2,7 +2,7 @@
 % Please edit documentation in R/add-file-to-model-dir.R
 \name{stanargs_scaffold}
 \alias{stanargs_scaffold}
-\title{Creates a starter -stanargs.R with only seed in it}
+\title{Creates a starter -stanargs.R with empty list}
 \usage{
 stanargs_scaffold(.mod)
 }
@@ -10,5 +10,5 @@ stanargs_scaffold(.mod)
 \item{.mod}{a \code{bbi_stan_model}}
 }
 \description{
-Creates a starter -stanargs.R with only seed in it
+Creates a starter -stanargs.R with empty list
 }
