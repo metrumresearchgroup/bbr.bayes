@@ -6,6 +6,9 @@
 \usage{
 stanargs_scaffold(.mod)
 }
+\arguments{
+\item{.mod}{a \code{bbi_stan_model}}
+}
 \description{
 Creates a starter -stanargs.R with only seed in it
 }
