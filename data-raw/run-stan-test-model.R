@@ -19,15 +19,15 @@ run_stan_test_model <- function(
   mod_path <- file.path(.model_dir, .model_name)
 
   message(paste("Running", mod_path, "..."))
-  mod <- read_model(mod_path)
+  mod <- read_model(mod_path) %>%
+    set_stanargs(list(iter_sampling = 100,
+                      iter_warmup = 100,
+                      seed = 123456))
+
   res <- mod %>%
     submit_model(
       .mode = "local",
-      .overwrite = TRUE,
-      iter_sampling = 100,
-      iter_warmup = 100,
-      seed = 123456
-    )
+      .overwrite = TRUE)
 
   # delete output files that are not included in package
   model_binary <- build_path_from_model(mod, "")
