@@ -107,11 +107,13 @@ make_init <- function(.data) {
 }"
 
 STANINIT_SCAFFOLD_MD5 <- "72b7704cd334fbecf8d7b8ace7138629"
+STANARGS_SCAFFOLD_MD5 <- "8b11f83c3293f3b89a30807b3b69b58e"
 
 STAN_SCAFFOLD_MD5_VEC <- c(
   STANMOD_SCAFFOLD_MD5,
   STANDATA_SCAFFOLD_MD5,
-  STANINIT_SCAFFOLD_MD5
+  STANINIT_SCAFFOLD_MD5,
+  STANARGS_SCAFFOLD_MD5
 )
 
 MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are missing"
