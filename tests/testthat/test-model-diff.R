@@ -21,10 +21,6 @@ test_that("model_diff.bbi_stan_model works with other files", {
   new_mod_name <- "model_diff_stan3"
   mod2 <- copy_model_from(STAN_MOD1, new_mod_name)
   on.exit(cleanup_model(mod2))
-  fs::file_copy(
-    build_path_from_model(STAN_MOD1, STANARGS_SUFFIX),
-    build_path_from_model(mod2, STANARGS_SUFFIX)
-  )
 
   .test_cases <- list(
     list(file = "standata", content = "make_standata"),
