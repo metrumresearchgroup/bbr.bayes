@@ -22,6 +22,7 @@ Will look for the following:
 \itemize{
 \item \code{build_path_from_model(.mod, "-standata.R")}
 \item \code{build_path_from_model(.mod, "-init.R")}
+\item \code{build_path_from_model(.mod, "-stanargs.R")}
 \item \code{build_path_from_model(.mod, ".stan")}
 }
 }

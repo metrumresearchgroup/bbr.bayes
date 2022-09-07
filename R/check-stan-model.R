@@ -8,6 +8,7 @@
 #' Will look for the following:
 #' * `build_path_from_model(.mod, "-standata.R")`
 #' * `build_path_from_model(.mod, "-init.R")`
+#' * `build_path_from_model(.mod, "-stanargs.R")`
 #' * `build_path_from_model(.mod, ".stan")`
 #'
 #' @param .mod A [bbi_stan_model] object
