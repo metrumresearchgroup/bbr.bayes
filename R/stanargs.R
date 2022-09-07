@@ -34,7 +34,9 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
 
   # reorder list and write to disk
   stanargs_path <- build_path_from_model(.mod, STANARGS_SUFFIX)
-  .args <- .args[order(names(.args))]
+  if (length(.args) > 1) {
+    .args <- .args[order(names(.args))]
+  }
   dput(.args, stanargs_path)
   capture.output(styler::style_file(stanargs_path))
 
