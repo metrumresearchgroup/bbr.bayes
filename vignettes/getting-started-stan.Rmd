@@ -169,6 +169,16 @@ fxaInc <- fxaInc %>%
   add_standata_file(.source_file = build_path_from_model(fxa, "-standata.R"))   # copy from another model
 ```
 
+For Stan models, model submission (see next section) wraps the [cmdstanr::sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. You can use `set_stanargs` to control which arguments are passed to [sample()], and `get_stanargs()` to inspect the currently set arguments.
+
+```{r}
+fxaInc <- fxaInc %>%
+  set_stanargs(list(seed = 123456,
+                    chains = 4,
+                    iter_warmup = 300,
+                    iter_sampling = 300))
+```
+
 Now we run `check_stan_model()` we get a clean bill of health.
 
 ```{r}
@@ -178,16 +188,11 @@ check_stan_model(fxaInc)
 
 ## Submit model
 
-To submit a model to be run, you simply pass the model object to `bbr::submit_model()`. For Stan models, this wraps the [cmdstanr::sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. Any arguments that you would normally pass through to the `$sample()` method can be passed through `submit_model()` via `...`. Simply pass the named arguments as shown below. You can see a full list of valid arguments in [the `?cmdstanr::sample` docs](https://mc-stan.org/cmdstanr/reference/model-method-sample.html).
+To submit a model to be run, you simply pass the model object to `bbr::submit_model()`.
 
 ```{r, eval = FALSE}
 fxa_res <- fxaInc %>%
-  submit_model(
-    seed = 123456,
-    chains = 4,
-    iter_warmup = 300,
-    iter_sampling = 300
-  )
+  submit_model()
 ```
 
 ```{r, echo = FALSE}
