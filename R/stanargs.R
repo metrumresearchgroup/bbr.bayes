@@ -38,7 +38,7 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
     .args <- .args[order(names(.args))]
   }
   dput(.args, stanargs_path)
-  capture.output(styler::style_file(stanargs_path))
+  utils::capture.output(styler::style_file(stanargs_path))
 
   return(invisible(.mod))
 }
