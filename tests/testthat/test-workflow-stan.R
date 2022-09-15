@@ -30,16 +30,16 @@ fs::file_copy(bbr::yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
 test_that("submit_model.bbi_stan_model works with copied model", {
   # create model
   mod1 <- read_model(file.path(MODEL_DIR_STAN_TEST, STAN_MOD_ID))
-  mod2 <- copy_model_from(mod1, STAN_MOD_ID2, .add_tags = "child")
+  mod2 <- copy_model_from(mod1, STAN_MOD_ID2, .add_tags = "child") %>%
+    set_stanargs(list(iter_warmup = 100,
+                      iter_sampling = 100))
 
   # submit model
   res_output <- capture.output(
     res2 <- submit_model(
       mod2,
       .mode = "local",
-      .overwrite = TRUE,
-      iter_warmup = 100,
-      iter_sampling = 100
+      .overwrite = TRUE
     )
   )
   expect_true(inherits(res2, STAN_FIT_CLASS))

@@ -1,7 +1,7 @@
 Type: Package
 Package: bbr.bayes
 Title: Bayesian modeling with BBR
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     c(person(given = "Seth",
              family = "Green",
@@ -20,6 +20,7 @@ Depends:
 Imports: 
     bbr,
     checkmate,
+    cli,
     cmdstanr,
     ellipsis,
     digest,
@@ -33,7 +34,8 @@ Imports:
     purrr,
     readr,
     rlang,
-    stringr
+    stringr,
+    styler
 Suggests: 
     covr,
     devtools,

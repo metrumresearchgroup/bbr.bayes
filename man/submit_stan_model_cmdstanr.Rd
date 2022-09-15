@@ -4,7 +4,7 @@
 \alias{submit_stan_model_cmdstanr}
 \title{Submit a Stan model via cmdstanr}
 \usage{
-submit_stan_model_cmdstanr(.mod, .mode = c("local"), ..., .overwrite = NULL)
+submit_stan_model_cmdstanr(.mod, .mode = c("local"), .overwrite = NULL)
 }
 \arguments{
 \item{.mod}{An S3 object of class \code{bbi_stan_model}}

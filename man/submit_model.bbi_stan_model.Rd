@@ -8,7 +8,6 @@
   .mod,
   .bbi_args = NULL,
   .mode = c("local"),
-  ...,
   .overwrite = NULL,
   .config_path = NULL,
   .wait = NULL,
@@ -26,8 +25,6 @@ global YAML files).}
 \item{.mode}{Either \code{"sge"}, the default, to submit model(s) to the grid or
 \code{"local"} for local execution. This can be passed directly to this argument
 or set globally with \code{options("bbr.bbi_exe_mode")}.}
-
-\item{...}{args passed through to \code{\link[cmdstanr:model-method-sample]{cmdstanr::sample()}}.}
 
 \item{.overwrite}{Logical to specify whether or not to overwrite existing
 model output from a previous run. If \code{NULL}, the default, will defer to

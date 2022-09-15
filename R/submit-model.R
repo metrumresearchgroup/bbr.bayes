@@ -3,7 +3,6 @@
 #'
 #' The model is executed via [cmdstanr::sample()].
 #'
-#' @param ... args passed through to [cmdstanr::sample()].
 #' @inheritParams bbr::submit_model
 #'
 #' @export
@@ -11,7 +10,6 @@ submit_model.bbi_stan_model <- function(
   .mod,
   .bbi_args = NULL,
   .mode = c("local"),
-  ...,
   .overwrite = NULL,
   .config_path = NULL,
   .wait = NULL,
@@ -26,7 +24,6 @@ submit_model.bbi_stan_model <- function(
   res <- submit_stan_model_cmdstanr(
     .mod,
     .mode = .mode,
-    ...,
     .overwrite = .overwrite
   )
   return(res)
@@ -40,7 +37,6 @@ submit_model.bbi_stan_model <- function(
 #' @keywords internal
 submit_stan_model_cmdstanr <- function(.mod,
                                        .mode = c("local"), # TODO: add sge mode for cmdstanr
-                                       ...,
                                        .overwrite = NULL) {
 
   # check against YAML
@@ -52,14 +48,12 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   out_dir <- get_output_dir(.mod, .check_exists = FALSE)
   standata_json_path <- build_path_from_model(.mod, STANDATA_JSON_SUFFIX)
-  stanargs_path <- build_path_from_model(.mod, STANARGS_SUFFIX)
 
   if (fs::dir_exists(out_dir)) {
     if (isTRUE(.overwrite)) {
       fs::dir_delete(out_dir)
       fs::dir_create(out_dir)
       if(fs::file_exists(standata_json_path)) { fs::file_delete(standata_json_path) }
-      if(fs::file_exists(stanargs_path)) { fs::file_delete(stanargs_path) }
     } else {
       stop(glue("{out_dir} already exists. Pass submit_model(..., .overwrite = TRUE) to delete it and re-run the model."), call. = FALSE)
     }
@@ -69,16 +63,44 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   stanmod <- compile_stanmod(.mod)
 
-  # capture args, check against sample(), then write to stanargs.R
-  valid_stanargs <- methods::formalArgs(stanmod$sample)
-  stanargs <- parse_stanargs(.mod, valid_stanargs, ...)
+  # build args to pass to cmdstanr::sample()
+  stanargs <- get_stanargs(.mod)
+
+  if(is.null(stanargs$seed)) {
+    stop("You must set a seed to run `submit_model()`. Use `set_stanargs(.mod, list(seed = <num>))` to set.", call. = FALSE)
+  }
+
+  cli::cli_h1("Running model with the following specified arguments")
+  cli::cli_h3("(all other arguments will be cmdstan defaults)")
+  print(stanargs)
+
+  stanargs[["output_dir"]] <- get_output_dir(.mod)
+  stanargs[["data"]] <- standata_json_path
 
   # construct input data set and initial estimates
   standata_list <- build_data(.mod, .out_path = standata_json_path)
-  stanargs[["output_dir"]] <- get_output_dir(.mod)
-  stanargs[["data"]] <- standata_json_path
+  # TODO: call the init function ourselves intead of passing it through
+  # # IF they've passed in a function
+  # withr::with_seed(stanargs$seed, {
+  #   # loop over chains and call the func we get from import_stan_init(.mod, .standata = standata_list)
+  #   # and then pass the resulting list to stanargs[["init"]]
+  # })
   stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list)
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
+
+  # check args against sample()
+  invalid_stanargs <- setdiff(
+    names(stanargs),
+    methods::formalArgs(stanmod$sample)
+  )
+  if (length(invalid_stanargs) > 0) {
+    stop(paste(
+      "Attempting to pass invalid stanargs.",
+      "  The following are not accepted by cmdstanr::sample():",
+      paste(invalid_stanargs, collapse = ", "),
+      sep = "\n"
+    ), call. = FALSE)
+  }
 
   # launch model
   res <- do.call(

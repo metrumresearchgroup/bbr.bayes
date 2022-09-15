@@ -40,7 +40,11 @@ newly created model directory.
 
 \strong{\verb{<run>.stan}} - The Stan file.
 
-\strong{\verb{<run>-standata.R}} - This file contains all necessary R code to read in
+\strong{\verb{<run>-stanargs.R}} - Contains a named list with all of the arguments that
+will be passed through to \code{cmdstanr$sample()}. See \code{\link[=set_stanargs]{set_stanargs()}} for
+details on modifying.
+
+\strong{\verb{<run>-standata.R}} - Contains all necessary R code to read in
 any source data and transform them to a Stan-ready data object (list).
 \itemize{
 \item Contains only one function, called \code{make_standata(.dir)}, that takes a
@@ -75,11 +79,6 @@ function that returns a single list..."}. If you intend to use this option,
 your \code{make_init()} function must return \emph{the function} described, \emph{not} the
 "single list...".
 }
-
-\strong{\verb{<run>-stanargs.R}} - A file to capture the arguments passed into
-\code{cmdstanr::sample()} (\code{nChains}, etc.) through \code{\link[bbr:submit_model]{bbr::submit_model()}}. This
-will be written to file with \code{dput()} so that it can be compared, and
-possibly re-used, in the future.
 
 \strong{\verb{<run>}} - This is the binary file created when the \verb{<run>.stan} file is
 compiled by \code{cmdstan}. We \code{.gitignore} this automatically.

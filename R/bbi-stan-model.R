@@ -37,7 +37,11 @@
 #'
 #' **`<run>.stan`** - The Stan file.
 #'
-#' **`<run>-standata.R`** - This file contains all necessary R code to read in
+#' **`<run>-stanargs.R`** - Contains a named list with all of the arguments that
+#' will be passed through to `cmdstanr$sample()`. See [set_stanargs()] for
+#' details on modifying.
+#'
+#' **`<run>-standata.R`** - Contains all necessary R code to read in
 #' any source data and transform them to a Stan-ready data object (list).
 #'
 #' * Contains only one function, called `make_standata(.dir)`, that takes a
@@ -77,11 +81,6 @@
 #' function that returns a single list..."_. If you intend to use this option,
 #' your `make_init()` function must return _the function_ described, _not_ the
 #' "single list...".
-#'
-#' **`<run>-stanargs.R`** - A file to capture the arguments passed into
-#' `cmdstanr::sample()` (`nChains`, etc.) through [bbr::submit_model()]. This
-#' will be written to file with `dput()` so that it can be compared, and
-#' possibly re-used, in the future.
 #'
 #' **`<run>`** - This is the binary file created when the `<run>.stan` file is
 #' compiled by `cmdstan`. We `.gitignore` this automatically.

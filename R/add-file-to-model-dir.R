@@ -127,6 +127,7 @@ scaffold_missing_stan_files <- function(.mod) {
 
   SCAFFOLD_LOOKUP <- rlang::list2(
     !!STANMOD_SUFFIX    := add_stan_file,
+    !!STANARGS_SUFFIX   := stanargs_scaffold,
     !!STANDATA_R_SUFFIX := add_standata_file,
     !!STANINIT_SUFFIX   := add_stan_init
   )
@@ -137,4 +138,11 @@ scaffold_missing_stan_files <- function(.mod) {
   })
 
   return(invisible(NULL))
+}
+
+#' Creates a starter -stanargs.R with empty list
+#'
+#' @param .mod a `bbi_stan_model`
+stanargs_scaffold <- function(.mod) {
+  set_stanargs(.mod, .stanargs = list(), .clear = TRUE)
 }
