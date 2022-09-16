@@ -17,16 +17,22 @@ steps:
   - name: docker.sock
     path: /var/run/docker.sock
 
+- name: Install bbi
+  pull: never
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  commands:
+    - |
+      curl -fSsL "$BBI_URL/$BBI_VERSION/bbi_linux_amd64.tar.gz" |
+        tar -z --extract --to-stdout >/ephemeral/bbi
+    - chmod +x /ephemeral/bbi
+    - /ephemeral/bbi version
 
-# - name: Install bbi
-#   pull: never
-#   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
-#   commands:
-#   - chmod +x install_bbi.sh
-#   - ./install_bbi.sh -p /ephemeral/bbi -v 'v3.2.0'
-#   volumes:
-#   - name: cache
-#     path: /ephemeral
+  environment:
+    BBI_VERSION: v3.2.0
+    BBI_URL: https://github.com/metrumresearchgroup/bbi/releases/download
+  volumes:
+  - name: cache
+    path: /ephemeral
 
 - name: "Check package: R 4.1"
   pull: never
@@ -35,8 +41,10 @@ steps:
   - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
   - git clone -b 1.4.0.9901 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
-  #- R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
-  - R -s -e 'devtools::check(env_vars = c("NOT_CRAN" = "true"))'
+  - /ephemeral/bbi version
+  - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
+  environment:
+    BBI_EXE_PATH: /ephemeral/bbi
   volumes:
   - name: cache
     path: /ephemeral
