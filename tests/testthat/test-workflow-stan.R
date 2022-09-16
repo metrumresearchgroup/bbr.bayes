@@ -81,7 +81,9 @@ test_that("run_log() captures runs correctly", {
 })
 
 test_that("summary_log() captures runs correctly", {
-  log_df <- summary_log(MODEL_DIR_STAN_TEST)
+  withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
+    log_df <- summary_log(MODEL_DIR_STAN_TEST)
+  })
   expect_equal(nrow(log_df), 2)
   expect_identical(basename(log_df[[ABS_MOD_PATH]]), c(STAN_MOD_ID, STAN_MOD_ID2))
   expect_true(all(purrr::map_lgl(log_df[[SL_SUMMARY]], ~inherits(.x, STAN_FIT_CLASS))))

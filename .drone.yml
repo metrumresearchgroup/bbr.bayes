@@ -1,0 +1,147 @@
+---
+kind: pipeline
+type: docker
+name: mpn:latest
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: pull
+  image: omerxx/drone-ecr-auth
+  commands:
+  - $(aws ecr get-login --no-include-email --region us-east-1)
+  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  volumes:
+  - name: docker.sock
+    path: /var/run/docker.sock
+
+- name: Install bbi
+  pull: never
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  commands:
+    - |
+      curl -fSsL "$BBI_URL/$BBI_VERSION/bbi_linux_amd64.tar.gz" |
+        tar -z --extract --to-stdout >/ephemeral/bbi
+    - chmod +x /ephemeral/bbi
+    - /ephemeral/bbi version
+
+  environment:
+    BBI_VERSION: v3.2.0
+    BBI_URL: https://github.com/metrumresearchgroup/bbi/releases/download
+  volumes:
+  - name: cache
+    path: /ephemeral
+
+- name: "Check package: R 4.1"
+  pull: never
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  commands:
+  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - git clone -b 1.4.0.9901 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
+  - R -s -e 'devtools::install("/tmp/bbr")'
+  - R -s -e 'cmdstanr::check_cmdstan_toolchain(fix = TRUE)' -e 'cmdstanr::install_cmdstan(cores = 2)'
+  - /ephemeral/bbi version
+  - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
+  environment:
+    BBI_EXE_PATH: /ephemeral/bbi
+  volumes:
+  - name: cache
+    path: /ephemeral
+
+volumes:
+- name: docker.sock
+  host:
+    path: /var/run/docker.sock
+- name: cache
+  temp: {}
+
+trigger:
+  event:
+    exclude:
+    - promote
+
+---
+kind: pipeline
+type: docker
+name: bbr.bayes-release
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: pull
+  image: omerxx/drone-ecr-auth
+  commands:
+  - $(aws ecr get-login --no-include-email --region us-east-1)
+  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  volumes:
+  - name: docker.sock
+    path: /var/run/docker.sock
+
+# - name: Install bbi
+#   pull: never
+#   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+#   commands:
+#   - chmod +x install_bbi.sh
+#   - ./install_bbi.sh -p /ephemeral/bbi -v 'v3.2.0'
+#   volumes:
+#   - name: cache
+#     path: /ephemeral
+
+- name: Build package
+  pull: never
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  commands:
+  - git config --global user.email drone@metrumrg.com
+  - git config --global user.name Drony
+  - git fetch --tags
+  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - git clone -b 1.4.0.9901 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
+  - R -s -e 'devtools::install("/tmp/bbr")'
+  - R -s -e 'pkgpub::create_tagged_repo(.dir = '"'"'/ephemeral'"'"')'
+  environment:
+    NOT_CRAN: true
+  volumes:
+  - name: cache
+    path: /ephemeral
+
+- name: "Publish package: ${DRONE_TAG}"
+  pull: if-not-exists
+  image: plugins/s3
+  settings:
+    bucket: mpn.metworx.dev
+    source: /ephemeral/${DRONE_TAG}/**/*
+    strip_prefix: /ephemeral/${DRONE_TAG}/
+    target: /releases/${DRONE_REPO_NAME}/${DRONE_TAG}
+  volumes:
+  - name: cache
+    path: /ephemeral
+
+- name: "Publish package: latest_tag"
+  pull: if-not-exists
+  image: plugins/s3
+  settings:
+    bucket: mpn.metworx.dev
+    source: /ephemeral/${DRONE_TAG}/**/*
+    strip_prefix: /ephemeral/${DRONE_TAG}/
+    target: /releases/${DRONE_REPO_NAME}/latest_tag
+  volumes:
+  - name: cache
+    path: /ephemeral
+
+volumes:
+- name: docker.sock
+  host:
+    path: /var/run/docker.sock
+- name: cache
+  temp: {}
+
+trigger:
+  event:
+  - tag
+
+depends_on:
+- mpn:latest
