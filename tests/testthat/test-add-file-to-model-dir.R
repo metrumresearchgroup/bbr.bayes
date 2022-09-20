@@ -57,10 +57,10 @@ test_that("add_stan_init() works correctly for scaffold", {
 
   # check default
   .m <- add_stan_init(.m)
-  expect_equal(
-    STANINIT_SCAFFOLD_MD5,
-    as.character(tools::md5sum(build_path_from_model(.m, STANINIT_SUFFIX)))
-  )
+  expect_true(any(grepl(
+    "return\\(NULL\\)",
+    readLines(build_path_from_model(.m, STANINIT_SUFFIX))
+  )))
 
   # check passing .source_file
   .sf <- build_path_from_model(STAN_MOD1, STANINIT_SUFFIX)
