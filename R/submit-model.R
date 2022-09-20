@@ -86,7 +86,7 @@ submit_stan_model_cmdstanr <- function(.mod,
   #   # loop over chains and call the func we get from import_stan_init(.mod, .standata = standata_list)
   #   # and then pass the resulting list to stanargs[["init"]]
   # })
-  stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list)
+  stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list, .stanargs = stanargs)
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
 
   # check args against sample()

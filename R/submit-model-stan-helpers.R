@@ -11,9 +11,10 @@
 #'
 #' @param .mod a `bbi_stan_model` object
 #' @param .standata the data list that is returned from [build_data()] for this model
+#' @param .stanargs the named list of arguments that will be passed to [cmdstanr::sample()]
 #'
 #' @keywords internal
-import_stan_init <- function(.mod, .standata) {
+import_stan_init <- function(.mod, .standata, .stanargs) {
   # check for <run>-init.R file
   staninit_path <- build_path_from_model(.mod, STANINIT_SUFFIX)
   if (!fs::file_exists(staninit_path)) {
@@ -25,7 +26,7 @@ import_stan_init <- function(.mod, .standata) {
   make_init <- safe_source_function(staninit_path, "make_init")
   init_res <- safe_call_sourced(
     .func = make_init,
-    .args = list(.data = .standata),
+    .args = list(.data = .standata, .args = .stanargs),
     .file = staninit_path
   )
 
