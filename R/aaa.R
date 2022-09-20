@@ -28,7 +28,6 @@ STAN_MODEL_FILES_TO_CHECK <- c(
 
 STAN_RESERVED_ARGS <- c(
   "data",
-  "init",
   "output_dir"
 )
 

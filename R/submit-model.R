@@ -65,6 +65,7 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   # build args to pass to cmdstanr::sample()
   stanargs <- get_stanargs(.mod)
+  check_reserved_stanargs(stanargs)
 
   if(is.null(stanargs$seed)) {
     stop("You must set a seed to run `submit_model()`. Use `set_stanargs(.mod, list(seed = <num>))` to set.", call. = FALSE)
