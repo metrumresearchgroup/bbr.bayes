@@ -17,10 +17,6 @@
 import_stan_init <- function(.mod, .standata, .stanargs) {
   # check for <run>-init.R file
   staninit_path <- build_path_from_model(.mod, STANINIT_SUFFIX)
-  if (!fs::file_exists(staninit_path)) {
-    message(paste("Using default initial values because no file found at", staninit_path))
-    return(NULL)
-  }
 
   # source and call function
   make_init <- safe_source_function(staninit_path, "make_init")
@@ -33,6 +29,14 @@ import_stan_init <- function(.mod, .standata, .stanargs) {
   # MAYBE FIRST DO SOME CHECKING?
   # that the returned value is actually something cmdstanr::sample() can take...
   # either a function or a list of lists that all have the same keys, etc.?
+
+  # TODO: call the init function ourselves intead of passing it through
+  # # IF they've passed in a function
+  # withr::with_seed(stanargs$seed, {
+  #   # loop over chains and call the func we get from import_stan_init(.mod, .standata = standata_list)
+  #   # and then pass the resulting list to stanargs[["init"]]
+  # })
+
   return(init_res)
 }
 

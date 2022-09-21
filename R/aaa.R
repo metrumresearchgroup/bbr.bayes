@@ -93,12 +93,12 @@ STANINIT_SCAFFOLD_STRING <- "# Create Stan initial values
 #   for details.
 #
 # `.data` represents the list returned from `make_standata()` for this model.
-#   This is provided in case any of your initial values are dependant on some
+#   This is provided in case any of your initial values are dependent on some
 #   aspect of the data (e.g. the number of rows).
 #
-# `.args` represents the list attached arguments that will be passed through to
+# `.args` represents the list of attached arguments that will be passed through to
 #   cmdstanr::sample(). This is provided in case any of your initial values are
-#   dependant on any of these arguments (e.g. the number of chains).
+#   dependent on any of these arguments (e.g. the number of chains).
 #
 # Note: you _don't_ need to pass anything to either of these arguments, you only
 #   use it within the function. `bbr` will pass in the correct objects when it calls
