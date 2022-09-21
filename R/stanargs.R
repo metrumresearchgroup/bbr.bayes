@@ -18,13 +18,7 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
   }
 
   # check passed args
-  checkmate::assert_list(.stanargs, names = "named")
-  if (any(names(.stanargs) %in% STAN_RESERVED_ARGS)) {
-    stop(paste(
-      "Cannot add any of the following args to model because they are parsed internally from the model object:",
-      paste(STAN_RESERVED_ARGS, collapse = ', ')
-    ))
-  }
+  check_reserved_stanargs(.stanargs)
 
   # add or overwrite args
   # TODO: do we need to do any evaluation of variables or anything here?
@@ -63,4 +57,21 @@ print.bbr_stanargs <- function(x, ...) {
   }) %>%
     rlang::set_names("*") %>%
     cli::cli_bullets()
+}
+
+#' @keywords internal
+check_reserved_stanargs <- function(.stanargs) {
+  checkmate::assert_list(.stanargs, names = "named")
+  if (any(names(.stanargs) %in% "init")) {
+    stop(paste(
+      "Cannot pass `init` via stanargs. Please add initial values in the `{.mod}-init.R` file.",
+      "You can use `open_init_file(.mod)` to easily open this file for editing."
+    ))
+  }
+  if (any(names(.stanargs) %in% STAN_RESERVED_ARGS)) {
+    stop(paste(
+      "Cannot add any of the following args to model because they are parsed internally from the model object:",
+      paste(STAN_RESERVED_ARGS, collapse = ', ')
+    ))
+  }
 }

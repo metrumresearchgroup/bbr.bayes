@@ -61,7 +61,7 @@ copy_stan_files <- function(.parent_mod, .new_model, .overwrite) {
     )
   }
 
-  purrr::walk(STAN_MODEL_FILES_TO_CHECK, function(.s) {
+  purrr::walk(STAN_MODEL_REQ_FILES, function(.s) {
     parent_file <- build_path_from_model(.parent_mod, .s)
     if (fs::file_exists(parent_file)) {
       fs::file_copy(

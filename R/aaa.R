@@ -18,17 +18,12 @@ STAN_MODEL_FIT_RDS <- file.path(STAN_OUTDIR_SUFFIX, "fit.RDS")
 STAN_MODEL_REQ_FILES <- c(
   STANMOD_SUFFIX,
   STANDATA_R_SUFFIX,
+  STANINIT_SUFFIX,
   STANARGS_SUFFIX
-)
-
-STAN_MODEL_FILES_TO_CHECK <- c(
-  STAN_MODEL_REQ_FILES,
-  STANINIT_SUFFIX
 )
 
 STAN_RESERVED_ARGS <- c(
   "data",
-  "init",
   "output_dir"
 )
 
@@ -97,23 +92,30 @@ STANINIT_SCAFFOLD_STRING <- "# Create Stan initial values
 #   of `cmdstanr::sample()`. There are several options; see `?cmdstanr::sample`
 #   for details.
 #
-# The `.data` represents the list returned from `make_standata()` for this model.
-#   This is provided in case any of your initial values are dependant on some
-#   aspect of the data (e.g. the number of rows). Note: you _don't_ need to pass
-#   anything to this argument, you only use it within the function. `bbr` will
-#   pass in the correct data when it calls `make_init()` under the hood.
-make_init <- function(.data) {
-  # return list of initial estimates that can be passed to cmdstanr
+# `.data` represents the list returned from `make_standata()` for this model.
+#   This is provided in case any of your initial values are dependent on some
+#   aspect of the data (e.g. the number of rows).
+#
+# `.args` represents the list of attached arguments that will be passed through to
+#   cmdstanr::sample(). This is provided in case any of your initial values are
+#   dependent on any of these arguments (e.g. the number of chains).
+#
+# Note: you _don't_ need to pass anything to either of these arguments, you only
+#   use it within the function. `bbr` will pass in the correct objects when it calls
+#   `make_init()` under the hood.
+#
+make_init <- function(.data, .args) {
+  # returning NULL causes cmdstanr::sample() to use the default initial values
+  return(NULL)
 }"
 
-STANINIT_SCAFFOLD_MD5 <- "72b7704cd334fbecf8d7b8ace7138629"
 STANARGS_SCAFFOLD_MD5 <- "8b11f83c3293f3b89a30807b3b69b58e"
 
 STAN_SCAFFOLD_MD5_VEC <- c(
   STANMOD_SCAFFOLD_MD5,
   STANDATA_SCAFFOLD_MD5,
-  STANINIT_SCAFFOLD_MD5,
   STANARGS_SCAFFOLD_MD5
+  # NOTE: we don't check -init.R because it is _not_ a scaffold, it returns a working default value
 )
 
 MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model` are missing"

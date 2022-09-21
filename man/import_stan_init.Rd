@@ -4,12 +4,14 @@
 \alias{import_stan_init}
 \title{Pull in Stan init file}
 \usage{
-import_stan_init(.mod, .standata)
+import_stan_init(.mod, .standata, .stanargs)
 }
 \arguments{
 \item{.mod}{a \code{bbi_stan_model} object}
 
 \item{.standata}{the data list that is returned from \code{\link[=build_data]{build_data()}} for this model}
+
+\item{.stanargs}{the named list of arguments that will be passed to \code{\link[cmdstanr:model-method-sample]{cmdstanr::sample()}}}
 }
 \description{
 Sources the \code{-init.R} file associated with a model

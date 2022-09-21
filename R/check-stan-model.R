@@ -34,7 +34,7 @@ check_stan_model <- function(.mod, .error = FALSE) {
   }
 
   # checking if any of the files found are only scaffolds
-  files_to_check <- build_path_from_model(.mod, STAN_MODEL_FILES_TO_CHECK)
+  files_to_check <- build_path_from_model(.mod, STAN_MODEL_REQ_FILES)
   scaffold_bool <- purrr::map_lgl(files_to_check, function(.f) {
     tools::md5sum(.f) %in% STAN_SCAFFOLD_MD5_VEC
   })
