@@ -3,10 +3,13 @@
 # utils::file.edit(). RStudio overrides file.edit() so that it opens up a tab.
 # utils::file.edit(), on the other hand, pops up a window that the user must
 # save before returning to RStudio.
-file_edit <- if (exists("file.edit", envir = globalenv())) {
-  get("file.edit", envir = globalenv())
-} else {
-  utils::file.edit
+file_edit <- function(...) {
+  fn <- if (exists("file.edit", envir = globalenv())) {
+    get("file.edit", envir = globalenv())
+  } else {
+    utils::file.edit
+  }
+  fn(...)
 }
 
 #' Open Stan model file in a text editor
