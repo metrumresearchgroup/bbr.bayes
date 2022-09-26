@@ -19,6 +19,7 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
 
   # check passed args
   check_reserved_stanargs(.stanargs)
+  check_unknown_stanargs(.stanargs)
 
   # add or overwrite args
   # TODO: do we need to do any evaluation of variables or anything here?
@@ -74,4 +75,30 @@ check_reserved_stanargs <- function(.stanargs) {
       paste(STAN_RESERVED_ARGS, collapse = ', ')
     ))
   }
+}
+
+check_unknown_stanargs <- function(args) {
+  invalid_stanargs <- setdiff(names(args), get_sample_params())
+  if (length(invalid_stanargs) > 0) {
+    stop("The following arguments are not accepted by cmdstanr::sample():\n",
+         paste(invalid_stanargs, collapse = ", "),
+         call. = FALSE)
+  }
+}
+
+known_params <- new.env(parent = emptyenv())
+
+get_sample_params <- function() {
+  kw <- "sample"
+  if (exists(kw, known_params)) {
+    return(get(kw, envir = known_params))
+  }
+
+  mfile <- system.file("model", "stan", "fxa", "fxa.stan",
+                       mustWork = TRUE, package = "bbr.bayes")
+  mod <- cmdstanr::cmdstan_model(mfile, compile = FALSE)
+  params <- methods::formalArgs(mod$sample)
+  assign(kw, params, envir = known_params)
+
+  return(params)
 }
