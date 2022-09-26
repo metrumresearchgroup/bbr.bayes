@@ -83,19 +83,7 @@ submit_stan_model_cmdstanr <- function(.mod,
   stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list, .stanargs = stanargs)
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
 
-  # check args against sample()
-  invalid_stanargs <- setdiff(
-    names(stanargs),
-    methods::formalArgs(stanmod$sample)
-  )
-  if (length(invalid_stanargs) > 0) {
-    stop(paste(
-      "Attempting to pass invalid stanargs.",
-      "  The following are not accepted by cmdstanr::sample():",
-      paste(invalid_stanargs, collapse = ", "),
-      sep = "\n"
-    ), call. = FALSE)
-  }
+  check_unknown_stanargs(stanargs)
 
   # launch model
   res <- do.call(

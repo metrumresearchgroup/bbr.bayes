@@ -31,6 +31,15 @@ test_that("set_stanargs catches init", {
   )
 })
 
+test_that("set_stanargs checks for unknown args", {
+  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite = TRUE)
+  withr::defer(cleanup_model(mod2))
+
+  expect_error(
+    set_stanargs(mod2, list(youdontknowme = NULL)),
+    regexp = "not accepted"
+  )
+})
 
 test_that("get_stanargs returns expected list", {
   mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite =T)
