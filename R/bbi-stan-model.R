@@ -62,8 +62,8 @@
 #' **`<run>-init.R`** - This file contains all necessary R code to create the
 #' initial values passed to `cmdstanr::sample()`. This file is a lot like
 #' `<run>-standata.R` (discussed above) and a scaffold can be created with
-#' [add_stan_init()]. However, this file is _not_ necessary. If it is missing,
-#' Stan will fall back to the [default initial
+#' [add_staninit_file()]. However, this file is _not_ necessary. If it is
+#' missing, Stan will fall back to the [default initial
 #' values](https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values).
 #'
 #' * Contains only one function, called `make_init(.data)`, that takes a single
@@ -112,8 +112,8 @@
 #' * **[build_path_from_model()]** - Builds the absolute path a file in the
 #' model folder from a model object and a suffix.
 #'
-#' * **[add_stan_file()], [add_standata_file()], [add_stan_init()]** - Helpers
-#' for adding one of the necessary files to the model folder.
+#' * **[add_stanmod_file()], [add_standata_file()], [add_staninit_file()]** -
+#' Helpers for adding one of the necessary files to the model folder.
 #'
 #' * **[model_diff()]** - Compare necessary files between two models. Defaults
 #' to comparing `<run>.stan` files.

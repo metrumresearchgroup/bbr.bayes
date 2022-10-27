@@ -17,7 +17,7 @@ NULL
 
 #' @describeIn add_file_to_model_dir Adds a `<run>.stan` model file.
 #' @export
-add_stan_file <- function(.mod, .source_file = NULL) {
+add_stanmod_file <- function(.mod, .source_file = NULL) {
   add_file_to_model_dir_impl(
     .mod,
     STAN_MOD_CLASS,
@@ -41,7 +41,7 @@ add_standata_file <- function(.mod, .source_file = NULL) {
 
 #' @describeIn add_file_to_model_dir Adds a `<run>-init.R` file for building the initial values. See `?`[bbi_stan_model] for details.
 #' @export
-add_stan_init <- function(.mod, .source_file = NULL) {
+add_staninit_file <- function(.mod, .source_file = NULL) {
   add_file_to_model_dir_impl(
     .mod,
     STAN_MOD_CLASS,
@@ -126,10 +126,10 @@ scaffold_missing_stan_files <- function(.mod) {
   missing_files <- STAN_MODEL_REQ_FILES[!fs::file_exists(files_to_check)]
 
   SCAFFOLD_LOOKUP <- rlang::list2(
-    !!STANMOD_SUFFIX    := add_stan_file,
+    !!STANMOD_SUFFIX    := add_stanmod_file,
     !!STANARGS_SUFFIX   := stanargs_scaffold,
     !!STANDATA_R_SUFFIX := add_standata_file,
-    !!STANINIT_SUFFIX   := add_stan_init
+    !!STANINIT_SUFFIX   := add_staninit_file
   )
 
   purrr::walk(missing_files, function(.f) {

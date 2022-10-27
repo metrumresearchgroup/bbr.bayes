@@ -1,7 +1,7 @@
 context("adding files to Stan models")
 
-test_that("add_stan_file() works correctly for scaffold", {
-  mod_name <- "testmod_add_stan_file1"
+test_that("add_stanmod_file() works correctly for scaffold", {
+  mod_name <- "testmod_add_stanmod_file1"
   suppressMessages(
     .m <- new_model(mod_name, .model_type = "stan")
   )
@@ -9,7 +9,7 @@ test_that("add_stan_file() works correctly for scaffold", {
 
   # check default
   fs::file_delete(get_model_path(.m))
-  .m <- add_stan_file(.m)
+  .m <- add_stanmod_file(.m)
   expect_equal(
     STANMOD_SCAFFOLD_MD5,
     as.character(tools::md5sum(get_model_path(.m)))
@@ -17,7 +17,7 @@ test_that("add_stan_file() works correctly for scaffold", {
 
   # check passing .source_file
   .sf <- get_model_path(STAN_MOD1)
-  .m <- add_stan_file(.m, .source_file = .sf)
+  .m <- add_stanmod_file(.m, .source_file = .sf)
   expect_equal(
     as.character(tools::md5sum(.sf)),
     as.character(tools::md5sum(get_model_path(.m)))
@@ -48,15 +48,15 @@ test_that("add_standata_file() works correctly for scaffold", {
   )
 })
 
-test_that("add_stan_init() works correctly for scaffold", {
-  mod_name <- "testmod_add_stan_init1"
+test_that("add_staninit_file() works correctly for scaffold", {
+  mod_name <- "testmod_add_staninit_file1"
   suppressMessages(
     .m <- new_model(mod_name, .model_type = "stan")
   )
   on.exit(cleanup_model(.m))
 
   # check default
-  .m <- add_stan_init(.m)
+  .m <- add_staninit_file(.m)
   expect_true(any(grepl(
     "return\\(NULL\\)",
     readLines(build_path_from_model(.m, STANINIT_SUFFIX))
@@ -64,7 +64,7 @@ test_that("add_stan_init() works correctly for scaffold", {
 
   # check passing .source_file
   .sf <- build_path_from_model(STAN_MOD1, STANINIT_SUFFIX)
-  .m <- add_stan_init(.m, .source_file = .sf)
+  .m <- add_staninit_file(.m, .source_file = .sf)
   expect_equal(
     as.character(tools::md5sum(.sf)),
     as.character(tools::md5sum(build_path_from_model(.m, STANINIT_SUFFIX)))

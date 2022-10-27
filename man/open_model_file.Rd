@@ -2,16 +2,16 @@
 % Please edit documentation in R/open.R
 \name{open_model_file}
 \alias{open_model_file}
-\alias{open_stan_file}
+\alias{open_stanmod_file}
 \alias{open_standata_file}
-\alias{open_init_file}
+\alias{open_staninit_file}
 \title{Open Stan model file in a text editor}
 \usage{
-open_stan_file(.mod)
+open_stanmod_file(.mod)
 
 open_standata_file(.mod)
 
-open_init_file(.mod)
+open_staninit_file(.mod)
 }
 \arguments{
 \item{.mod}{a \code{bbi_stan_model}}
@@ -23,10 +23,10 @@ jumping to a model file in RStudio or any other editor supported by
 }
 \section{Functions}{
 \itemize{
-\item \code{open_stan_file()}: Open \verb{<run>.stan}.
+\item \code{open_stanmod_file()}: Open \verb{<run>.stan}.
 
 \item \code{open_standata_file()}: Open \verb{<run>-standata.R}.
 
-\item \code{open_init_file()}: Open \verb{<run>-init.R}.
+\item \code{open_staninit_file()}: Open \verb{<run>-init.R}.
 
 }}
