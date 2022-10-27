@@ -3,6 +3,13 @@
 #' @importFrom rlang := %||%
 NULL
 
+### NONMEM Bayes
+
+NMBAYES_MOD_CLASS <- "bbi_nmbayes_model"
+NMBAYES_SUM_CLASS <- "bbi_nmbayes_summary"
+
+### Stan
+
 STAN_MOD_CLASS <- "bbi_stan_model"
 STAN_SUM_CLASS <- "bbi_stan_summary"
 STAN_FIT_CLASS <- "CmdStanMCMC"
