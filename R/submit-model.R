@@ -38,19 +38,19 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
   ctl[row_extrasend] <- str_replace(ctl[row_extrasend], "extrasend", "../extrasend")
 
   walk(seq_len(n_chain), function(.chain) {
-    est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue::glue("ISAMPLE={.chain}"))
-    est_bayes_i <- str_replace(est_bayes, "SEED=[0-9]+", glue::glue("SEED={.chain}"))
+    est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue("ISAMPLE={.chain}"))
+    est_bayes_i <- str_replace(est_bayes, "SEED=[0-9]+", glue("SEED={.chain}"))
     ctl_i <- ctl
     ctl_i[row_chain] <- est_chain_i
     ctl_i[row_bayes] <- est_bayes_i
     write_lines(ctl_i, file.path(
       .model_dir,
-      glue::glue("{.run}/{.run}_{.chain}.ctl"))
+      glue("{.run}/{.run}_{.chain}.ctl"))
     )
 
     mod <- new_model(
-      file.path(.model_dir, .run, glue::glue("{.run}_{.chain}")),
-      .description = glue::glue("Chain {.chain}"),
+      file.path(.model_dir, .run, glue("{.run}_{.chain}")),
+      .description = glue("Chain {.chain}"),
       .overwrite = TRUE
     )
 
