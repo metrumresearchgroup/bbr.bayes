@@ -2,7 +2,7 @@
 ### NONMEM Bayes
 
 #' Run Bayes chains
-#' 
+#'
 #' Run multiple chains of a Bayes model after initial estimates have been
 #' generated
 #'
@@ -13,30 +13,30 @@
 run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
   mod <- read_model(file.path(.model_dir, .run))
   ctl <- read_lines(get_model_path(mod))
-  
+
   row_bayes <- str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
   est_bayes <- ctl[row_bayes]
   est_bayes <- str_replace(est_bayes, "^;", "")
   ctl[row_bayes] <- est_bayes
-  
+
   row_table <- str_detect(ctl, ";\\s*\\$TABLE")
   block_table <- ctl[row_table]
   block_table <- str_replace(block_table, "^;", "")
   ctl[row_table] <- block_table
-  
+
   row_chain <- str_detect(ctl, "METHOD=CHAIN")
   est_chain <- ctl[row_chain]
   n_chain <- as.numeric(str_extract(est_chain, "(?<=NSAMPLE=)[0-9]+"))
   est_chain <- str_replace(est_chain, "NSAMPLE=[0-9]+", "NSAMPLE=0")
   est_chain <- str_replace(est_chain, "FILE=", "FILE=../")
-  
+
   row_data <- str_detect(ctl, "\\$DATA")
   data_record <- ctl[row_data]
   ctl[row_data] <- str_replace(data_record, "\\$DATA\\s+", "$DATA ../")
-  
+
   row_extrasend <- str_detect(ctl, "extrasend")
   ctl[row_extrasend] <- str_replace(ctl[row_extrasend], "extrasend", "../extrasend")
-  
+
   walk(seq_len(n_chain), function(.chain) {
     #cat(.chain, "\n")
     est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue::glue("ISAMPLE={.chain}"))
@@ -50,14 +50,14 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
       .model_dir,
       glue::glue("{.run}/{.run}_{.chain}.ctl"))
     )
-    
+
     mod <- new_model(
       #glue::glue("./{.run}/{.run}.{.chain}.yaml"),
       file.path(.model_dir, .run, glue::glue("{.run}_{.chain}")),
       .description = glue::glue("Chain {.chain}"),
       .overwrite = TRUE
     )
-    
+
     proc <- submit_model(
       mod,
       #.directory = file.path(.model_dir, .run),
