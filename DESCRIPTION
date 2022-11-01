@@ -10,7 +10,11 @@ Authors@R:
       person(given = "Kyle",
              family = "Meyer",
              role = "aut",
-             email = "kylem@metrumrg.com"))
+             email = "kylem@metrumrg.com"),
+      person(given = "Tim",
+             family = "Waterhouse",
+             role = "aut",
+             email = "timw@metrumrg.com"))
 Description: This package extends the BBR package for Bayesian modeling.
     The current focus is on supporting 'Stan' via the 'CmdStanR'
     interface.

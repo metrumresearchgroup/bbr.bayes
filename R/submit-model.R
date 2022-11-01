@@ -1,4 +1,75 @@
 
+### NONMEM Bayes
+
+#' Run Bayes chains
+#' 
+#' Run multiple chains of a Bayes model after initial estimates have been
+#' generated
+#'
+#' @param .model_dir path to directory containing model
+#' @param .run run name
+#' @param .bbi_args list of arguments to be passed to `submit_model()`
+run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
+  mod <- read_model(file.path(.model_dir, .run))
+  ctl <- read_lines(get_model_path(mod))
+  
+  row_bayes <- str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
+  est_bayes <- ctl[row_bayes]
+  est_bayes <- str_replace(est_bayes, "^;", "")
+  ctl[row_bayes] <- est_bayes
+  
+  row_table <- str_detect(ctl, ";\\s*\\$TABLE")
+  block_table <- ctl[row_table]
+  block_table <- str_replace(block_table, "^;", "")
+  ctl[row_table] <- block_table
+  
+  row_chain <- str_detect(ctl, "METHOD=CHAIN")
+  est_chain <- ctl[row_chain]
+  n_chain <- as.numeric(str_extract(est_chain, "(?<=NSAMPLE=)[0-9]+"))
+  est_chain <- str_replace(est_chain, "NSAMPLE=[0-9]+", "NSAMPLE=0")
+  est_chain <- str_replace(est_chain, "FILE=", "FILE=../")
+  
+  row_data <- str_detect(ctl, "\\$DATA")
+  data_record <- ctl[row_data]
+  ctl[row_data] <- str_replace(data_record, "\\$DATA\\s+", "$DATA ../")
+  
+  row_extrasend <- str_detect(ctl, "extrasend")
+  ctl[row_extrasend] <- str_replace(ctl[row_extrasend], "extrasend", "../extrasend")
+  
+  walk(seq_len(n_chain), function(.chain) {
+    #cat(.chain, "\n")
+    est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue::glue("ISAMPLE={.chain}"))
+    #est_chain_i <- str_replace(est_chain_i, "SEED=[0-9]+", glue::glue("SEED={.chain}"))
+    est_bayes_i <- str_replace(est_bayes, "SEED=[0-9]+", glue::glue("SEED={.chain}"))
+    #cat(est_chain_i, "\n")
+    ctl_i <- ctl
+    ctl_i[row_chain] <- est_chain_i
+    ctl_i[row_bayes] <- est_bayes_i
+    write_lines(ctl_i, file.path(
+      .model_dir,
+      glue::glue("{.run}/{.run}_{.chain}.ctl"))
+    )
+    
+    mod <- new_model(
+      #glue::glue("./{.run}/{.run}.{.chain}.yaml"),
+      file.path(.model_dir, .run, glue::glue("{.run}_{.chain}")),
+      .description = glue::glue("Chain {.chain}"),
+      .overwrite = TRUE
+    )
+    
+    proc <- submit_model(
+      mod,
+      #.directory = file.path(.model_dir, .run),
+      .bbi_args = .bbi_args,
+      .mode = .mode,
+      .config_path = file.path(.model_dir, "bbi.yaml")
+      #.dry_run = FALSE
+    )
+  })
+}
+
+### Stan
+
 #' Submit model based on a `bbi_stan_model` object
 #'
 #' The model is executed via [cmdstanr::sample()].
