@@ -38,11 +38,8 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
   ctl[row_extrasend] <- str_replace(ctl[row_extrasend], "extrasend", "../extrasend")
 
   walk(seq_len(n_chain), function(.chain) {
-    #cat(.chain, "\n")
     est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue::glue("ISAMPLE={.chain}"))
-    #est_chain_i <- str_replace(est_chain_i, "SEED=[0-9]+", glue::glue("SEED={.chain}"))
     est_bayes_i <- str_replace(est_bayes, "SEED=[0-9]+", glue::glue("SEED={.chain}"))
-    #cat(est_chain_i, "\n")
     ctl_i <- ctl
     ctl_i[row_chain] <- est_chain_i
     ctl_i[row_bayes] <- est_bayes_i
@@ -52,7 +49,6 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
     )
 
     mod <- new_model(
-      #glue::glue("./{.run}/{.run}.{.chain}.yaml"),
       file.path(.model_dir, .run, glue::glue("{.run}_{.chain}")),
       .description = glue::glue("Chain {.chain}"),
       .overwrite = TRUE
@@ -60,11 +56,9 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
 
     proc <- submit_model(
       mod,
-      #.directory = file.path(.model_dir, .run),
       .bbi_args = .bbi_args,
       .mode = .mode,
       .config_path = file.path(.model_dir, "bbi.yaml")
-      #.dry_run = FALSE
     )
   })
 }
