@@ -12,38 +12,50 @@
 #' @noRd
 run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
   mod <- read_model(file.path(.model_dir, .run))
-  ctl <- read_lines(get_model_path(mod))
+  ctl <- readr::read_lines(get_model_path(mod))
 
-  row_bayes <- str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
+  row_bayes <- stringr::str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
   est_bayes <- ctl[row_bayes]
-  est_bayes <- str_replace(est_bayes, "^;", "")
+  est_bayes <- stringr::str_replace(est_bayes, "^;", "")
   ctl[row_bayes] <- est_bayes
 
-  row_table <- str_detect(ctl, ";\\s*\\$TABLE")
+  row_table <- stringr::str_detect(ctl, ";\\s*\\$TABLE")
   block_table <- ctl[row_table]
-  block_table <- str_replace(block_table, "^;", "")
+  block_table <- stringr::str_replace(block_table, "^;", "")
   ctl[row_table] <- block_table
 
-  row_chain <- str_detect(ctl, "METHOD=CHAIN")
+  row_chain <- stringr::str_detect(ctl, "METHOD=CHAIN")
   est_chain <- ctl[row_chain]
-  n_chain <- as.numeric(str_extract(est_chain, "(?<=NSAMPLE=)[0-9]+"))
-  est_chain <- str_replace(est_chain, "NSAMPLE=[0-9]+", "NSAMPLE=0")
-  est_chain <- str_replace(est_chain, "FILE=", "FILE=../")
+  n_chain <- as.numeric(stringr::str_extract(est_chain, "(?<=NSAMPLE=)[0-9]+"))
+  est_chain <- stringr::str_replace(est_chain, "NSAMPLE=[0-9]+", "NSAMPLE=0")
+  est_chain <- stringr::str_replace(est_chain, "FILE=", "FILE=../")
 
-  row_data <- str_detect(ctl, "\\$DATA")
+  row_data <- stringr::str_detect(ctl, "\\$DATA")
   data_record <- ctl[row_data]
-  ctl[row_data] <- str_replace(data_record, "\\$DATA\\s+", "$DATA ../")
+  ctl[row_data] <- stringr::str_replace(
+    data_record,
+    "\\$DATA\\s+",
+    "$DATA ../")
 
-  row_extrasend <- str_detect(ctl, "extrasend")
-  ctl[row_extrasend] <- str_replace(ctl[row_extrasend], "extrasend", "../extrasend")
+  row_extrasend <- stringr::str_detect(ctl, "extrasend")
+  ctl[row_extrasend] <- stringr::str_replace(
+    ctl[row_extrasend],
+    "extrasend",
+    "../extrasend")
 
-  walk(seq_len(n_chain), function(.chain) {
-    est_chain_i <- str_replace(est_chain, "ISAMPLE=0", glue("ISAMPLE={.chain}"))
-    est_bayes_i <- str_replace(est_bayes, "SEED=[0-9]+", glue("SEED={.chain}"))
+  purrr::walk(seq_len(n_chain), function(.chain) {
+    est_chain_i <- stringr::str_replace(
+      est_chain,
+      "ISAMPLE=0",
+      glue("ISAMPLE={.chain}"))
+    est_bayes_i <- stringr::str_replace(
+      est_bayes,
+      "SEED=[0-9]+",
+      glue("SEED={.chain}"))
     ctl_i <- ctl
     ctl_i[row_chain] <- est_chain_i
     ctl_i[row_bayes] <- est_bayes_i
-    write_lines(ctl_i, file.path(
+    readr::write_lines(ctl_i, file.path(
       .model_dir,
       glue("{.run}/{.run}_{.chain}.ctl"))
     )
