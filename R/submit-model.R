@@ -6,13 +6,13 @@
 #' Run multiple chains of a Bayes model after initial estimates have been
 #' generated
 #'
-#' @param .model_dir path to directory containing model
-#' @param .run run name
+#' @param .mod A `bbi_nmbayes_model` object.
 #' @param ... Arguments passed to [bbr::submit_model()].
 #' @noRd
-run_chains <- function(.model_dir, .run, ...) {
-  mod <- read_model(file.path(.model_dir, .run))
-  ctl <- readr::read_lines(get_model_path(mod))
+run_chains <- function(.mod, ...) {
+  checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
+
+  ctl <- readr::read_lines(get_model_path(.mod))
 
   row_bayes <- stringr::str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
   est_bayes <- ctl[row_bayes]
@@ -43,6 +43,8 @@ run_chains <- function(.model_dir, .run, ...) {
     "extrasend",
     "../extrasend")
 
+  .run <- get_model_id(.mod)
+  outdir <- get_output_dir(.mod)
   purrr::walk(seq_len(n_chain), function(.chain) {
     est_chain_i <- stringr::str_replace(
       est_chain,
@@ -56,20 +58,16 @@ run_chains <- function(.model_dir, .run, ...) {
     ctl_i[row_chain] <- est_chain_i
     ctl_i[row_bayes] <- est_bayes_i
     readr::write_lines(ctl_i, file.path(
-      .model_dir,
-      glue("{.run}/{.run}_{.chain}.ctl"))
+      outdir,
+      glue("{.run}_{.chain}.ctl"))
     )
 
     mod <- new_model(
-      file.path(.model_dir, .run, glue("{.run}_{.chain}")),
+      file.path(outdir, glue("{.run}_{.chain}")),
       .description = glue("Chain {.chain}"),
     )
 
-    proc <- submit_model(
-      mod,
-      ...,
-      .config_path = file.path(.model_dir, "bbi.yaml")
-    )
+    proc <- submit_model(mod, ...)
   })
 }
 
