@@ -1,6 +1,66 @@
 
 ### NONMEM Bayes
 
+#' Submit model based on a `bbi_nmbayes_model` object
+#'
+#' Model submission consists of two steps: generating the initial values
+#' (`METHOD=CHAIN` run) and sampling for each chain (`METHOD=BAYES` or
+#' `METHOD=NUTS` runs).
+#'
+#' TODO: Provide details about expected ctl lines.
+#'
+#' @param .dry_run Do not submit the sampling runs; just report what command
+#'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
+#'   is executed to generate the initialization values regardless of this value.
+#' @inheritParams bbr::submit_model
+#' @export
+submit_model.bbi_nmbayes_model <- function(
+  .mod,
+  .bbi_args = NULL,
+  .mode = getOption("bbr.bbi_exe_mode"),
+  ...,
+  .overwrite = NULL,
+  .config_path = NULL,
+  .wait = TRUE,
+  .dry_run = FALSE
+  ) {
+  .config_path <- if (is.null(.config_path)) {
+    # Explicitly pass the default value because it's needed for the
+    # METHOD={BAYES,NUTS} runs, which happen one level deeper.
+    file.path(get_model_working_directory(.mod),
+              "bbi.yaml")
+  } else {
+    # Ensure that user-specified values work from the METHOD={BAYES,NUTS}
+    # subdirectory.
+    fs::path_abs(.config_path)
+  }
+
+  # Convert model to bbi_nonmem_model for initialization. Another option would
+  # be to call NextMethod(), but modifying arguments with that approach less
+  # straightforward.
+  mod_init <- .mod
+  class(mod_init) <- class(mod_init)[-1]
+
+  submit_model(
+    mod_init,
+    .bbi_args = .bbi_args,
+    .overwrite = .overwrite,
+    .config_path = .config_path,
+    .wait = .wait,
+    # Regardless of the mode for the main sampling (triggered by run_chains),
+    # this upfront initialization should always be done locally.
+    .mode = "local",
+    .dry_run = FALSE)
+
+  run_chains(.mod,
+             .bbi_args = .bbi_args,
+             .mode = .mode,
+             ...,
+             .config_path = .config_path,
+             .wait = .wait,
+             .dry_run = .dry_run)
+}
+
 #' Run Bayes chains
 #'
 #' Run multiple chains of a Bayes model after initial estimates have been
