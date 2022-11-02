@@ -63,7 +63,6 @@ run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
     mod <- new_model(
       file.path(.model_dir, .run, glue("{.run}_{.chain}")),
       .description = glue("Chain {.chain}"),
-      .overwrite = TRUE
     )
 
     proc <- submit_model(
