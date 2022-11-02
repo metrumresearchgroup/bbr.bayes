@@ -9,6 +9,7 @@
 #' @param .model_dir path to directory containing model
 #' @param .run run name
 #' @param .bbi_args list of arguments to be passed to `submit_model()`
+#' @noRd
 run_chains <- function(.model_dir, .run, .mode = "sge", .bbi_args) {
   mod <- read_model(file.path(.model_dir, .run))
   ctl <- read_lines(get_model_path(mod))
