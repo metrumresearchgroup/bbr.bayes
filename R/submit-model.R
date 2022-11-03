@@ -45,7 +45,7 @@ run_chains <- function(.mod, ...) {
 
   .run <- get_model_id(.mod)
   outdir <- get_output_dir(.mod)
-  purrr::walk(seq_len(n_chain), function(.chain) {
+  res <- purrr::map(seq_len(n_chain), function(.chain) {
     est_chain_i <- stringr::str_replace(
       est_chain,
       "ISAMPLE=0",
@@ -66,9 +66,9 @@ run_chains <- function(.mod, ...) {
       file.path(outdir, glue("{.run}_{.chain}")),
       .description = glue("Chain {.chain}"),
     )
-
-    proc <- submit_model(mod, ...)
+    submit_model(mod, ...)
   })
+  res
 }
 
 ### Stan
