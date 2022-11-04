@@ -41,7 +41,7 @@ steps:
   - R -s -e 'devtools::install_deps(upgrade = "never")'
   - git clone -b 1.5.0.9001 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
-  - R -s -e 'cmdstanr::check_cmdstan_toolchain(fix = TRUE)' -e 'cmdstanr::install_cmdstan(cores = 2)'
+  - R -s -e 'cmdstanr::install_cmdstan(cores = 2)'
   - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
   environment:
     BBI_EXE_PATH: /ephemeral/bbi
