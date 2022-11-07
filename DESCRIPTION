@@ -39,7 +39,8 @@ Imports:
     readr,
     rlang,
     stringr,
-    styler
+    styler,
+    yaml
 Suggests: 
     covr,
     devtools,
