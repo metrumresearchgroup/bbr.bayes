@@ -1,6 +1,6 @@
 
 #' @importFrom glue glue
-#' @importFrom rlang := %||%
+#' @importFrom rlang := %||% .data
 NULL
 
 ### NONMEM Bayes

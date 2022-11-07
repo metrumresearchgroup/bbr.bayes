@@ -26,6 +26,7 @@ Imports:
     checkmate,
     cli,
     cmdstanr,
+    data.table,
     diffobj,
     digest,
     dplyr (>= 1.0.0),
@@ -35,11 +36,13 @@ Imports:
     jsonlite,
     magrittr,
     methods,
+    posterior,
     purrr,
     readr,
     rlang,
     stringr,
     styler,
+    tibble,
     yaml
 Suggests: 
     covr,

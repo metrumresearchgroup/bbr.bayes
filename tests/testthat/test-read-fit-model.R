@@ -1,5 +1,19 @@
 context("reading fit model objects from disk")
 
+### NONMEM Bayes
+
+test_that("nmbayes: read_fit_model() works correctly", {
+  res <- read_fit_model(NMBAYES_MOD1_PATH)
+  expect_s3_class(res, "draws")
+})
+
+test_that("nmbayes: read_fit_model() works correctly", {
+  res <- read_fit_model(NMBAYES_MOD1)
+  expect_s3_class(res, "draws")
+})
+
+### Stan
+
 test_that("stan: read_fit_model.character() works correctly", {
   res <- read_fit_model(STAN_MOD1_PATH)
   expect_true(inherits(res, STAN_FIT_CLASS))
