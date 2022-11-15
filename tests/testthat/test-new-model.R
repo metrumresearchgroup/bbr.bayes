@@ -1,4 +1,39 @@
 
+### NONMEM Bayes
+
+test_that("nmbayes: read_model() works", {
+  mod <- read_model(NMBAYES_MOD1_PATH)
+  expect_identical(mod[[YAML_MOD_TYPE]], "nmbayes")
+  expect_identical(mod[[ABS_MOD_PATH]],
+                   file.path(NMBAYES_ABS_MODEL_DIR, NMBAYES_MOD_ID))
+  expect_s3_class(mod, NMBAYES_MOD_CLASS)
+  expect_s3_class(mod, NM_MOD_CLASS)
+  expect_s3_class(mod, BBI_PARENT_CLASS)
+})
+
+test_that("nmbayes: new_model() errors without .model_type", {
+  expect_error(
+    new_model(file.path(NMBAYES_MODEL_DIR, "test-nmbayes")),
+    regexp = "IF THIS IS NOT A NONMEM MODEL"
+  )
+})
+
+test_that("nmbayes: new_model() works", {
+  tdir <- withr::local_tempdir("bbr-bayes-")
+  model_path <- file.path(tdir, "100")
+  fs::file_copy(paste0(NMBAYES_MOD1_PATH, ".ctl"),
+                paste0(model_path, ".ctl"))
+  mod <- new_model(model_path, .model_type = "nmbayes")
+
+  expect_equal(mod[[YAML_MOD_TYPE]], "nmbayes")
+  expect_equal(mod[[ABS_MOD_PATH]], model_path)
+  expect_s3_class(mod, NMBAYES_MOD_CLASS)
+  expect_s3_class(mod, NM_MOD_CLASS)
+  expect_s3_class(mod, BBI_PARENT_CLASS)
+})
+
+### Stan
+
 test_that("stan: read_model() works", {
   .m <- read_model(STAN_MOD1_PATH)
   expect_equal(.m[[YAML_MOD_TYPE]], "stan")
