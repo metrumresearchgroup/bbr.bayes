@@ -1,4 +1,10 @@
 
+### NONMEM Bayes
+
+NMBAYES_MOD_ID <- "1100"
+
+### Stan
+
 STAN_ABS_MODEL_DIR <- system.file("model", "stan",   package = "bbr.bayes")
 
 STAN_MOD_ID <- "fxa"
