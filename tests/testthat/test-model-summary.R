@@ -1,4 +1,15 @@
 
+test_that("nmbayes: model_summary() summarizes submodels", {
+  withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
+    expect_warning(res <- model_summary(NMBAYES_MOD1),
+                   "not implemented")
+  })
+  expect_length(res, 2)
+  for (obj in res) {
+    expect_s3_class(obj, "bbi_nonmem_summary")
+  }
+})
+
 test_that("stan: model_summary() correctly calls read_fit_model()", {
   expect_warning(
     res <- model_summary(STAN_MOD1)
