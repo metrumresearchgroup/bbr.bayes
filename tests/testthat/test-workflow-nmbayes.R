@@ -41,3 +41,22 @@ test_that("nmbayes: submit_model() works", {
   expect_length(res, 1)
   expect_s3_class(res[[1]], "bbi_process")
 })
+
+test_that("nmbayes: run_log() captures runs correctly", {
+  skip("FIXME: submodels confuse run_log()")
+  log_df <- run_log(".")
+  expect_identical(nrow(log_df), 2L)
+  expect_identical(ncol(log_df), 10L)
+  expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
+                  c("1100", "1101"))
+})
+
+test_that("nmbayes: summary_log() captures runs correctly", {
+  skip("FIXME: submodels confuse summary_log()")
+  withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
+    log_df <- summary_log(".")
+  })
+  expect_identical(nrow(log_df), 2L)
+  expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
+                  c("1100", "1101"))
+})
