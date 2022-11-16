@@ -73,6 +73,22 @@ test_that("cmdstanr fit object can be reloaded", {
   expect_equal(dim(smp2), STAN_SMP_DIAG_DIM)
 })
 
+test_that("stan: supports posterior as_draws methods", {
+  mod <- read_model(file.path(MODEL_DIR_STAN_TEST, STAN_MOD_ID2))
+
+  draws_list <- posterior::as_draws_list(mod)
+  expect_s3_class(draws_list, "draws_list")
+
+  expect_identical(posterior::niterations(draws_list), 100L)
+  expect_identical(posterior::nchains(draws_list), 4L)
+
+  expect_equal(draws_list,
+               read_fit_model(mod)$draws(format = "list"))
+
+  expect_true("eta[1]" %in% posterior::variables(draws_list))
+  expect_true("eta" %in% posterior::variables(posterior::as_draws_rvars(mod)))
+})
+
 test_that("stan: run_log() captures runs correctly", {
   log_df <- run_log(MODEL_DIR_STAN_TEST)
   expect_equal(nrow(log_df), 2L)

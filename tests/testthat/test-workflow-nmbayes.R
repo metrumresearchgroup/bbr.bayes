@@ -40,6 +40,10 @@ test_that("nmbayes: submit_model() works", {
   # This relays the return value of submit_models().
   expect_length(res, 1)
   expect_s3_class(res[[1]], "bbi_process")
+
+  draws <- posterior::as_draws(mod)
+  expect_identical(posterior::nchains(draws), 2L)
+  expect_identical(posterior::niterations(draws), 50L)
 })
 
 test_that("nmbayes: run_log() captures runs correctly", {

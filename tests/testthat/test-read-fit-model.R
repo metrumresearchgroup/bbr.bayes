@@ -12,6 +12,23 @@ test_that("nmbayes: read_fit_model() works correctly", {
   expect_s3_class(res, "draws")
 })
 
+test_that("read_fit_model accepts draws format argument for nmbayes", {
+  cases <- list(list(format = "array",
+                     fn = posterior::as_draws_array),
+                list(format = "df",
+                     fn = posterior::as_draws_df),
+                list(format = "matrix",
+                     fn = posterior::as_draws_matrix),
+                list(format = "list",
+                     fn = posterior::as_draws_list),
+                list(format = "rvars",
+                     fn = posterior::as_draws_rvars))
+  for (case in cases) {
+    expect_equal(read_fit_model(NMBAYES_MOD1, format = case$format),
+                 case$fn(NMBAYES_MOD1))
+  }
+})
+
 ### Stan
 
 test_that("stan: read_fit_model.character() works correctly", {
