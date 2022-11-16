@@ -27,7 +27,7 @@ fs::file_copy(bbr::yaml_ext(STAN_MOD1_PATH), MODEL_DIR_STAN_TEST)
 # create model from R
 #######################
 
-test_that("submit_model.bbi_stan_model works with copied model", {
+test_that("stan: submit_model() works with copied model", {
   # create model
   mod1 <- read_model(file.path(MODEL_DIR_STAN_TEST, STAN_MOD_ID))
   mod2 <- copy_model_from(mod1, STAN_MOD_ID2, .add_tags = "child") %>%
@@ -73,14 +73,14 @@ test_that("cmdstanr fit object can be reloaded", {
   expect_equal(dim(smp2), STAN_SMP_DIAG_DIM)
 })
 
-test_that("run_log() captures runs correctly", {
+test_that("stan: run_log() captures runs correctly", {
   log_df <- run_log(MODEL_DIR_STAN_TEST)
   expect_equal(nrow(log_df), 2L)
   expect_equal(ncol(log_df), 10L)
   expect_identical(basename(log_df[[ABS_MOD_PATH]]), c(STAN_MOD_ID, STAN_MOD_ID2))
 })
 
-test_that("summary_log() captures runs correctly", {
+test_that("stan: summary_log() captures runs correctly", {
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
     log_df <- summary_log(MODEL_DIR_STAN_TEST)
   })
