@@ -2,8 +2,7 @@
 #' Summarize a `bbi_nmbayes_model` object
 #'
 #' This method will eventually provide a tailored summary for NONMEM Bayes
-#' output; for now, it returns a model summary object for each underying
-#' sampling run.
+#' output; for now, it the same draws object that [read_fit_model()] does.
 #'
 #' @inheritParams bbr::model_summary
 #'
@@ -17,11 +16,10 @@ model_summary.bbi_nmbayes_model <- function(
   # TODO: Implement. See issue 27 for design discussion.
   warning(
     "model_summary.bbi_nmbayes_model() is not implemented.\n",
-    "Returning list of summaries for underlying sampling models.",
+    glue("A draws object will be returned for {.mod[[ABS_MOD_PATH]]}\n\n"),
+    "Consider calling `read_fit_model()` directly instead.",
     call. = FALSE)
-  purrr::map(get_chain_dirs(.mod), read_model) %>%
-    bbr::model_summaries(.bbi_args = .bbi_args, ..., .dry_run = .dry_run) %>%
-    purrr::map("bbi_summary")
+  read_fit_model(.mod)
 }
 
 #' Summarize a `bbi_stan_model`

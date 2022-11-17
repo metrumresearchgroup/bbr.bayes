@@ -18,6 +18,5 @@ See \code{\link[bbr:print_bbi_args]{print_bbi_args()}} for full list of options.
 }
 \description{
 This method will eventually provide a tailored summary for NONMEM Bayes
-output; for now, it returns a model summary object for each underying
-sampling run.
+output; for now, it the same draws object that \code{\link[=read_fit_model]{read_fit_model()}} does.
 }
