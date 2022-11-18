@@ -2,18 +2,21 @@
 #'
 #' For some a types of models, an object representing the "fitted" model is
 #' persisted on disk when the model is run. This function will load that object
-#' into memory and return it. **Note: this is currently only implemented for
-#' `bbi_stan_model` objects.**
+#' into memory and return it.
 #'
 #' @return
-#' **Stan:** Returns a `cmdstanr` fit object of class `"CmdStanMCMC"`. See the
-#' `?cmdstanr::CmdStanMCMC` docs for methods and information on this object.
-#' _Note: currently [model_summary]`.bbi_stan_model()` calls this under the hood
-#' because it contains methods to summarize model outputs and no similar methods
-#' exist yet in `bbr` for Stan._
+#'   * **NONMEM Bayes**: Returns a \pkg{posterior} draws object.
+#'
+#'   * **Stan**: Returns a `cmdstanr` fit object of class `"CmdStanMCMC"`. See the
+#'     `?cmdstanr::CmdStanMCMC` docs for methods and information on this object.
+#'     _Note: currently [model_summary]`.bbi_stan_model()` calls this under the
+#'     hood because it contains methods to summarize model outputs and no
+#'     similar methods exist yet in `bbr` for Stan._
 #'
 #' @param .mod a `.bbi_{.model_type}_model` object
-#' @param ... arguments passed through to methods (currently none).
+#' @param format The draws object format to return for bbi_nmbayes_model
+#'   objects.
+#' @param ... arguments passed through to methods.
 #' @export
 read_fit_model <- function(.mod, ...) {
   UseMethod("read_fit_model")
@@ -26,6 +29,16 @@ read_fit_model <- function(.mod, ...) {
 read_fit_model.character <- function(.mod, ...) {
   checkmate::assert_string(.mod)
   read_fit_model(read_model(.mod))
+}
+
+#' @describeIn read_fit_model Returns a \pkg{posterior} draws object.
+#' @export
+read_fit_model.bbi_nmbayes_model <- function(.mod,
+                                             format = c("array", "df", "matrix", "list", "rvars"),
+                                             ...) {
+  # TODO: Define custom object that, like CmdStanMCMC, has info about the run
+  # but doesn't bring in the draws until the user explicitly asks for them.
+  nmbayes_draws(.mod, format = format)
 }
 
 #' @describeIn read_fit_model Returns a `cmdstanr::CmdStanMCMC` object.

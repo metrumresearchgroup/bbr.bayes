@@ -1,5 +1,12 @@
 
-test_that("model_summary.bbi_stan_model correctly calls read_fit_model", {
+test_that("nmbayes: model_summary() returns draws object", {
+  expect_warning(res <- model_summary(NMBAYES_MOD1),
+                 "not implemented")
+  expect_s3_class(res, "draws")
+  expect_identical(posterior::nchains(res), 2L)
+})
+
+test_that("stan: model_summary() correctly calls read_fit_model()", {
   expect_warning(
     res <- model_summary(STAN_MOD1)
   )

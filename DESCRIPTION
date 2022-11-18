@@ -10,7 +10,11 @@ Authors@R:
       person(given = "Kyle",
              family = "Meyer",
              role = "aut",
-             email = "kylem@metrumrg.com"))
+             email = "kylem@metrumrg.com"),
+      person(given = "Tim",
+             family = "Waterhouse",
+             role = "aut",
+             email = "timw@metrumrg.com"))
 Description: This package extends the BBR package for Bayesian modeling.
     The current focus is on supporting 'Stan' via the 'CmdStanR'
     interface.
@@ -22,20 +26,24 @@ Imports:
     checkmate,
     cli,
     cmdstanr,
-    ellipsis,
-    digest,
+    data.table,
     diffobj,
+    digest,
     dplyr (>= 1.0.0),
+    ellipsis,
     fs,
     glue,
     jsonlite,
     magrittr,
     methods,
+    posterior,
     purrr,
     readr,
     rlang,
     stringr,
-    styler
+    styler,
+    tibble,
+    yaml
 Suggests: 
     covr,
     devtools,
@@ -48,4 +56,4 @@ VignetteBuilder:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2

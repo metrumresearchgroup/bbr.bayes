@@ -1,7 +1,17 @@
 
 #' @importFrom glue glue
-#' @importFrom rlang := %||%
+#' @importFrom rlang := %||% .data
 NULL
+
+### NONMEM Bayes
+
+NMBAYES_MOD_CLASS <- "bbi_nmbayes_model"
+NMBAYES_SUM_CLASS <- "bbi_nmbayes_summary"
+
+NMBAYES_CTL_START <- ";;; ---------- nmbayes start ----------"
+NMBAYES_CTL_END <- ";;; ---------- nmbayes end ------------"
+
+### Stan
 
 STAN_MOD_CLASS <- "bbi_stan_model"
 STAN_SUM_CLASS <- "bbi_stan_summary"

@@ -1,13 +1,15 @@
 
 withr::local_envvar(c("NO_COLOR" = "true"))
 
-test_that("print.bbi_stan_model contains proper fields", {
+test_that("print() contains proper fields", {
   fields <- c('Status',
               'Absolute Model Path',
               'YAML & Model Files',
               'Tags')
 
-  bullets <- capture.output({ # these get thrown away, but we don't want them to print in the test output
-    purrr::walk(fields, ~ expect_message(print(STAN_MOD1), regexp = .x))
-  })
+  for (mod in list(NMBAYES_MOD1, STAN_MOD1)) {
+    # Call capture.output() to prevent stdout stream from polluting test output.
+    capture.output(
+      purrr::walk(fields, ~ expect_message(print(mod), regexp = .x)))
+  }
 })

@@ -1,0 +1,19 @@
+model_type: nmbayes
+based_on:
+- '1001'
+tags:
+- two-compartment + absorption
+- ETA-CL
+- ETA-KA
+- ETA-V2
+- CLWT-allo
+- V2WT-allo
+- QWT-allo
+- V3WT-allo
+- proportional RUV
+- CLEGFR
+- CLAGE
+- CLALB
+notes:
+- All diagnostics look reasonable
+description: Final Model

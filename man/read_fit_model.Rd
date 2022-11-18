@@ -3,6 +3,7 @@
 \name{read_fit_model}
 \alias{read_fit_model}
 \alias{read_fit_model.character}
+\alias{read_fit_model.bbi_nmbayes_model}
 \alias{read_fit_model.bbi_stan_model}
 \title{Reads a fitted model object from disk}
 \usage{
@@ -10,31 +11,40 @@ read_fit_model(.mod, ...)
 
 \method{read_fit_model}{character}(.mod, ...)
 
+\method{read_fit_model}{bbi_nmbayes_model}(.mod, format = c("array", "df", "matrix", "list", "rvars"), ...)
+
 \method{read_fit_model}{bbi_stan_model}(.mod, ...)
 }
 \arguments{
 \item{.mod}{a \verb{.bbi_\{.model_type\}_model} object}
 
-\item{...}{arguments passed through to methods (currently none).}
+\item{...}{arguments passed through to methods.}
+
+\item{format}{The draws object format to return for bbi_nmbayes_model
+objects.}
 }
 \value{
-\strong{Stan:} Returns a \code{cmdstanr} fit object of class \code{"CmdStanMCMC"}. See the
+\itemize{
+\item \strong{NONMEM Bayes}: Returns a \pkg{posterior} draws object.
+\item \strong{Stan}: Returns a \code{cmdstanr} fit object of class \code{"CmdStanMCMC"}. See the
 \code{?cmdstanr::CmdStanMCMC} docs for methods and information on this object.
-\emph{Note: currently \link{model_summary}\code{.bbi_stan_model()} calls this under the hood
-because it contains methods to summarize model outputs and no similar methods
-exist yet in \code{bbr} for Stan.}
+\emph{Note: currently \link{model_summary}\code{.bbi_stan_model()} calls this under the
+hood because it contains methods to summarize model outputs and no
+similar methods exist yet in \code{bbr} for Stan.}
+}
 }
 \description{
 For some a types of models, an object representing the "fitted" model is
 persisted on disk when the model is run. This function will load that object
-into memory and return it. \strong{Note: this is currently only implemented for
-\code{bbi_stan_model} objects.}
+into memory and return it.
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{read_fit_model(character)}: Takes a file path that will be passed to
 \code{\link[bbr:read_model]{bbr::read_model()}}. The loaded model is then passed directly to the relevant
 \code{read_fit_model()} dispatch.
+
+\item \code{read_fit_model(bbi_nmbayes_model)}: Returns a \pkg{posterior} draws object.
 
 \item \code{read_fit_model(bbi_stan_model)}: Returns a \code{cmdstanr::CmdStanMCMC} object.
 
