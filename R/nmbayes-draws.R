@@ -13,7 +13,7 @@ nmbayes_draws <- function(.mod,
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
   draws_fn <- select_draws_fn(match.arg(format))
 
-  exts <- get_chain_files(.mod, ".ext")
+  exts <- get_chain_files(.mod, ".ext", check_exists = "all")
   nchains <- length(exts)
   # TODO: Consider how to handle other information, such as warmup samples or
   # termination status (row -1000000007).
