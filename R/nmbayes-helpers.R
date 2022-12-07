@@ -34,11 +34,34 @@ get_chain_dirs <- function(.mod) {
 #'
 #' @param .mod A `bbi_nmbayes_model`.
 #' @param extension File extension.
+#' @param check_exists Whether to check that the files exist. If "all", confirm
+#'   that each chain subdirectory has a `{run}.{extension}` file. If
+#'   "all_or_none", do the same, but, if the file doesn't exist in any
+#'   subdirectory, return an empty character rather than aborting. Specify "no"
+#'   to disable the check entirely.
 #' @return Absolute file paths, one for each chain.
 #' @noRd
-get_chain_files <- function(.mod, extension) {
+get_chain_files <- function(.mod, extension,
+                            check_exists = c("no", "all", "all_or_none")) {
+  check_exists <- match.arg(check_exists)
   dirs <- get_chain_dirs(.mod)
   files <- file.path(dirs, fs::path_ext_set(basename(dirs), extension))
+
+  if (!identical(check_exists, "no")) {
+    nchains <- length(dirs)
+    exist <- file.exists(files)
+    nexist <- sum(exist)
+
+    if (identical(check_exists, "all_or_none") && nexist == 0) {
+      return(character(0))
+    }
+
+    if (nexist != nchains) {
+      stop(glue("Missing {nchains} expected file(s):\n", .trim = FALSE),
+           paste(" -", files[!exist], collapse = "\n"))
+    }
+  }
+
   return(files)
 }
 
