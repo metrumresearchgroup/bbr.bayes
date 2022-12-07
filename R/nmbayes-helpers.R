@@ -30,9 +30,16 @@ get_chain_dirs <- function(.mod) {
   return(chaindirs[chains])
 }
 
-get_chain_exts <- function(.mod) {
+#' Return `{run}.{extension}` file from each chain subdirectory.
+#'
+#' @param .mod A `bbi_nmbayes_model`.
+#' @param extension File extension.
+#' @return Absolute file paths, one for each chain.
+#' @noRd
+get_chain_files <- function(.mod, extension) {
   dirs <- get_chain_dirs(.mod)
-  return(file.path(dirs, paste0(basename(dirs), ".ext")))
+  files <- file.path(dirs, fs::path_ext_set(basename(dirs), extension))
+  return(files)
 }
 
 fread_chain_file <- function(file) {
