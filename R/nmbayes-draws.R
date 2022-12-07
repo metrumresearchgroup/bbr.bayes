@@ -14,12 +14,11 @@ nmbayes_draws <- function(.mod,
   # termination status (row -1000000007).
   draws <- vector(mode = "list", length = nchains)
   for (chain in seq_len(nchains)) {
-    d <- fread_chain_file(exts[chain])
     # Note: Both the warmup and post-warmup samples have the expected count
     # without ITERATION=0. It's unclear what this value issue.
-    draws[[chain]] <- dplyr::filter(d, .data$ITERATION > 0) %>%
-      dplyr::select(-"ITERATION") %>%
-      dplyr::rename_with(rename_nm_as_rvar, .cols = dplyr::everything())
+    d <- fread_draws(exts[chain]) %>%
+      dplyr::select(-"ITERATION")
+    draws[[chain]] <- d
   }
 
   return(draws_fn(draws))
@@ -35,3 +34,11 @@ select_draws_fn <- function(format) {
          stop("Unknown posterior format: ", format, call. = FALSE))
 }
 
+#' Read draws from chain file and do common processing.
+#' @param file An from from *.ext and *.iph file.
+#' @noRd
+fread_draws <- function(file) {
+  fread_chain_file(file) %>%
+    dplyr::filter(.data$ITERATION > 0) %>%
+    dplyr::rename_with(rename_nm_as_rvar, .cols = dplyr::everything())
+}
