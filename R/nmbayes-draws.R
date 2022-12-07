@@ -2,11 +2,6 @@
 #' Read posteriors draws from NONMEM Bayes model
 #'
 #' Extract MCMC samples from ext files of chain sub-models.
-#'
-#' @param .mod A `bbi_nmbayes_model`.
-#' @param format A format supported by \pkg{posterior} via an
-#'   `as_draws_{format}` method.
-#' @return A draws object.
 #' @noRd
 nmbayes_draws <- function(.mod,
                           format = c("array", "df", "matrix", "list", "rvars")) {
