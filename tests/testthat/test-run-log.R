@@ -1,6 +1,7 @@
 
 test_that("run_log() works", {
-  log_df <- run_log(system.file("model", package = "bbr.bayes"))
+  log_df <- run_log(system.file("model", package = "bbr.bayes"),
+                    .recurse = TRUE)
   expect_setequal(!!unique(log_df[[YAML_MOD_TYPE]]),
                   c("nmbayes", "nonmem", "stan"))
 
