@@ -34,3 +34,59 @@ as_draws.bbi_nmbayes_model <- function(x, ...) {
 as_draws.bbi_stan_model <- function(x, ...) {
   as_draws(read_fit_model.bbi_stan_model(x), ...)
 }
+
+### Methods for draws_nmbayes class
+
+# The draws_nmbayes class methods wrap posterior's as_draws_* methods to ensure
+# that the "nmbayes" attribute is preserved. Without this, only the array and
+# matrix methods preserve the attributes.
+
+restore_draws_nmbayes <- function(res, attr_orig) {
+  if (!is.null(attr_orig)) {
+    attr(res, "nmbayes") <- attr_orig
+    if (!inherits(res, "draws_nmbayes")) {
+      class(res) <- c("draws_nmbayes", class(res))
+    }
+  }
+  return(res)
+}
+
+#' @importFrom posterior as_draws_df
+#' @export
+as_draws_df.draws_nmbayes <- function(x, ...) {
+  nmbayes_attr <- attr(x, "nmbayes")
+  attr(x, "nmbayes") <- NULL
+  return(restore_draws_nmbayes(NextMethod(), nmbayes_attr))
+}
+
+#' @importFrom posterior as_draws_list
+#' @export
+as_draws_list.draws_nmbayes <- function(x, ...) {
+  nmbayes_attr <- attr(x, "nmbayes")
+  attr(x, "nmbayes") <- NULL
+  return(restore_draws_nmbayes(NextMethod(), nmbayes_attr))
+}
+
+#' @importFrom posterior as_draws_array
+#' @export
+as_draws_array.draws_nmbayes <- function(x, ...) {
+  nmbayes_attr <- attr(x, "nmbayes")
+  attr(x, "nmbayes") <- NULL
+  return(restore_draws_nmbayes(NextMethod(), nmbayes_attr))
+}
+
+#' @importFrom posterior as_draws_matrix
+#' @export
+as_draws_matrix.draws_nmbayes <- function(x, ...) {
+  nmbayes_attr <- attr(x, "nmbayes")
+  attr(x, "nmbayes") <- NULL
+  return(restore_draws_nmbayes(NextMethod(), nmbayes_attr))
+}
+
+#' @importFrom posterior as_draws_rvars
+#' @export
+as_draws_rvars.draws_nmbayes <- function(x, ...) {
+  nmbayes_attr <- attr(x, "nmbayes")
+  attr(x, "nmbayes") <- NULL
+  return(restore_draws_nmbayes(NextMethod(), nmbayes_attr))
+}

@@ -1,7 +1,7 @@
 
 test_that("reshape_iph() return value can be converted into draws object", {
   iphs <- get_chain_files(NMBAYES_MOD1, ".iph")
-  dfs <- purrr::map(iphs, ~ reshape_iph(fread_draws(.x)))
+  dfs <- purrr::map(iphs, ~ reshape_iph(fread_draws(.x))$draws)
 
   draws <- posterior::as_draws(dfs)
   expect_identical(posterior::ndraws(draws), 100L)
@@ -42,7 +42,7 @@ test_that("reshape_iph() encodes labels in parameter names: no subpop", {
   res <- reshape_iph(data)
 
   expect_identical(
-    colnames(res),
+    colnames(res$draws),
     c("PMIX[1,1]", "PMIX[1,2]", "PMIX[1,3]",
       "PHI[1,1,1]", "PHI[1,1,2]", "PHI[1,1,3]",
       "PHI[2,1,1]", "PHI[2,1,2]", "PHI[2,1,3]",
@@ -51,10 +51,17 @@ test_that("reshape_iph() encodes labels in parameter names: no subpop", {
       "ETA[3,1,1]", "ETA[3,1,2]", "ETA[3,1,3]",
       "MCMCOBJ[1,1]", "MCMCOBJ[1,2]", "MCMCOBJ[1,3]"))
 
-  rvars <- posterior::as_draws_rvars(res)
+  rvars <- posterior::as_draws_rvars(res$draws)
   expect_identical(dim(rvars$MCMCOBJ), c(1L, nsubj))
   expect_equal(as.numeric(mean(rvars$MCMCOBJ)),
                c(1000, 2000, 3000))
+
+  expect_identical(
+    res$id_map,
+    tibble::tibble(index = 1:nsubj, ID = ids))
+  expect_identical(
+    res$subpop_map,
+    tibble::tibble(index = 1L, SUBPOP = 0L))
 })
 
 test_that("reshape_iph() encodes labels in parameter names: subpops", {
@@ -80,7 +87,7 @@ test_that("reshape_iph() encodes labels in parameter names: subpops", {
   res <- reshape_iph(data)
 
   expect_identical(
-    colnames(res),
+    colnames(res$draws),
     c("PMIX[1,1]", "PMIX[1,2]", "PMIX[1,3]",
       "PMIX[2,1]", "PMIX[2,2]", "PMIX[2,3]",
       "PHI[1,1,1]", "PHI[1,1,2]", "PHI[1,1,3]",
@@ -96,10 +103,17 @@ test_that("reshape_iph() encodes labels in parameter names: subpops", {
       "MCMCOBJ[1,1]", "MCMCOBJ[1,2]", "MCMCOBJ[1,3]",
       "MCMCOBJ[2,1]", "MCMCOBJ[2,2]", "MCMCOBJ[2,3]"))
 
-  rvars <- posterior::as_draws_rvars(res)
+  rvars <- posterior::as_draws_rvars(res$draws)
   expect_identical(dim(rvars$MCMCOBJ), c(npops, nsubj))
   expect_equal(as.numeric(mean(rvars$MCMCOBJ)),
                c(1000, 10000,
                  2000, 20000,
                  3000, 30000))
+
+  expect_identical(
+    res$id_map,
+    tibble::tibble(index = 1:nsubj, ID = ids))
+  expect_identical(
+    res$subpop_map,
+    tibble::tibble(index = 1:npops, SUBPOP = 1:npops))
 })

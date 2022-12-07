@@ -30,6 +30,7 @@ nmbayes_draws <- function(.mod,
   # TODO: Support selecting a subset of variables with argument like
   # cmdstanr::read_cmdstan_csv's.
   draws_dfs <- vector(mode = "list", length = nchains)
+  iph_meta <- NULL
   for (chain in seq_len(nchains)) {
     # Note: Both the warmup and post-warmup samples have the expected count
     # without ITERATION=0. It's unclear what this value issue.
@@ -41,13 +42,23 @@ nmbayes_draws <- function(.mod,
         # The ext data already has an MCMCOBJ column.
         dplyr::rename(MCMCOBJ_IPH = "MCMCOBJ") %>%
         reshape_iph()
-      d <- dplyr::bind_cols(d, iph_res, .name_repair = "check_unique")
+      d <- dplyr::bind_cols(d, iph_res$draws, .name_repair = "check_unique")
+      if (is.null(iph_meta))
+        # The iph maps are the same across chains. Only grab it once.
+        iph_meta <- list(id_map = iph_res$id_map,
+                         subpop_map = iph_res$subpop_map)
     }
 
     draws_dfs[[chain]] <- d
   }
 
-  return(draws_fn(draws_dfs))
+  draws <- draws_fn(draws_dfs)
+  if (!is.null(iph_meta)) {
+    attr(draws, "nmbayes") <- list(iph = iph_meta)
+  }
+  class(draws) <- c("draws_nmbayes", class(draws))
+
+  return(draws)
 }
 
 select_draws_fn <- function(format) {
@@ -96,7 +107,15 @@ fread_draws <- function(file, select = NULL) {
 #'
 #' @param data Data frame with iph data to be reshaped. The column names must
 #'   already be processed by `rename_nm_as_rvar()`.
-#' @return A data frame suitable to be converted to a draws object.
+#' @return A list of three values:
+#'
+#'   * draws: a data frame suitable to be converted to a draws object.
+#'
+#'   * id_map: a data frame that maps the index in the parameter name ("index"
+#'     column) to the original `ID` value in `data`.
+#'
+#'   * subpop_map: a data frame that maps the index in the parameter name
+#'     ("index" column) to the original `SUBPOP` value in `data`.
 #' @noRd
 #' @importFrom tidyr all_of
 reshape_iph <- function(data) {
@@ -119,9 +138,15 @@ reshape_iph <- function(data) {
   d_long$name <- stringi::stri_c(
     d_long$name, char_start, d_long$sp, ",", d_long$id, "]")
 
-  dplyr::select(d_long,
-                -all_of(IPH_ID_NAMES),
-                -c("sp", "id")) %>%
+  id_map <- dplyr::select(d_long, c("index" = "id", "ID")) %>%
+    dplyr::distinct()
+  subpop_map <- dplyr::select(d_long, c("index" = "sp", "SUBPOP")) %>%
+    dplyr::distinct()
+  draws <- dplyr::select(d_long,
+                         -all_of(IPH_ID_NAMES),
+                         -c("sp", "id")) %>%
     tidyr::pivot_wider(names_from = "name", values_from = "value") %>%
     dplyr::select(-"ITERATION")
+
+  return(list(draws = draws, id_map = id_map, subpop_map = subpop_map))
 }
