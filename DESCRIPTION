@@ -42,6 +42,7 @@ Imports:
     rlang,
     stringr,
     styler,
+    tidyr,
     tibble,
     yaml
 Suggests: 

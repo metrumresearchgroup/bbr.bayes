@@ -44,6 +44,10 @@ test_that("nmbayes: submit_model() works", {
   draws <- posterior::as_draws(mod)
   expect_identical(posterior::nchains(draws), 2L)
   expect_identical(posterior::niterations(draws), 50L)
+
+  expect_true("MCMCOBJ_IPH[1,1]" %in% posterior::variables(draws))
+  draws_no_iph <- posterior::as_draws(mod, include_iph = FALSE)
+  expect_false("MCMCOBJ_IPH[1,1]" %in% posterior::variables(draws_no_iph))
 })
 
 test_that("nmbayes: run_log() captures runs correctly", {

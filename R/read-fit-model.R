@@ -16,6 +16,8 @@
 #' @param .mod a `.bbi_{.model_type}_model` object
 #' @param format The draws object format to return for bbi_nmbayes_model
 #'   objects.
+#' @param include_iph Whether to include data from `*.iph` files, if they exist,
+#'   in the draws constructed for bbi_nmbayes_model objects.
 #' @param ... arguments passed through to methods.
 #' @export
 read_fit_model <- function(.mod, ...) {
@@ -35,10 +37,11 @@ read_fit_model.character <- function(.mod, ...) {
 #' @export
 read_fit_model.bbi_nmbayes_model <- function(.mod,
                                              format = c("array", "df", "matrix", "list", "rvars"),
+                                             include_iph = TRUE,
                                              ...) {
   # TODO: Define custom object that, like CmdStanMCMC, has info about the run
   # but doesn't bring in the draws until the user explicitly asks for them.
-  nmbayes_draws(.mod, format = format)
+  nmbayes_draws(.mod, format = format, include_iph = include_iph)
 }
 
 #' @describeIn read_fit_model Returns a `cmdstanr::CmdStanMCMC` object.

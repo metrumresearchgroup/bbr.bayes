@@ -11,7 +11,12 @@ read_fit_model(.mod, ...)
 
 \method{read_fit_model}{character}(.mod, ...)
 
-\method{read_fit_model}{bbi_nmbayes_model}(.mod, format = c("array", "df", "matrix", "list", "rvars"), ...)
+\method{read_fit_model}{bbi_nmbayes_model}(
+  .mod,
+  format = c("array", "df", "matrix", "list", "rvars"),
+  include_iph = TRUE,
+  ...
+)
 
 \method{read_fit_model}{bbi_stan_model}(.mod, ...)
 }
@@ -22,6 +27,9 @@ read_fit_model(.mod, ...)
 
 \item{format}{The draws object format to return for bbi_nmbayes_model
 objects.}
+
+\item{include_iph}{Whether to include data from \verb{*.iph} files, if they exist,
+in the draws constructed for bbi_nmbayes_model objects.}
 }
 \value{
 \itemize{
