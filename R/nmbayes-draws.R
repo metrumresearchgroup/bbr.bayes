@@ -12,16 +12,16 @@ nmbayes_draws <- function(.mod,
   nchains <- length(exts)
   # TODO: Consider how to handle other information, such as warmup samples or
   # termination status (row -1000000007).
-  draws <- vector(mode = "list", length = nchains)
+  draws_dfs <- vector(mode = "list", length = nchains)
   for (chain in seq_len(nchains)) {
     # Note: Both the warmup and post-warmup samples have the expected count
     # without ITERATION=0. It's unclear what this value issue.
     d <- fread_draws(exts[chain]) %>%
       dplyr::select(-"ITERATION")
-    draws[[chain]] <- d
+    draws_dfs[[chain]] <- d
   }
 
-  return(draws_fn(draws))
+  return(draws_fn(draws_dfs))
 }
 
 select_draws_fn <- function(format) {
