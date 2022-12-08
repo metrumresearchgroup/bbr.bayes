@@ -68,12 +68,25 @@ get_chain_files <- function(.mod, extension, chain_dirs = NULL,
   return(files)
 }
 
-fread_chain_file <- function(file) {
+fread_chain_file <- function(file, select = NULL) {
   tibble::as_tibble(
     data.table::fread(file = file,
                       na.strings = ".",
                       data.table = FALSE,
-                      verbose = FALSE))
+                      verbose = FALSE,
+                      select = select))
+}
+
+#' Peek at beginning of file to determine column names.
+#'
+#' @param file,nrows Passed to `data.table::fread()`. Note that `nrows` must be
+#'   above the number of lines that `fread` automatically skips before getting
+#'   to the header.
+#' @noRd
+fread_peek_at_columns <- function(file, nrows = 5) {
+  colnames(data.table::fread(file = file,
+                             nrows = nrows,
+                             verbose = FALSE))
 }
 
 #' Rename NONMEM variables for rvar compatibility

@@ -22,6 +22,7 @@ nmbayes_draws <- function(.mod,
                             check_exists = "all_or_none")
     include_iph <- length(iphs) == nchains
   }
+  iph_select <- if (include_iph) get_iph_variables(iphs[1]) else NULL
 
   # TODO: Consider how to handle other information, such as warmup samples or
   # termination status (row -1000000007).
@@ -36,7 +37,7 @@ nmbayes_draws <- function(.mod,
       dplyr::select(-"ITERATION")
 
     if (include_iph) {
-      iph_res <- fread_draws(iphs[chain]) %>%
+      iph_res <- fread_draws(iphs[chain], select = iph_select) %>%
         # The ext data already has an MCMCOBJ column.
         dplyr::rename(MCMCOBJ_IPH = "MCMCOBJ") %>%
         reshape_iph()
@@ -59,11 +60,26 @@ select_draws_fn <- function(format) {
          stop("Unknown posterior format: ", format, call. = FALSE))
 }
 
+get_iph_variables <- function(file) {
+  iph_all_names <- fread_peek_at_columns(file)
+  bm_etas <- stringr::str_starts(iph_all_names, stringr::fixed("ETA("))
+  if (!any(bm_etas)) {
+    stop("iph file unexpectedly missing ETA(N) columns: ", file)
+  }
+  bm_obj <- iph_all_names == "MCMCOBJ"
+  if (!any(bm_obj)) {
+    stop("iph file unexpectedly missing MCMCOBJ column: ", file)
+  }
+
+  return(c(IPH_NONPARAM_NAMES, iph_all_names[bm_etas | bm_obj]))
+}
+
 #' Read draws from chain file and do common processing.
 #' @param file An from from *.ext and *.iph file.
+#' @param select Passed through to `data.table::fread()`.
 #' @noRd
-fread_draws <- function(file) {
-  fread_chain_file(file) %>%
+fread_draws <- function(file, select = NULL) {
+  fread_chain_file(file, select = select) %>%
     dplyr::filter(.data$ITERATION > 0) %>%
     dplyr::rename_with(rename_nm_as_rvar, .cols = dplyr::everything())
 }
