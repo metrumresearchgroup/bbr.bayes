@@ -35,7 +35,8 @@ nmbayes_draws <- function(.mod,
     # Note: Both the warmup and post-warmup samples have the expected count
     # without ITERATION=0. It's unclear what this value issue.
     d <- fread_draws(exts[chain]) %>%
-      dplyr::select(-"ITERATION")
+      dplyr::select(-"ITERATION") %>%
+      dplyr::rename_with(rename_nm_as_rvar, .cols = dplyr::everything())
 
     if (include_iph) {
       iph_res <- fread_draws(iphs[chain], select = iph_select) %>%
@@ -91,8 +92,7 @@ get_iph_variables <- function(file) {
 #' @noRd
 fread_draws <- function(file, select = NULL) {
   fread_chain_file(file, select = select) %>%
-    dplyr::filter(.data$ITERATION > 0) %>%
-    dplyr::rename_with(rename_nm_as_rvar, .cols = dplyr::everything())
+    dplyr::filter(.data$ITERATION > 0)
 }
 
 #' Reshape chain's iph data for conversion to draws object
@@ -103,10 +103,9 @@ fread_draws <- function(file, select = NULL) {
 #' 1-based indices for the SUBPOP and ID into the parameter names:
 #'
 #'      * p    -> p[SP,ID]
-#'      * p[M] -> p[M,SP,ID]
+#'      * p(M) -> p[M,SP,ID]
 #'
-#' @param data Data frame with iph data to be reshaped. The column names must
-#'   already be processed by `rename_nm_as_rvar()`.
+#' @param data Data frame with iph data to be reshaped.
 #' @return A list of three values:
 #'
 #'   * draws: a data frame suitable to be converted to a draws object.
@@ -149,8 +148,8 @@ reshape_iph <- function(data) {
 
 rename_iph_cols <- function(x) {
   # Fix up non-scalar variables from NONMEM that now have names like
-  # "ETA[1][1,1]".
+  # "ETA(1)[1,1]".
   stringi::stri_replace_last(x,
-                             regex = "\\[([0-9]+)\\]\\[",
+                             regex = "\\(([0-9]+)\\)\\[",
                              replacement = "[$1,")
 }

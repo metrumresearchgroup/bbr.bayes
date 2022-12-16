@@ -31,11 +31,11 @@ test_that("reshape_iph() encodes labels in parameter names: no subpop", {
     "ID" = rep(ids, times = niter),
     "SUBPOP" = rep(0L, nobs),
     "PMIX" = 22L,
-    "PHI[1]" = 22L,
-    "PHI[2]" = 22L,
-    "ETA[1]" = 22L,
-    "ETA[2]" = 22L,
-    "ETA[3]" = 22L,
+    "PHI(1)" = 22L,
+    "PHI(2)" = 22L,
+    "ETA(1)" = 22L,
+    "ETA(2)" = 22L,
+    "ETA(3)" = 22L,
     # Give one parameter identifying values for debugging purposes.
     "MCMCOBJ" = rep(1:nsubj * 1000L, times = niter)
   )
@@ -76,11 +76,11 @@ test_that("reshape_iph() encodes labels in parameter names: subpops", {
     "ID" = rep(ids, times = niter * npops),
     "SUBPOP" = rep(1:npops, times = niter * nsubj),
     "PMIX" = 22L,
-    "PHI[1]" = 22L,
-    "PHI[2]" = 22L,
-    "ETA[1]" = 22L,
-    "ETA[2]" = 22L,
-    "ETA[3]" = 22L,
+    "PHI(1)" = 22L,
+    "PHI(2)" = 22L,
+    "ETA(1)" = 22L,
+    "ETA(2)" = 22L,
+    "ETA(3)" = 22L,
     # Give one parameter identifying values for debugging purposes.
     "MCMCOBJ" = rep(1:nsubj, times = niter * npops)  * c(1000L, 10000L)
   )
