@@ -132,21 +132,25 @@ reshape_iph <- function(data) {
     # "ETA[5,1,1]", "MCMCOBJ_IPH[1,1]", ...).
     dplyr::arrange(match(.data$name, param_names), .data$sp, .data$id)
 
-  has_brack <- stringi::stri_endswith_fixed(d_long$name, "]")
-  stringi::stri_sub(d_long$name[has_brack], from = -1L, to = -1L) <- ""
-  char_start <- dplyr::if_else(has_brack, ",", "[")
-  d_long$name <- stringi::stri_c(
-    d_long$name, char_start, d_long$sp, ",", d_long$id, "]")
-
   id_map <- dplyr::select(d_long, c("index" = "id", "ID")) %>%
     dplyr::distinct()
   subpop_map <- dplyr::select(d_long, c("index" = "sp", "SUBPOP")) %>%
     dplyr::distinct()
   draws <- dplyr::select(d_long,
-                         -all_of(IPH_ID_NAMES),
-                         -c("sp", "id")) %>%
-    tidyr::pivot_wider(names_from = "name", values_from = "value") %>%
-    dplyr::select(-"ITERATION")
+                         -all_of(IPH_ID_NAMES)) %>%
+    tidyr::pivot_wider(names_from = c("name", "sp", "id"),
+                       names_glue = "{name}[{sp},{id}]",
+                       values_from = "value") %>%
+    dplyr::select(-"ITERATION") %>%
+    dplyr::rename_with(rename_iph_cols, .cols = dplyr::everything())
 
   return(list(draws = draws, id_map = id_map, subpop_map = subpop_map))
+}
+
+rename_iph_cols <- function(x) {
+  # Fix up non-scalar variables from NONMEM that now have names like
+  # "ETA[1][1,1]".
+  stringi::stri_replace_last(x,
+                             regex = "\\[([0-9]+)\\]\\[",
+                             replacement = "[$1,")
 }
