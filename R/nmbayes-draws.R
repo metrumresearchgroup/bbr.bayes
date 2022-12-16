@@ -121,12 +121,12 @@ fread_draws <- function(file, select = NULL) {
 reshape_iph <- function(data) {
   # Note: This function is expensive. Compare timings when changing.
   param_names <- setdiff(colnames(data), IPH_NONPARAM_NAMES)
-  d_long <- tidyr::pivot_longer(data, -all_of(IPH_NONPARAM_NAMES),
-                                names_to = "name",
-                                values_to = "value") %>%
-    dplyr::mutate(
-      id = as.integer(factor(.data$ID)),
-      sp = as.integer(factor(.data$SUBPOP))) %>%
+  d_long <- dplyr::mutate(data,
+                          id = as.integer(factor(.data$ID)),
+                          sp = as.integer(factor(.data$SUBPOP))) %>%
+    tidyr::pivot_longer(-all_of(c(IPH_NONPARAM_NAMES, c("id", "sp"))),
+                        names_to = "name",
+                        values_to = "value") %>%
     # Reorder rows so that, when widened, the parameter columns are grouped by
     # the name (e.g., "ETA[5,1,1]", "ETA[5,1,2]") rather than cycling (e.g.,
     # "ETA[5,1,1]", "MCMCOBJ_IPH[1,1]", ...).
