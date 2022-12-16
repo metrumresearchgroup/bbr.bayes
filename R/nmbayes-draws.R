@@ -87,7 +87,7 @@ get_iph_variables <- function(file) {
 }
 
 #' Read draws from chain file and do common processing.
-#' @param file An from from *.ext and *.iph file.
+#' @param file An *.ext or *.iph file.
 #' @param select Passed through to `data.table::fread()`.
 #' @noRd
 fread_draws <- function(file, select = NULL) {
