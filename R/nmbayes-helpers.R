@@ -30,17 +30,63 @@ get_chain_dirs <- function(.mod) {
   return(chaindirs[chains])
 }
 
-get_chain_exts <- function(.mod) {
-  dirs <- get_chain_dirs(.mod)
-  return(file.path(dirs, paste0(basename(dirs), ".ext")))
+#' Return `{run}.{extension}` file from each chain subdirectory.
+#'
+#' @param .mod A `bbi_nmbayes_model`.
+#' @param extension File extension.
+#' @param chain_dirs Paths to chain subdirectories. This argument exists so that
+#'   callers can avoid repeated calls to `get_chain_dirs()`; the value should
+#'   match what is returned by `get_chain_dirs()`.
+#' @param check_exists Whether to check that the files exist. If "all", confirm
+#'   that each chain subdirectory has a `{run}.{extension}` file. If
+#'   "all_or_none", do the same, but, if the file doesn't exist in any
+#'   subdirectory, return an empty character rather than aborting. Specify "no"
+#'   to disable the check entirely.
+#' @return Absolute file paths, one for each chain.
+#' @noRd
+get_chain_files <- function(.mod, extension, chain_dirs = NULL,
+                            check_exists = c("no", "all", "all_or_none")) {
+  check_exists <- match.arg(check_exists)
+  dirs <- chain_dirs %||% get_chain_dirs(.mod)
+  files <- file.path(dirs, fs::path_ext_set(basename(dirs), extension))
+
+  if (!identical(check_exists, "no")) {
+    nchains <- length(dirs)
+    exist <- file.exists(files)
+    nexist <- sum(exist)
+
+    if (identical(check_exists, "all_or_none") && nexist == 0) {
+      return(character(0))
+    }
+
+    if (nexist != nchains) {
+      stop(glue("Missing {nchains} expected file(s):\n", .trim = FALSE),
+           paste(" -", files[!exist], collapse = "\n"))
+    }
+  }
+
+  return(files)
 }
 
-fread_chain_file <- function(file) {
+fread_chain_file <- function(file, select = NULL) {
   tibble::as_tibble(
     data.table::fread(file = file,
                       na.strings = ".",
                       data.table = FALSE,
-                      verbose = FALSE))
+                      verbose = FALSE,
+                      select = select))
+}
+
+#' Peek at beginning of file to determine column names.
+#'
+#' @param file,nrows Passed to `data.table::fread()`. Note that `nrows` must be
+#'   above the number of lines that `fread` automatically skips before getting
+#'   to the header.
+#' @noRd
+fread_peek_at_columns <- function(file, nrows = 5) {
+  colnames(data.table::fread(file = file,
+                             nrows = nrows,
+                             verbose = FALSE))
 }
 
 #' Rename NONMEM variables for rvar compatibility

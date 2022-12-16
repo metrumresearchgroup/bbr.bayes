@@ -40,8 +40,10 @@ Imports:
     purrr,
     readr,
     rlang,
+    stringi,
     stringr,
     styler,
+    tidyr,
     tibble,
     yaml
 Suggests: 

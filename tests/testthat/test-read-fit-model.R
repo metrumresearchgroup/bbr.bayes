@@ -24,7 +24,7 @@ test_that("read_fit_model accepts draws format argument for nmbayes", {
                 list(format = "rvars",
                      fn = posterior::as_draws_rvars))
   for (case in cases) {
-    expect_equal(read_fit_model(NMBAYES_MOD1, format = case$format),
+    expect_equal(read_fit_model(NMBAYES_MOD1, format = !!case$format),
                  case$fn(NMBAYES_MOD1))
   }
 })
