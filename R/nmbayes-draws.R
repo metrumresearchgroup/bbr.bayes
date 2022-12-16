@@ -119,6 +119,7 @@ fread_draws <- function(file, select = NULL) {
 #' @noRd
 #' @importFrom tidyr all_of
 reshape_iph <- function(data) {
+  # Note: This function is expensive. Compare timings when changing.
   param_names <- setdiff(colnames(data), IPH_NONPARAM_NAMES)
   d_long <- tidyr::pivot_longer(data, -all_of(IPH_NONPARAM_NAMES),
                                 names_to = "name",
@@ -131,7 +132,6 @@ reshape_iph <- function(data) {
     # "ETA[5,1,1]", "MCMCOBJ_IPH[1,1]", ...).
     dplyr::arrange(match(.data$name, param_names), .data$sp, .data$id)
 
-  # Note: This block is expensive. Compare timings when changing.
   has_brack <- stringi::stri_endswith_fixed(d_long$name, "]")
   stringi::stri_sub(d_long$name[has_brack], from = -1L, to = -1L) <- ""
   char_start <- dplyr::if_else(has_brack, ",", "[")
