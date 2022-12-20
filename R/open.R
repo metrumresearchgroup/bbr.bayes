@@ -25,7 +25,7 @@ NULL
 
 #' @describeIn open_model_file Open `<run>.stan`.
 #' @export
-open_stan_file <- function(.mod) {
+open_stanmod_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
   .mod %>%
     build_path_from_model(".stan") %>%
@@ -43,7 +43,7 @@ open_standata_file <- function(.mod) {
 
 #' @describeIn open_model_file Open `<run>-init.R`.
 #' @export
-open_init_file <- function(.mod) {
+open_staninit_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
   .mod %>%
     build_path_from_model("-init.R") %>%

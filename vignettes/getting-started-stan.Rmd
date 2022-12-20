@@ -106,7 +106,7 @@ mod1 %>%
 
 The purpose of this scaffold is to provide some helpful framework to begin writing the necessary code for submitting a model with `bbr`. Below (in the `copy_model_from()` section) you will see how, once you have defined a model or two, you can use those models as your starting point for new models, instead of relying on writing new code from scaffolds.
 
-Note that **if you already have the relevant code for your new model**, you can manually create these files in the output directory _before_ calling `new_model()`. In that case, you won't see any of the messages shown above and the `new_model()` call will simply create the `.yaml` file (described below) next to your directory. Alternatively, you can create the model with the scaffolds and use helpers like `add_stan_file()` (described below) to add your files to the model directory.
+Note that **if you already have the relevant code for your new model**, you can manually create these files in the output directory _before_ calling `new_model()`. In that case, you won't see any of the messages shown above and the `new_model()` call will simply create the `.yaml` file (described below) next to your directory. Alternatively, you can create the model with the scaffolds and use helpers like `add_stanmod_file()` (described below) to add your files to the model directory.
 
 ```{r, include = FALSE}
 # clean up blank mod1 object and files
@@ -165,7 +165,7 @@ By default, all of these functions will attempt to add a scaffold of the relevan
 
 ```{r}
 fxaInc <- fxaInc %>%
-  add_stan_init(.source_file = file.path(MODEL_DIR, "some_other_init.R")) %>%   # copy from external file
+  add_staninit_file(.source_file = file.path(MODEL_DIR, "some_other_init.R")) %>%   # copy from external file
   add_standata_file(.source_file = build_path_from_model(fxa, "-standata.R"))   # copy from another model
 ```
 

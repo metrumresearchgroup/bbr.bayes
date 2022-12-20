@@ -63,8 +63,8 @@ model is run or as it prepares to run.
 \strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
 initial values passed to \code{cmdstanr::sample()}. This file is a lot like
 \verb{<run>-standata.R} (discussed above) and a scaffold can be created with
-\code{\link[=add_stan_init]{add_stan_init()}}. However, this file is \emph{not} necessary. If it is missing,
-Stan will fall back to the \href{https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values}{default initial values}.
+\code{\link[=add_staninit_file]{add_staninit_file()}}. However, this file is \emph{not} necessary. If it is
+missing, Stan will fall back to the \href{https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values}{default initial values}.
 \itemize{
 \item Contains only one function, called \code{make_init(.data)}, that takes a single
 argument and returns something that can be passed to the \code{init} argument of
@@ -108,8 +108,8 @@ since the model was run, primarily for reproducibility purposes.
 before running or copying the model.
 \item \strong{\code{\link[=build_path_from_model]{build_path_from_model()}}} - Builds the absolute path a file in the
 model folder from a model object and a suffix.
-\item \strong{\code{\link[=add_stan_file]{add_stan_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_stan_init]{add_stan_init()}}} - Helpers
-for adding one of the necessary files to the model folder.
+\item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}}} -
+Helpers for adding one of the necessary files to the model folder.
 \item \strong{\code{\link[=model_diff]{model_diff()}}} - Compare necessary files between two models. Defaults
 to comparing \verb{<run>.stan} files.
 \item Also has many of the same helpers as \code{bbi_nonmem_model} objects:

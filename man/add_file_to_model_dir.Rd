@@ -2,16 +2,16 @@
 % Please edit documentation in R/add-file-to-model-dir.R
 \name{add_file_to_model_dir}
 \alias{add_file_to_model_dir}
-\alias{add_stan_file}
+\alias{add_stanmod_file}
 \alias{add_standata_file}
-\alias{add_stan_init}
+\alias{add_staninit_file}
 \title{Attaches a file to a model}
 \usage{
-add_stan_file(.mod, .source_file = NULL)
+add_stanmod_file(.mod, .source_file = NULL)
 
 add_standata_file(.mod, .source_file = NULL)
 
-add_stan_init(.mod, .source_file = NULL)
+add_staninit_file(.mod, .source_file = NULL)
 }
 \arguments{
 \item{.mod}{a \verb{bbi_\{.model_type\}_model} object}
@@ -32,10 +32,10 @@ see if any of these files are missing.
 }
 \section{Functions}{
 \itemize{
-\item \code{add_stan_file()}: Adds a \verb{<run>.stan} model file.
+\item \code{add_stanmod_file()}: Adds a \verb{<run>.stan} model file.
 
 \item \code{add_standata_file()}: Adds a \verb{<run>-standata.R} file for building the data. See \verb{?}\link{bbi_stan_model} for details.
 
-\item \code{add_stan_init()}: Adds a \verb{<run>-init.R} file for building the initial values. See \verb{?}\link{bbi_stan_model} for details.
+\item \code{add_staninit_file()}: Adds a \verb{<run>-init.R} file for building the initial values. See \verb{?}\link{bbi_stan_model} for details.
 
 }}
