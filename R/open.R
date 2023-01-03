@@ -20,10 +20,10 @@ file_edit <- function(...) {
 #'
 #' @param .mod a `bbi_stan_model`
 #'
-#' @name open_model_file
+#' @name open_stan_file
 NULL
 
-#' @describeIn open_model_file Open `<run>.stan`.
+#' @describeIn open_stan_file Open `<run>.stan`.
 #' @export
 open_stanmod_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
@@ -32,7 +32,7 @@ open_stanmod_file <- function(.mod) {
     file_edit()
 }
 
-#' @describeIn open_model_file Open `<run>-standata.R`.
+#' @describeIn open_stan_file Open `<run>-standata.R`.
 #' @export
 open_standata_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
@@ -41,7 +41,7 @@ open_standata_file <- function(.mod) {
     file_edit()
 }
 
-#' @describeIn open_model_file Open `<run>-init.R`.
+#' @describeIn open_stan_file Open `<run>-init.R`.
 #' @export
 open_staninit_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
