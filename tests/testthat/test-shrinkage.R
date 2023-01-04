@@ -38,6 +38,50 @@ test_that("shrinkage.bbi_nmbayes_model() matches reference implementation", {
                unname(shrinkage_ref_impl(NMBAYES_MOD1)))
 })
 
+test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
+  tdir <- withr::local_tempdir("bbr-bayes-")
+  modfile <- get_model_path(NMBAYES_MOD1)
+  fs::file_copy(modfile, tdir)
+  fs::file_copy(get_yaml_path(NMBAYES_MOD1), tdir)
+
+  mod_id <- get_model_id(NMBAYES_MOD1)
+  rundir <- file.path(tdir, mod_id)
+  fs::dir_copy(fs::path_ext_remove(modfile),
+               rundir)
+
+  mod <- read_model(rundir)
+  iphs <- get_chain_files(mod, ".iph", check_exists = "all")
+  if (!all(fs::path_has_parent(iphs, get_model_working_directory(mod)))) {
+    fail(glue("Returned files are not under expected directory",
+              " - directory: {get_model_working_directory(mod)}",
+              " - files:     {files}",
+              files = paste(iphs, collapse = ", "),
+              .sep = "\n"))
+    return(NULL)
+  }
+  fs::file_delete(iphs)
+
+  res_shk <- shrinkage(mod)
+  res_iph <- shrinkage(NMBAYES_MOD1)
+  expect_false(any(res_shk == res_iph))
+  expect_identical(dim(res_shk), dim(res_iph))
+  # The results should still be fairly similar.
+  expect_lt(mean(abs(res_shk - res_iph)), 5)
+
+  # Error cases
+
+  shk_files <- fs::path_ext_set(iphs, "shk")
+
+  invalid_data <- tibble::tibble(TYPE = 1:2)
+  for (f in shk_files) {
+    readr::write_csv(invalid_data, f)
+  }
+  expect_error(shrinkage(mod), "TYPE=4")
+
+  fs::file_delete(shk_files)
+  expect_error(shrinkage(mod), "cannot calculate")
+})
+
 test_that("shrinkage.rvar() aborts on invalid input", {
   x <- posterior::rvar_rng(rnorm, 10, ndraws = 50)
   y <- x

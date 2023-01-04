@@ -8,7 +8,8 @@
 #'
 #' For a `bbi_nmbayes_model` object, the `ETA` values are taken as the errors,
 #' and variance for each `ETA` is extracted from the diagonal of the `OMEGA`
-#' matrix.
+#' matrix. As a special case, if `*.iph` files do not exist, the shrinkage
+#' values are collected from the `*.shk` files.
 #'
 #' For a \pkg{posterior} draws object, the errors and variance are extracted for
 #' the specified parameter names.
@@ -54,11 +55,36 @@ shrinkage <- function(errors, ...) {
 #' @export
 shrinkage.bbi_nmbayes_model <- function(errors, ...) {
   mod <- errors
-  shrinkage(read_fit_model(mod),
-            errors_name = "ETA",
-            variance_name = "OMEGA",
-            from_diag = TRUE,
-            ...)
+  iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
+  if (length(iph_files)) {
+    shrinkage(read_fit_model(mod),
+              errors_name = "ETA",
+              variance_name = "OMEGA",
+              from_diag = TRUE,
+              ...)
+  } else {
+    shk_files <- get_chain_files(mod, ".shk", check_exists = "all_or_none")
+    if (!length(shk_files)) {
+      stop("No *.iph or *.shk files found; cannot calculate shrinkage")
+    }
+
+    shk <- purrr::map_dfr(shk_files, fread_chain_file, .id = "chain") %>%
+      # From Intro to NM 7: "Type 4=%Eta shrinkage SD version"
+      dplyr::filter(.data$TYPE == 4)
+
+    if (!nrow(shk)) {
+      stop("Failed to extract TYPE=4 rows from *.shk files:\n",
+           paste("  -", shk_files, collapse = "\n"))
+    }
+
+    if (dplyr::n_distinct(shk$SUBPOP) != 1) {
+      stop("shrinkage() does not currently support more than one SUBPOP")
+    }
+
+    dplyr::select(shk, tidyr::starts_with("ETA")) %>%
+      dplyr::summarise(dplyr::across(.fns = stats::median))  %>%
+      as.numeric()
+  }
 }
 
 #' @rdname shrinkage

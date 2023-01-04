@@ -60,7 +60,8 @@ reduced by group-level pooling.
 
 For a \code{bbi_nmbayes_model} object, the \code{ETA} values are taken as the errors,
 and variance for each \code{ETA} is extracted from the diagonal of the \code{OMEGA}
-matrix.
+matrix. As a special case, if \verb{*.iph} files do not exist, the shrinkage
+values are collected from the \verb{*.shk} files.
 
 For a \pkg{posterior} draws object, the errors and variance are extracted for
 the specified parameter names.
