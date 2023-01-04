@@ -82,6 +82,51 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
   expect_error(shrinkage(mod), "cannot calculate")
 })
 
+expect_percent <- function(x, len = NULL) {
+  res <- checkmate::check_double(x, lower = 0, upper = 100, len = len)
+  checkmate::makeAssertion(
+    x, res, var.name = checkmate::vname(x), collection = NULL)
+}
+
+test_that("shrinkage.rvar() returns expected shape", {
+  # One-dimensional rvar with 10 "groups".
+  x <- posterior::rvar_rng(rnorm, 10, ndraws = 50)
+  res <- shrinkage(x)
+  expect_percent(res, len = 1L)
+  expect_null(dim(res))
+
+  # Two-dimensional rvar with 10 groups...
+  x <- posterior::rvar_rng(rnorm, 50, ndraws = 50)
+  dim(x) <- c(5, 10)
+  res <- shrinkage(x)
+  expect_percent(res, len = 5L)
+  expect_null(dim(res))
+  # ... or 5 groups.
+  res <- shrinkage(x, group_idx = 1)
+  expect_percent(res, len = 10L)
+  expect_null(dim(res))
+
+  # Three-dimensional rvar with 10 groups...
+  x <- posterior::rvar_rng(rnorm, 100, ndraws = 50)
+  dim(x) <- c(2, 5, 10)
+  res <- shrinkage(x)
+  expect_percent(res)
+  expect_identical(dim(res), c(2L, 5L))
+  # ... or 5 groups...
+  res <- shrinkage(x, group_idx = 2)
+  expect_percent(res)
+  expect_identical(dim(res), c(2L, 10L))
+  # ... or 2 groups...
+  res <- shrinkage(x, group_idx = 1)
+  expect_percent(res)
+  expect_identical(dim(res), c(5L, 10L))
+  # ... or 50 groups across two dimensions.
+  res <- shrinkage(x, group_idx = c(2, 3))
+  expect_percent(res)
+  expect_null(dim(res))
+  expect_length(res, 2L)
+})
+
 test_that("shrinkage.rvar() aborts on invalid input", {
   x <- posterior::rvar_rng(rnorm, 10, ndraws = 50)
   y <- x
