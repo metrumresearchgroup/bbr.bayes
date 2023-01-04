@@ -28,8 +28,8 @@
 #'   * As with NONMEM's shrinkage values, the returned values are percentages
 #'     rather than fractions.
 #'
-#'   * The variance of the errors is supplied. The denominator is calculated by
-#'     taking the expectation of those values.
+#'   * If the variance of the errors is supplied, the denominator is calculated
+#'     by taking the expectation of those values.
 #'
 #' @param errors An object from which errors can be extracted.
 #' @param ... Additional arguments passed on to methods.
@@ -93,7 +93,8 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
 #' @param variance_name Name of a parameter to extract from the `draws_rvars`
 #'   object and use as the variance. The dimensions of this value should
 #'   correspond to the dimenions in the errors after summarizing across the
-#'   group dimension(s).
+#'   group dimension(s). If no name is provided, the variance across groups is
+#'   calculated for the extracted errors.
 #' @param from_diag To obtain the variance values, take the diagonal of the
 #'   matrix return by `variance_name`.
 #' @param group_idx A vector of indices specifying which dimension(s) correspond
@@ -101,36 +102,40 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
 #' @export
 shrinkage.draws <- function(errors,
                             errors_name,
-                            variance_name,
+                            variance_name = NULL,
                             from_diag = FALSE,
                             group_idx = NULL,
                             ...) {
   rlang::check_dots_used()
   checkmate::assert_string(errors_name)
-  checkmate::assert_string(variance_name)
+  checkmate::assert_string(variance_name, null.ok = TRUE)
 
   draws <- posterior::as_draws_rvars(errors)
   errs <- posterior::drop(draws[[errors_name]])
 
-  err_var <- draws[[variance_name]]
-  if (isTRUE(from_diag)) {
-    if (!is.matrix(err_var)) {
-      stop("Value for `variance_name` must be matrix if from_diag=TRUE")
+  err_var <- NULL
+  if (!is.null(variance_name)) {
+    err_var <- draws[[variance_name]]
+    if (isTRUE(from_diag)) {
+      if (!is.matrix(err_var)) {
+        stop("Value for `variance_name` must be matrix if from_diag=TRUE")
+      }
+      err_var <- diag(err_var)
     }
-    err_var <- diag(err_var)
+    err_var <- posterior::drop(err_var)
   }
-  err_var <- posterior::drop(err_var)
 
   shrinkage(errs, group_idx = group_idx, variance = err_var)
 }
 
 #' @rdname shrinkage
 #' @param variance A \pkg{posterior} rvar object specifying variance of the
-#'   errors.
+#'   errors. If not specified, it is set to the variance across groups in
+#'   `errors`.
 #' @export
-shrinkage.rvar <- function(errors, variance, group_idx = NULL, ...) {
+shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
   rlang::check_dots_used()
-  checkmate::assert_class(variance, "rvar")
+  checkmate::assert_class(variance, "rvar", null.ok = TRUE)
   checkmate::assert_integerish(group_idx, null.ok = TRUE, lower = 1L)
 
   margin <- NULL
@@ -153,18 +158,26 @@ shrinkage.rvar <- function(errors, variance, group_idx = NULL, ...) {
 
   if (is.null(margin)) {
     pt_var_fn <- stats::sd
+    group_var_fn <- posterior::rvar_sd
   } else {
     pt_var_fn <- function(x) apply(x, margin, stats::sd)
+    group_var_fn <- function(x) {
+      posterior::rvar_apply(x, margin, posterior::rvar_sd)
+    }
   }
 
   numer <- pt_var_fn(posterior::E(errors))
-  dim_var <- dim(variance)
-  dim_want <- dim(numer) %||% length(numer)
-  if (!identical(dim_var, dim_want)) {
-    stop(sprintf("dim(`variance`) is %s, expected %s",
-                 deparse(dim_var), deparse(dim_want)))
+  denom <- if (is.null(variance)) {
+    posterior::E(group_var_fn(errors))
+  } else {
+    dim_var <- dim(variance)
+    dim_want <- dim(numer) %||% length(numer)
+    if (!identical(dim_var, dim_want)) {
+      stop(sprintf("dim(`variance`) is %s, expected %s",
+                   deparse(dim_var), deparse(dim_want)))
+    }
+    sqrt(posterior::E(variance))
   }
-  denom <- sqrt(posterior::E(variance))
 
   return((1 - numer / denom) * 100)
 }

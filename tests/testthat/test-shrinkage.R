@@ -88,8 +88,11 @@ test_that("shrinkage.rvar() aborts on invalid input", {
   dim(y) <- c(2, 5)
 
   expect_equal(dim(x), 10L)
-  expect_error(shrinkage(x, variance = y, group_idx = 1),
+  expect_error(shrinkage(x, group_idx = 1),
                "margin free")
+
+  expect_error(shrinkage(y, group_idx = 3),
+               "group_idx values")
 
   expect_error(shrinkage(x, variance = y),
                "dim(`variance`)",

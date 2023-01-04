@@ -14,13 +14,13 @@ shrinkage(errors, ...)
 \method{shrinkage}{draws}(
   errors,
   errors_name,
-  variance_name,
+  variance_name = NULL,
   from_diag = FALSE,
   group_idx = NULL,
   ...
 )
 
-\method{shrinkage}{rvar}(errors, variance, group_idx = NULL, ...)
+\method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ...)
 }
 \arguments{
 \item{errors}{An object from which errors can be extracted.}
@@ -33,7 +33,8 @@ object and use as the errors.}
 \item{variance_name}{Name of a parameter to extract from the \code{draws_rvars}
 object and use as the variance. The dimensions of this value should
 correspond to the dimenions in the errors after summarizing across the
-group dimension(s).}
+group dimension(s). If no name is provided, the variance across groups is
+calculated for the extracted errors.}
 
 \item{from_diag}{To obtain the variance values, take the diagonal of the
 matrix return by \code{variance_name}.}
@@ -42,7 +43,8 @@ matrix return by \code{variance_name}.}
 to groups. Defaults to the last dimension when not specified.}
 
 \item{variance}{A \pkg{posterior} rvar object specifying variance of the
-errors.}
+errors. If not specified, it is set to the variance across groups in
+\code{errors}.}
 }
 \value{
 Vector of shrinkage estimates, in the same order as the values
@@ -77,8 +79,8 @@ definition, with a few adjustments:
 deviation rather than variance.
 \item As with NONMEM's shrinkage values, the returned values are percentages
 rather than fractions.
-\item The variance of the errors is supplied. The denominator is calculated by
-taking the expectation of those values.
+\item If the variance of the errors is supplied, the denominator is calculated
+by taking the expectation of those values.
 }
 }
 \references{
