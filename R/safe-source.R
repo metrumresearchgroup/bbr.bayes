@@ -42,11 +42,12 @@ safe_source_function <- function(.file, .func_name) {
 #'   doesn't inherit this class.
 #' @keywords internal
 safe_call_sourced <- function(.func, .args, .file = NULL, .expected_class = NULL) {
+  fname <- as.character(substitute(.func))
   .res <- tryCatch(
     do.call(.func, .args),
     error = function(.e) {
       err_msg <- paste(
-        glue("Calling `{as.character(substitute(.func))}()` from {.file} FAILED with the following:"),
+        glue("Calling `{fname}()` from {.file} FAILED with the following:"),
         .e$message
       )
       stop(err_msg, call. = FALSE)
@@ -55,7 +56,7 @@ safe_call_sourced <- function(.func, .args, .file = NULL, .expected_class = NULL
 
   if (!is.null(.expected_class) && !inherits(.res, .expected_class)) {
     err_msg <- paste(
-      glue("The result of `{as.character(substitute(.func))}()` was expected to be {.expected_class} but got the following:"),
+      glue("The result of `{fname}()` was expected to be {.expected_class} but got the following:"),
       paste(class(.res), collapse = ", ")
     )
     stop(err_msg, call. = FALSE)

@@ -33,7 +33,7 @@ test_that("build_data.bbi_stan_model errors with flawed -standata.R", {
   # fails because it can't find the relative path to the data from the temp dir
   expect_error(
     build_data(new_mod),
-    regexp = "Calling.+FAILED.+fxa.data.csv' does not exist"
+    regexp = "Calling `make_standata.+FAILED.+fxa.data.csv' does not exist"
   )
 
   # replace -standata.R with non-working code
@@ -44,6 +44,16 @@ test_that("build_data.bbi_stan_model errors with flawed -standata.R", {
   expect_error(
     build_data(new_mod),
     regexp = "Loading.+FAILED.+unexpected end of input"
+  )
+
+  # replace -standata.R with function that returns wrong type
+  writeLines(
+    "make_standata <- function(.dir) 3",
+    build_path_from_model(new_mod, STANDATA_R_SUFFIX)
+  )
+  expect_error(
+    build_data(new_mod),
+    regexp = "`make_standata\\(\\)` was expected to be list"
   )
 
   # replace -standata.R with dummy function
