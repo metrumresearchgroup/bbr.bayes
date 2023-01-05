@@ -38,13 +38,15 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
   commands:
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
+  - R -s -e 'devtools::install_deps(upgrade = "never")'
   - git clone -b 1.5.0.9001 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
-  - R -s -e 'cmdstanr::check_cmdstan_toolchain(fix = TRUE)' -e 'cmdstanr::install_cmdstan(cores = 2)'
-  - /ephemeral/bbi version
-  - R -s -e 'devtools::check(env_vars = c("BBI_EXE_PATH" = "/ephemeral/bbi", "NOT_CRAN" = "true"))'
+  - |
+    R -s -e 'cmdstanr::install_cmdstan(cores = 2)' >/tmp/cmdstanr-install-stdout ||
+      { cat /tmp/cmdstanr-install-stdout; exit 1; }
+  - R -s -e 'devtools::check()'
   environment:
+    NOT_CRAN: true
     BBI_EXE_PATH: /ephemeral/bbi
   volumes:
   - name: cache
