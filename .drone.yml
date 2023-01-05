@@ -103,6 +103,9 @@ steps:
   - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
   - git clone -b 1.5.0.9001 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
+  - |
+    R -s -e 'cmdstanr::install_cmdstan(cores = 2)' >/tmp/cmdstanr-install-stdout ||
+      { cat /tmp/cmdstanr-install-stdout; exit 1; }
   - R -s -e 'pkgpub::create_tagged_repo(.dir = '"'"'/ephemeral'"'"')'
   environment:
     NOT_CRAN: true
