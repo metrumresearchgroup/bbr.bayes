@@ -12,14 +12,14 @@ steps:
   image: omerxx/drone-ecr-auth
   commands:
   - $(aws ecr get-login --no-include-email --region us-east-1)
-  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   volumes:
   - name: docker.sock
     path: /var/run/docker.sock
 
 - name: Install bbi
   pull: never
-  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   commands:
     - |
       curl -fSsL "$BBI_URL/$BBI_VERSION/bbi_linux_amd64.tar.gz" |
@@ -36,14 +36,11 @@ steps:
 
 - name: "Check package: R 4.1"
   pull: never
-  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   commands:
   - R -s -e 'devtools::install_deps(upgrade = "never")'
   - git clone -b 1.5.0.9001 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
-  - |
-    R -s -e 'cmdstanr::install_cmdstan(cores = 2)' >/tmp/cmdstanr-install-stdout ||
-      { cat /tmp/cmdstanr-install-stdout; exit 1; }
   - R -s -e 'devtools::check()'
   environment:
     NOT_CRAN: true
@@ -78,14 +75,14 @@ steps:
   image: omerxx/drone-ecr-auth
   commands:
   - $(aws ecr get-login --no-include-email --region us-east-1)
-  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  - docker pull 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   volumes:
   - name: docker.sock
     path: /var/run/docker.sock
 
 # - name: Install bbi
 #   pull: never
-#   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+#   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
 #   commands:
 #   - chmod +x install_bbi.sh
 #   - ./install_bbi.sh -p /ephemeral/bbi -v 'v3.2.0'
@@ -95,7 +92,7 @@ steps:
 
 - name: Build package
   pull: never
-  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:latest
+  image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   commands:
   - git config --global user.email drone@metrumrg.com
   - git config --global user.name Drony
@@ -103,9 +100,6 @@ steps:
   - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
   - git clone -b 1.5.0.9001 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
   - R -s -e 'devtools::install("/tmp/bbr")'
-  - |
-    R -s -e 'cmdstanr::install_cmdstan(cores = 2)' >/tmp/cmdstanr-install-stdout ||
-      { cat /tmp/cmdstanr-install-stdout; exit 1; }
   - R -s -e 'pkgpub::create_tagged_repo(.dir = '"'"'/ephemeral'"'"')'
   environment:
     NOT_CRAN: true
