@@ -9,7 +9,8 @@
 #' For a `bbi_nmbayes_model` object, the `ETA` values are taken as the errors,
 #' and variance for each `ETA` is extracted from the diagonal of the `OMEGA`
 #' matrix. As a special case, if `*.iph` files do not exist, the shrinkage
-#' values are collected from the `*.shk` files.
+#' values are collected from the `*.shk` files and summarized as medians across
+#' chains.
 #'
 #' For a \pkg{posterior} draws object, the errors and variance are extracted for
 #' the specified parameter names.
