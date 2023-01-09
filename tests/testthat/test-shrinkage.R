@@ -90,13 +90,13 @@ expect_percent <- function(x, len = NULL) {
 
 test_that("shrinkage.rvar() returns expected shape", {
   # One-dimensional rvar with 10 "groups".
-  x <- posterior::rvar_rng(rnorm, 10, ndraws = 50)
+  x <- posterior::rvar_rng(rnorm, 10, ndraws = 60)
   res <- shrinkage(x)
   expect_percent(res, len = 1L)
   expect_null(dim(res))
 
   # Two-dimensional rvar with 10 groups...
-  x <- posterior::rvar_rng(rnorm, 50, ndraws = 50)
+  x <- posterior::rvar_rng(rnorm, 50, ndraws = 60)
   dim(x) <- c(5, 10)
   res <- shrinkage(x)
   expect_percent(res, len = 5L)
@@ -107,7 +107,7 @@ test_that("shrinkage.rvar() returns expected shape", {
   expect_null(dim(res))
 
   # Three-dimensional rvar with 10 groups...
-  x <- posterior::rvar_rng(rnorm, 100, ndraws = 50)
+  x <- posterior::rvar_rng(rnorm, 100, ndraws = 60)
   dim(x) <- c(2, 5, 10)
   res <- shrinkage(x)
   expect_percent(res)
@@ -128,7 +128,7 @@ test_that("shrinkage.rvar() returns expected shape", {
 })
 
 test_that("shrinkage.rvar() aborts on invalid input", {
-  x <- posterior::rvar_rng(rnorm, 10, ndraws = 50)
+  x <- posterior::rvar_rng(rnorm, 10, ndraws = 60)
   y <- x
   dim(y) <- c(2, 5)
 
