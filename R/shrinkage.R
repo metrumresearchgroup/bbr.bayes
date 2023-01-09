@@ -36,10 +36,10 @@
 #'   specified by `errors`.
 #'
 #'   The dimensions of the input errors determines the dimensions of the return
-#'   value (dropping any dimensions with only one level). For example, errors of
-#'   the form `X[i,j]`, where `j` is the group-level index, would lead to a
-#'   vector of `i` values. And errors `X[i,j,k]`, where `k` is the group-level
-#'   index, would lead to a matrix with `i` rows and `j` columns.
+#'   value. For example, errors of the form `X[i,j]`, where `j` is the
+#'   group-level index, would lead to a vector of `i` values. And errors
+#'   `X[i,j,k]`, where `k` is the group-level index, would lead to a matrix with
+#'   `i` rows and `j` columns.
 #'
 #' @references Andrew Gelman, Iain Pardoe (2006) Bayesian measures of explained
 #'   variance and pooling in multilevel (hierarchical) models. *Technometrics*.
@@ -55,10 +55,14 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
   mod <- errors
   iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
   if (length(iph_files)) {
-    shrinkage(read_fit_model(mod),
-              errors_name = "ETA",
-              variance_name = "OMEGA",
-              from_diag = TRUE,
+    draws <- posterior::as_draws_rvars(errors)
+    eta <- draws[["ETA"]]
+    # For ETA[I,J,K], J is SUBPOP value. See reshape_iph().
+    if (dim(eta[2]) != 1) {
+      stop("shrinkage() does not currently support more than one SUBPOP")
+    }
+    shrinkage(posterior::drop(eta),
+              variance = diag(draws[["OMEGA"]]),
               ...)
   } else {
     shk_files <- get_chain_files(mod, ".shk", check_exists = "all_or_none")
@@ -93,15 +97,12 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
 #'   correspond to the dimenions in the errors after summarizing across the
 #'   group dimension(s). If no name is provided, the variance across groups is
 #'   calculated for the extracted errors.
-#' @param from_diag To obtain the variance values, take the diagonal of the
-#'   matrix return by `variance_name`.
 #' @param group_idx A vector of indices specifying which dimension(s) correspond
 #'   to groups. Defaults to the last dimension when not specified.
 #' @export
 shrinkage.draws <- function(errors,
                             errors_name,
                             variance_name = NULL,
-                            from_diag = FALSE,
                             group_idx = NULL,
                             ...) {
   rlang::check_dots_used()
@@ -109,18 +110,11 @@ shrinkage.draws <- function(errors,
   checkmate::assert_string(variance_name, null.ok = TRUE)
 
   draws <- posterior::as_draws_rvars(errors)
-  errs <- posterior::drop(draws[[errors_name]])
+  errs <- draws[[errors_name]]
 
   err_var <- NULL
   if (!is.null(variance_name)) {
     err_var <- draws[[variance_name]]
-    if (isTRUE(from_diag)) {
-      if (!is.matrix(err_var)) {
-        stop("Value for `variance_name` must be matrix if from_diag=TRUE")
-      }
-      err_var <- diag(err_var)
-    }
-    err_var <- posterior::drop(err_var)
   }
 
   shrinkage(errs, group_idx = group_idx, variance = err_var)

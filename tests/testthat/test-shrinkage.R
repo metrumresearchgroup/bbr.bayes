@@ -125,6 +125,13 @@ test_that("shrinkage.rvar() returns expected shape", {
   expect_percent(res)
   expect_null(dim(res))
   expect_length(res, 2L)
+
+  # Redundant dimensions are kept.
+  x <- posterior::rvar_rng(rnorm, 100, ndraws = 60)
+  dim(x) <- c(50, 1, 2)
+  res <- shrinkage(x, group_idx = 1)
+  expect_percent(res)
+  expect_identical(dim(res), c(1L, 2L))
 })
 
 test_that("shrinkage.rvar() aborts on invalid input", {
@@ -142,12 +149,4 @@ test_that("shrinkage.rvar() aborts on invalid input", {
   expect_error(shrinkage(x, variance = y),
                "dim(`variance`)",
                fixed = TRUE)
-})
-
-test_that("shrinkage.draws() aborts on invalid input", {
-  draws <- posterior::as_draws(NMBAYES_MOD1)
-  expect_error(shrinkage(draws,
-                         errors_name = "ETA", variance_name = "ETA",
-                         from_diag = TRUE),
-               "must be matrix")
 })

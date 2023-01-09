@@ -11,14 +11,7 @@ shrinkage(errors, ...)
 
 \method{shrinkage}{bbi_nmbayes_model}(errors, ...)
 
-\method{shrinkage}{draws}(
-  errors,
-  errors_name,
-  variance_name = NULL,
-  from_diag = FALSE,
-  group_idx = NULL,
-  ...
-)
+\method{shrinkage}{draws}(errors, errors_name, variance_name = NULL, group_idx = NULL, ...)
 
 \method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ...)
 }
@@ -47,9 +40,6 @@ correspond to the dimenions in the errors after summarizing across the
 group dimension(s). If no name is provided, the variance across groups is
 calculated for the extracted errors.}
 
-\item{from_diag}{To obtain the variance values, take the diagonal of the
-matrix return by \code{variance_name}.}
-
 \item{group_idx}{A vector of indices specifying which dimension(s) correspond
 to groups. Defaults to the last dimension when not specified.}
 
@@ -62,10 +52,10 @@ Vector of shrinkage estimates, in the same order as the values
 specified by \code{errors}.
 
 The dimensions of the input errors determines the dimensions of the return
-value (dropping any dimensions with only one level). For example, errors of
-the form \code{X[i,j]}, where \code{j} is the group-level index, would lead to a
-vector of \code{i} values. And errors \code{X[i,j,k]}, where \code{k} is the group-level
-index, would lead to a matrix with \code{i} rows and \code{j} columns.
+value. For example, errors of the form \code{X[i,j]}, where \code{j} is the
+group-level index, would lead to a vector of \code{i} values. And errors
+\code{X[i,j,k]}, where \code{k} is the group-level index, would lead to a matrix with
+\code{i} rows and \code{j} columns.
 }
 \description{
 Using the posterior samples, estimate how much the variance of errors is
