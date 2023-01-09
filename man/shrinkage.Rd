@@ -67,7 +67,7 @@ values are collected from the \verb{*.shk} files and summarized as medians acros
 chains.
 
 For a \pkg{posterior} draws object, the errors and variance are extracted for
-the specified parameter names.
+the parameter names specified by \code{errors_name} and \code{variance_name}.
 
 For a \pkg{posterior} rvar object, the errors and variance are supplied
 directly.

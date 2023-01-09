@@ -13,7 +13,7 @@
 #' chains.
 #'
 #' For a \pkg{posterior} draws object, the errors and variance are extracted for
-#' the specified parameter names.
+#' the parameter names specified by `errors_name` and `variance_name`.
 #'
 #' For a \pkg{posterior} rvar object, the errors and variance are supplied
 #' directly.
