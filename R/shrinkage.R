@@ -1,24 +1,8 @@
 
 #' Calculate shrinkage in variance of errors
 #'
-#' @description
-#'
 #' Using the posterior samples, estimate how much the variance of errors is
 #' reduced by group-level pooling.
-#'
-#' For a `bbi_nmbayes_model` object, the `ETA` values are taken as the errors,
-#' and variance for each `ETA` is extracted from the diagonal of the `OMEGA`
-#' matrix. As a special case, if `*.iph` files do not exist, the shrinkage
-#' values are collected from the `*.shk` files and summarized as medians across
-#' chains.
-#'
-#' For a \pkg{posterior} draws object, the errors and variance are extracted for
-#' the parameter names specified by `errors_name` and `variance_name`.
-#'
-#' For a \pkg{posterior} rvar object, the errors and variance are supplied
-#' directly.
-#'
-#' @details
 #'
 #' The shrinkage calculation here follows Gelman and Pardoe's pooling factor
 #' definition, with a few adjustments:
@@ -33,6 +17,19 @@
 #'     by taking the expectation of those values.
 #'
 #' @param errors An object from which errors can be extracted.
+#'
+#'   * For a `bbi_nmbayes_model` object, the `ETA` values are taken as the
+#'     errors, and variance for each `ETA` is extracted from the diagonal of the
+#'     `OMEGA` matrix. As a special case, if `*.iph` files do not exist, the
+#'     shrinkage values are collected from the `*.shk` files and summarized as
+#'     medians across chains.
+#'
+#'   * For a \pkg{posterior} draws object, the errors and variance are extracted
+#'     for the parameter names specified by `errors_name` and `variance_name`.
+#'
+#'   * For a \pkg{posterior} rvar object, the errors and variance are supplied
+#'     directly.
+#'
 #' @param ... Additional arguments passed on to methods.
 #'
 #' @return Vector of shrinkage estimates, in the same order as the values

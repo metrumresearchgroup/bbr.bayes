@@ -23,7 +23,18 @@ shrinkage(errors, ...)
 \method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ...)
 }
 \arguments{
-\item{errors}{An object from which errors can be extracted.}
+\item{errors}{An object from which errors can be extracted.
+\itemize{
+\item For a \code{bbi_nmbayes_model} object, the \code{ETA} values are taken as the
+errors, and variance for each \code{ETA} is extracted from the diagonal of the
+\code{OMEGA} matrix. As a special case, if \verb{*.iph} files do not exist, the
+shrinkage values are collected from the \verb{*.shk} files and summarized as
+medians across chains.
+\item For a \pkg{posterior} draws object, the errors and variance are extracted
+for the parameter names specified by \code{errors_name} and \code{variance_name}.
+\item For a \pkg{posterior} rvar object, the errors and variance are supplied
+directly.
+}}
 
 \item{...}{Additional arguments passed on to methods.}
 
@@ -59,18 +70,6 @@ index, would lead to a matrix with \code{i} rows and \code{j} columns.
 \description{
 Using the posterior samples, estimate how much the variance of errors is
 reduced by group-level pooling.
-
-For a \code{bbi_nmbayes_model} object, the \code{ETA} values are taken as the errors,
-and variance for each \code{ETA} is extracted from the diagonal of the \code{OMEGA}
-matrix. As a special case, if \verb{*.iph} files do not exist, the shrinkage
-values are collected from the \verb{*.shk} files and summarized as medians across
-chains.
-
-For a \pkg{posterior} draws object, the errors and variance are extracted for
-the parameter names specified by \code{errors_name} and \code{variance_name}.
-
-For a \pkg{posterior} rvar object, the errors and variance are supplied
-directly.
 }
 \details{
 The shrinkage calculation here follows Gelman and Pardoe's pooling factor
