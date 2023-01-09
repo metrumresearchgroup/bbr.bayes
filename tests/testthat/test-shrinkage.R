@@ -88,6 +88,14 @@ expect_percent <- function(x, len = NULL) {
     x, res, var.name = checkmate::vname(x), collection = NULL)
 }
 
+test_that("shrinkage.draws() and shrinkage.rvar() return same value", {
+  x <- posterior::rvar_rng(rnorm, 10, ndraws = 60)
+  res <- shrinkage.draws(posterior::as_draws_list(list(foo = x)),
+                         "foo")
+  expect_percent(res)
+  expect_equal(res, shrinkage.rvar(x))
+})
+
 test_that("shrinkage.rvar() returns expected shape", {
   # One-dimensional rvar with 10 "groups".
   x <- posterior::rvar_rng(rnorm, 10, ndraws = 60)

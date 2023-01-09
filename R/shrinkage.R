@@ -24,8 +24,11 @@
 #'     shrinkage values are collected from the `*.shk` files and summarized as
 #'     medians across chains.
 #'
-#'   * For a \pkg{posterior} draws object, the errors and variance are extracted
-#'     for the parameter names specified by `errors_name` and `variance_name`.
+#'   * For a \pkg{posterior} draws object, the errors are extracted for the
+#'     parameter name specified by `errors_name`. When passing a draws object,
+#'     the variance is calculated from the errors, and there is not support for
+#'     also providing separate variance values; to do that, pass rvar objects
+#'     instead.
 #'
 #'   * For a \pkg{posterior} rvar object, the errors and variance are supplied
 #'     directly.
@@ -92,32 +95,18 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
 #' @rdname shrinkage
 #' @param errors_name Name of a parameter to extract from the `draws_rvars`
 #'   object and use as the errors.
-#' @param variance_name Name of a parameter to extract from the `draws_rvars`
-#'   object and use as the variance. The dimensions of this value should
-#'   correspond to the dimenions in the errors after summarizing across the
-#'   group dimension(s). If no name is provided, the variance across groups is
-#'   calculated for the extracted errors.
 #' @param group_idx A vector of indices specifying which dimension(s) correspond
 #'   to groups. Defaults to the last dimension when not specified.
 #' @export
 shrinkage.draws <- function(errors,
                             errors_name,
-                            variance_name = NULL,
                             group_idx = NULL,
                             ...) {
   rlang::check_dots_used()
   checkmate::assert_string(errors_name)
-  checkmate::assert_string(variance_name, null.ok = TRUE)
 
   draws <- posterior::as_draws_rvars(errors)
-  errs <- draws[[errors_name]]
-
-  err_var <- NULL
-  if (!is.null(variance_name)) {
-    err_var <- draws[[variance_name]]
-  }
-
-  shrinkage(errs, group_idx = group_idx, variance = err_var)
+  shrinkage(draws[[errors_name]], group_idx = group_idx)
 }
 
 #' @rdname shrinkage

@@ -11,7 +11,7 @@ shrinkage(errors, ...)
 
 \method{shrinkage}{bbi_nmbayes_model}(errors, ...)
 
-\method{shrinkage}{draws}(errors, errors_name, variance_name = NULL, group_idx = NULL, ...)
+\method{shrinkage}{draws}(errors, errors_name, group_idx = NULL, ...)
 
 \method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ...)
 }
@@ -23,8 +23,11 @@ errors, and variance for each \code{ETA} is extracted from the diagonal of the
 \code{OMEGA} matrix. As a special case, if \verb{*.iph} files do not exist, the
 shrinkage values are collected from the \verb{*.shk} files and summarized as
 medians across chains.
-\item For a \pkg{posterior} draws object, the errors and variance are extracted
-for the parameter names specified by \code{errors_name} and \code{variance_name}.
+\item For a \pkg{posterior} draws object, the errors are extracted for the
+parameter name specified by \code{errors_name}. When passing a draws object,
+the variance is calculated from the errors, and there is not support for
+also providing separate variance values; to do that, pass rvar objects
+instead.
 \item For a \pkg{posterior} rvar object, the errors and variance are supplied
 directly.
 }}
@@ -33,12 +36,6 @@ directly.
 
 \item{errors_name}{Name of a parameter to extract from the \code{draws_rvars}
 object and use as the errors.}
-
-\item{variance_name}{Name of a parameter to extract from the \code{draws_rvars}
-object and use as the variance. The dimensions of this value should
-correspond to the dimenions in the errors after summarizing across the
-group dimension(s). If no name is provided, the variance across groups is
-calculated for the extracted errors.}
 
 \item{group_idx}{A vector of indices specifying which dimension(s) correspond
 to groups. Defaults to the last dimension when not specified.}
