@@ -119,6 +119,13 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
   checkmate::assert_class(variance, "rvar", null.ok = TRUE)
   checkmate::assert_integerish(group_idx, null.ok = TRUE, lower = 1L)
 
+  # `errors` comes in with at least one dimension. If there is only one, margin
+  # is NULL and the only option is to calculate shrinkage over that dimension.
+  #
+  # If there's more than one dimension (e.g., in the NONMEM context, ETA comes
+  # in as two dimensions, where the second is for the individual), we calculate
+  # shrinkage over the last dimension unless `group_idx` specifies which
+  # dimension(s) to use.
   margin <- NULL
   ndim <- length(dim(errors))
 
@@ -137,6 +144,21 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
     margin <- seq_len(ndim - 1)
   }
 
+  # For the numerator, the standard deviation (`pt_var_fn`) is calculated on the
+  # point estimates obtained by taking the mean of the samples. If `errors` has
+  # one dimension, the result is a vector with the length of the groups. If
+  # `errors` has more than one dimension, the result is an array with the same
+  # dimensions as `errors`. In either case, we've taken the expectation and are
+  # no longer working with an rvar by the time the value is fed to `pt_var_fn`.
+  #
+  # For the denominator (when `variance` isn't specified), the standard
+  # deviation of group errors values is calculated within each sample
+  # (`group_var_fn`). If `errors` has one dimension, the result is an rvar with
+  # one dimension and one value. If `errors` has more than one dimension, the
+  # result is an rvar with the `group_idx` dimension(s) dropped.
+  #
+  # Taking expectation of the `group_var_fn` result leads to a value with the
+  # same dimensions as the `pt_var_fn` return value.
   if (is.null(margin)) {
     pt_var_fn <- stats::sd
     group_var_fn <- posterior::rvar_sd
