@@ -7,7 +7,7 @@ read_chain_files <- function(mod, extension) {
 }
 
 # Reference implementation derived from the example project's baysh function.
-shrinkage_ref_impl <- function(mod) {
+shrinkage_ref_impl <- function(mod, use_sd = TRUE) {
   ext <- read_chain_files(mod, "ext")
   iph <- read_chain_files(mod, "iph")
 
@@ -19,23 +19,39 @@ shrinkage_ref_impl <- function(mod) {
     dplyr::summarise(dplyr::across(tidyselect::everything(), mean),
                      .groups = "drop") %>%
     dplyr::select(tidyselect::starts_with("ETA")) %>%
-    dplyr::summarise(dplyr::across(tidyselect::everything(), sd))
+    dplyr::summarise(dplyr::across(tidyselect::everything(),
+                                   if (isTRUE(use_sd)) sd else var))
 
   eta_idxs <- stringr::str_extract(names(numer), "\\d+")
   omegas <- purrr::map_chr(eta_idxs, ~ glue("OMEGA({.x},{.x})"))
   denom <- ext %>%
     dplyr::select(tidyr::all_of(omegas)) %>%
     dplyr::summarise(dplyr::across(tidyselect::everything(),
-                                   ~ sqrt(mean(.x))))
+                                   ~ mean(.x)))
+  if (isTRUE(use_sd)) {
+    denom <- sqrt(denom)
+  }
 
   res <- as.numeric(1 - numer / denom) * 100
   names(res) <- names(numer)
   return(res)
 }
 
-test_that("shrinkage.bbi_nmbayes_model() matches reference implementation", {
+test_that("shrinkage.bbi_nmbayes_model() matches reference implementation: sd", {
   expect_equal(shrinkage(NMBAYES_MOD1),
                unname(shrinkage_ref_impl(NMBAYES_MOD1)))
+})
+
+test_that("shrinkage.bbi_nmbayes_model() matches reference implementation: var", {
+  expect_equal(shrinkage(NMBAYES_MOD1, use_sd = FALSE),
+               unname(shrinkage_ref_impl(NMBAYES_MOD1, use_sd = FALSE)))
+})
+
+test_that("shrinkage(): rank matches for use_sd=TRUE and use_sd=FALSE", {
+  res_sd <- shrinkage(NMBAYES_MOD1, use_sd = TRUE)
+  res_var <- shrinkage(NMBAYES_MOD1, use_sd = FALSE)
+  expect_false(any(res_sd == res_var))
+  expect_identical(rank(res_sd), rank(res_var))
 })
 
 test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {

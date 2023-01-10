@@ -8,7 +8,8 @@
 #' definition, with a few adjustments:
 #'
 #'   * Keeping with pharmacometrics conventions, the calculation uses standard
-#'     deviation rather than variance.
+#'     deviation rather than variance by default (controlled by `use_sd`
+#'     argument).
 #'
 #'   * As with NONMEM's shrinkage values, the returned values are percentages
 #'     rather than fractions.
@@ -33,6 +34,8 @@
 #'   * For a \pkg{posterior} rvar object, the errors and variance are supplied
 #'     directly.
 #'
+#' @param use_sd Whether to calculate shrinkage with standard deviation
+#'   (default) instead of variance.
 #' @param ... Additional arguments passed on to methods.
 #'
 #' @return Vector of shrinkage estimates, in the same order as the values
@@ -48,13 +51,13 @@
 #'   variance and pooling in multilevel (hierarchical) models. *Technometrics*.
 #'   48(2), 241--251.
 #' @export
-shrinkage <- function(errors, ...) {
+shrinkage <- function(errors, ..., use_sd = TRUE) {
   UseMethod("shrinkage")
 }
 
 #' @rdname shrinkage
 #' @export
-shrinkage.bbi_nmbayes_model <- function(errors, ...) {
+shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
   rlang::check_dots_used()
 
   mod <- errors
@@ -67,7 +70,8 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
       stop("shrinkage() does not currently support more than one SUBPOP")
     }
     shrinkage(posterior::drop(eta),
-              variance = diag(draws[["OMEGA"]]))
+              variance = diag(draws[["OMEGA"]]),
+              use_sd = use_sd)
   } else {
     shk_files <- get_chain_files(mod, ".shk", check_exists = "all_or_none")
     if (!length(shk_files)) {
@@ -102,7 +106,8 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
 shrinkage.draws <- function(errors,
                             errors_name,
                             group_idx = NULL,
-                            ...) {
+                            ...,
+                            use_sd = TRUE) {
   rlang::check_dots_used()
   checkmate::assert_string(errors_name)
 
@@ -112,15 +117,20 @@ shrinkage.draws <- function(errors,
     stop(glue("Could not find '{errors_name}' in rvar draws object"))
   }
 
-  shrinkage(rv, group_idx = group_idx)
+  shrinkage(rv, group_idx = group_idx, use_sd = use_sd)
 }
 
 #' @rdname shrinkage
 #' @param variance A \pkg{posterior} rvar object specifying variance of the
 #'   errors. If not specified, it is set to the variance across groups in
-#'   `errors`.
+#'   `errors`. Note that this should be variance, not standard deviation, even
+#'   when `use_sd` is `TRUE`.
 #' @export
-shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
+shrinkage.rvar <- function(errors,
+                           variance = NULL,
+                           group_idx = NULL,
+                           ...,
+                           use_sd = TRUE) {
   rlang::check_dots_used()
   checkmate::assert_class(variance, "rvar", null.ok = TRUE)
   checkmate::assert_integerish(group_idx, null.ok = TRUE, lower = 1L)
@@ -150,29 +160,38 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
     margin <- seq_len(ndim - 1)
   }
 
-  # For the numerator, the standard deviation (`pt_dispersion_fn`) is calculated
-  # on the point estimates obtained by taking the mean of the samples. If
-  # `errors` has one dimension, the result is a vector with the length of the
-  # groups. If `errors` has more than one dimension, the result is an array with
-  # the same dimensions as `errors`. In either case, we've taken the expectation
-  # and are no longer working with an rvar by the time the value is fed to
-  # `pt_dispersion_fn`.
+  # For the numerator, the standard deviation (or variance, if use_sd=FALSE) is
+  # calculated on the point estimates obtained by taking the mean of the samples
+  # (`pt_dispersion_fn`). If `errors` has one dimension, the result is a vector
+  # with the length of the groups. If `errors` has more than one dimension, the
+  # result is an array with the same dimensions as `errors`. In either case,
+  # we've taken the expectation and are no longer working with an rvar by the
+  # time the value is fed to `pt_dispersion_fn`.
   #
   # For the denominator (when `variance` isn't specified), the standard
-  # deviation of group errors values is calculated within each sample
-  # (`group_dispersion_fn`). If `errors` has one dimension, the result is an
-  # rvar with one dimension and one value. If `errors` has more than one
-  # dimension, the result is an rvar with the `group_idx` dimension(s) dropped.
+  # deviation (or variance, if use_sd=FALSE) of group errors values is
+  # calculated within each sample (`group_dispersion_fn`). If `errors` has one
+  # dimension, the result is an rvar with one dimension and one value. If
+  # `errors` has more than one dimension, the result is an rvar with the
+  # `group_idx` dimension(s) dropped.
   #
   # Taking expectation of the `group_dispersion_fn` result leads to a value with
   # the same dimensions as the `pt_dispersion_fn` return value.
-  if (is.null(margin)) {
-    pt_dispersion_fn <- stats::sd
-    group_dispersion_fn <- posterior::rvar_sd
+  if (isTRUE(use_sd)) {
+    dispersion_fn <- stats::sd
+    rvar_dispersion_fn <- posterior::rvar_sd
   } else {
-    pt_dispersion_fn <- function(x) apply(x, margin, stats::sd)
+    dispersion_fn <- stats::var
+    rvar_dispersion_fn <- posterior::rvar_var
+  }
+
+  if (is.null(margin)) {
+    pt_dispersion_fn <- dispersion_fn
+    group_dispersion_fn <- rvar_dispersion_fn
+  } else {
+    pt_dispersion_fn <- function(x) apply(x, margin, dispersion_fn)
     group_dispersion_fn <- function(x) {
-      posterior::rvar_apply(x, margin, posterior::rvar_sd)
+      posterior::rvar_apply(x, margin, rvar_dispersion_fn)
     }
   }
 
@@ -186,7 +205,10 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
       stop(sprintf("dim(`variance`) is %s, expected %s",
                    deparse(dim_var), deparse(dim_want)))
     }
-    denom <- sqrt(posterior::E(variance))
+    denom <- posterior::E(variance)
+    if (isTRUE(use_sd)) {
+      denom <- sqrt(denom)
+    }
   }
 
   return((1 - numer / denom) * 100)

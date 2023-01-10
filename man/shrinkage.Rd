@@ -7,13 +7,13 @@
 \alias{shrinkage.rvar}
 \title{Calculate shrinkage in variance of errors}
 \usage{
-shrinkage(errors, ...)
+shrinkage(errors, ..., use_sd = TRUE)
 
-\method{shrinkage}{bbi_nmbayes_model}(errors, ...)
+\method{shrinkage}{bbi_nmbayes_model}(errors, ..., use_sd = TRUE)
 
-\method{shrinkage}{draws}(errors, errors_name, group_idx = NULL, ...)
+\method{shrinkage}{draws}(errors, errors_name, group_idx = NULL, ..., use_sd = TRUE)
 
-\method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ...)
+\method{shrinkage}{rvar}(errors, variance = NULL, group_idx = NULL, ..., use_sd = TRUE)
 }
 \arguments{
 \item{errors}{An object from which errors can be extracted.
@@ -34,6 +34,9 @@ directly.
 
 \item{...}{Additional arguments passed on to methods.}
 
+\item{use_sd}{Whether to calculate shrinkage with standard deviation
+(default) instead of variance.}
+
 \item{errors_name}{Name of a parameter to extract from the \code{draws_rvars}
 object and use as the errors.}
 
@@ -42,7 +45,8 @@ to groups. Defaults to the last dimension when not specified.}
 
 \item{variance}{A \pkg{posterior} rvar object specifying variance of the
 errors. If not specified, it is set to the variance across groups in
-\code{errors}.}
+\code{errors}. Note that this should be variance, not standard deviation, even
+when \code{use_sd} is \code{TRUE}.}
 }
 \value{
 Vector of shrinkage estimates, in the same order as the values
@@ -63,7 +67,8 @@ The shrinkage calculation here follows Gelman and Pardoe's pooling factor
 definition, with a few adjustments:
 \itemize{
 \item Keeping with pharmacometrics conventions, the calculation uses standard
-deviation rather than variance.
+deviation rather than variance by default (controlled by \code{use_sd}
+argument).
 \item As with NONMEM's shrinkage values, the returned values are percentages
 rather than fractions.
 \item If the variance of the errors is supplied, the denominator is calculated
