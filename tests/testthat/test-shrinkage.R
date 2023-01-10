@@ -82,6 +82,44 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
   expect_error(shrinkage(mod), "cannot calculate")
 })
 
+test_that("shrinkage.rvar() 1d matches ref", {
+  ref <- unname(shrinkage_ref_impl(NMBAYES_MOD1))
+  draws <- posterior::as_draws_rvars(NMBAYES_MOD1)
+  etas <- posterior::drop(draws[["ETA"]])
+  omega_diag <- diag(draws[["OMEGA"]])
+  for (i in seq_along(ref)) {
+    expect_equal(shrinkage(posterior::drop(etas[i, ]),
+                           variance = omega_diag[i]),
+                 ref[i])
+  }
+})
+
+test_that("shrinkage.rvar() 3d+ matches ref", {
+  ref <- unname(shrinkage_ref_impl(NMBAYES_MOD1))
+  draws <- posterior::as_draws_rvars(NMBAYES_MOD1)
+  eta <- draws[["ETA"]]
+  omega_diag <- diag(draws[["OMEGA"]])
+  dim(omega_diag) <- dim(eta)[-3]
+  res <- shrinkage(eta, variance = omega_diag)
+  # Unlike shrinkage.bbi_nmbayes_model(), this doesn't drop redundant
+  # dimensions, so shrinkage() operated over the last dimension of a 3d array.
+  expect_identical(dim(res), c(5L, 1L))
+  # But the underlying values line up.
+  expect_equal(as.numeric(res), ref)
+
+  # Extend rvars with an additional dimension duplicating same values. Each one
+  # should match the ref.
+  eta2 <- c(eta, eta)
+  dim(eta2) <- c(dim(eta), 2)
+  omega_diag2 <- c(omega_diag, omega_diag)
+  dim(omega_diag2) <- c(dim(omega_diag), 2)
+
+  res <- shrinkage(eta2, variance = omega_diag2, group_idx = 3)
+  expect_identical(dim(res), c(5L, 1L, 2L))
+  expect_equal(as.numeric(res[, , 1]), ref)
+  expect_equal(as.numeric(res[, , 2]), ref)
+})
+
 expect_percent <- function(x, len = NULL) {
   res <- checkmate::check_double(x, lower = 0, upper = 100, len = len)
   checkmate::makeAssertion(
