@@ -88,6 +88,51 @@ test_that("shrinkage.rvar() 3d+ matches ref", {
   expect_equal(as.numeric(res[, , 2]), ref)
 })
 
+### Gelman & Pardoe 2006 reference implementation
+
+# Pooling factor based on code in Appendix B of Gelman & Pardoe 2006.
+#
+# e is a matrix of samples, draws by groups.
+gp_lambda_var <- function(e) {
+  1 - var(apply(e, 2, mean)) / mean(apply(e, 1, var))
+}
+
+# Like gp_lambda_var, but modified to use sd() instead of var().
+gp_lambda_sd <- function(e) {
+  1 - sd(apply(e, 2, mean)) / mean(apply(e, 1, sd))
+}
+
+test_that("shrinkage.rvar() matches Gelman & Pardoe reference implementation", {
+  x <- rnorm(50)
+  dim(x) <- c(10, 5)
+
+  # It's not necessary, but shift a couple of columns to get things away from
+  # the upper bound.
+  x[, 2] <- 1 + x[, 2]
+  x[, 5] <- -2 + x[, 5]
+
+  expect_equal(shrinkage(posterior::rvar(x), use_sd = FALSE),
+               gp_lambda_var(x) * 100)
+  expect_equal(shrinkage(posterior::rvar(x), use_sd = TRUE),
+               gp_lambda_sd(x) * 100)
+
+  y <- rnorm(150)
+  dim(y) <- c(10, 5, 3)
+
+  y[, 2, ] <- 1 + y[, 2, ]
+  y[, 5, ] <- -2 + y[, 5, ]
+
+  res_var <- shrinkage(posterior::rvar(y), group_idx = 1, use_sd = FALSE)
+  expect_length(res_var, 3L)
+  expect_equal(res_var,
+               apply(y, 3, gp_lambda_var) * 100)
+
+  res_sd <- shrinkage(posterior::rvar(y), group_idx = 1, use_sd = TRUE)
+  expect_length(res_sd, 3L)
+  expect_equal(res_sd,
+               apply(y, 3, gp_lambda_sd) * 100)
+})
+
 ### Other tests
 
 test_that("shrinkage(): rank matches for use_sd=TRUE and use_sd=FALSE", {
