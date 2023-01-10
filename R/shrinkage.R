@@ -150,34 +150,35 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
     margin <- seq_len(ndim - 1)
   }
 
-  # For the numerator, the standard deviation (`pt_var_fn`) is calculated on the
-  # point estimates obtained by taking the mean of the samples. If `errors` has
-  # one dimension, the result is a vector with the length of the groups. If
-  # `errors` has more than one dimension, the result is an array with the same
-  # dimensions as `errors`. In either case, we've taken the expectation and are
-  # no longer working with an rvar by the time the value is fed to `pt_var_fn`.
+  # For the numerator, the standard deviation (`pt_dispersion_fn`) is calculated
+  # on the point estimates obtained by taking the mean of the samples. If
+  # `errors` has one dimension, the result is a vector with the length of the
+  # groups. If `errors` has more than one dimension, the result is an array with
+  # the same dimensions as `errors`. In either case, we've taken the expectation
+  # and are no longer working with an rvar by the time the value is fed to
+  # `pt_dispersion_fn`.
   #
   # For the denominator (when `variance` isn't specified), the standard
   # deviation of group errors values is calculated within each sample
-  # (`group_var_fn`). If `errors` has one dimension, the result is an rvar with
-  # one dimension and one value. If `errors` has more than one dimension, the
-  # result is an rvar with the `group_idx` dimension(s) dropped.
+  # (`group_dispersion_fn`). If `errors` has one dimension, the result is an
+  # rvar with one dimension and one value. If `errors` has more than one
+  # dimension, the result is an rvar with the `group_idx` dimension(s) dropped.
   #
-  # Taking expectation of the `group_var_fn` result leads to a value with the
-  # same dimensions as the `pt_var_fn` return value.
+  # Taking expectation of the `group_dispersion_fn` result leads to a value with
+  # the same dimensions as the `pt_dispersion_fn` return value.
   if (is.null(margin)) {
-    pt_var_fn <- stats::sd
-    group_var_fn <- posterior::rvar_sd
+    pt_dispersion_fn <- stats::sd
+    group_dispersion_fn <- posterior::rvar_sd
   } else {
-    pt_var_fn <- function(x) apply(x, margin, stats::sd)
-    group_var_fn <- function(x) {
+    pt_dispersion_fn <- function(x) apply(x, margin, stats::sd)
+    group_dispersion_fn <- function(x) {
       posterior::rvar_apply(x, margin, posterior::rvar_sd)
     }
   }
 
-  numer <- pt_var_fn(posterior::E(errors))
+  numer <- pt_dispersion_fn(posterior::E(errors))
   denom <- if (is.null(variance)) {
-    posterior::E(group_var_fn(errors))
+    posterior::E(group_dispersion_fn(errors))
   } else {
     dim_var <- dim(variance)
     dim_want <- dim(numer) %||% length(numer)
