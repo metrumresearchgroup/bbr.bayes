@@ -55,6 +55,8 @@ shrinkage <- function(errors, ...) {
 #' @rdname shrinkage
 #' @export
 shrinkage.bbi_nmbayes_model <- function(errors, ...) {
+  rlang::check_dots_used()
+
   mod <- errors
   iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
   if (length(iph_files)) {
@@ -65,8 +67,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ...) {
       stop("shrinkage() does not currently support more than one SUBPOP")
     }
     shrinkage(posterior::drop(eta),
-              variance = diag(draws[["OMEGA"]]),
-              ...)
+              variance = diag(draws[["OMEGA"]]))
   } else {
     shk_files <- get_chain_files(mod, ".shk", check_exists = "all_or_none")
     if (!length(shk_files)) {
