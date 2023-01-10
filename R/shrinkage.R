@@ -177,8 +177,8 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
   }
 
   numer <- pt_dispersion_fn(posterior::E(errors))
-  denom <- if (is.null(variance)) {
-    posterior::E(group_dispersion_fn(errors))
+  if (is.null(variance)) {
+    denom <- posterior::E(group_dispersion_fn(errors))
   } else {
     dim_var <- dim(variance)
     dim_want <- dim(numer) %||% length(numer)
@@ -186,7 +186,7 @@ shrinkage.rvar <- function(errors, variance = NULL, group_idx = NULL, ...) {
       stop(sprintf("dim(`variance`) is %s, expected %s",
                    deparse(dim_var), deparse(dim_want)))
     }
-    sqrt(posterior::E(variance))
+    denom <- sqrt(posterior::E(variance))
   }
 
   return((1 - numer / denom) * 100)
