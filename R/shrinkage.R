@@ -106,7 +106,12 @@ shrinkage.draws <- function(errors,
   checkmate::assert_string(errors_name)
 
   draws <- posterior::as_draws_rvars(errors)
-  shrinkage(draws[[errors_name]], group_idx = group_idx)
+  rv <- draws[[errors_name]]
+  if (is.null(rv)) {
+    stop(glue("Could not find '{errors_name}' in rvar draws object"))
+  }
+
+  shrinkage(rv, group_idx = group_idx)
 }
 
 #' @rdname shrinkage

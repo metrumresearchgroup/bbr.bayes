@@ -196,3 +196,8 @@ test_that("shrinkage.rvar() aborts on invalid input", {
                "dim(`variance`)",
                fixed = TRUE)
 })
+
+test_that("shrinkage.draw() aborts if errors_name is not found", {
+  draws <- posterior::example_draws(example = "eight_schools")
+  expect_error(shrinkage(draws, "not-there"), "in rvar draws")
+})
