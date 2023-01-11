@@ -5,6 +5,12 @@ context("reading fit model objects from disk")
 test_that("nmbayes: read_fit_model.character() works correctly", {
   res <- read_fit_model(NMBAYES_MOD1_PATH)
   expect_s3_class(res, "draws")
+
+  res <- read_fit_model(NMBAYES_MOD1_PATH,
+                        format = "df",
+                        include_iph = FALSE)
+  expect_s3_class(res, "draws_df")
+  expect_false("MCMCOBJ_IPH[1,1]" %in% posterior::variables(res))
 })
 
 test_that("nmbayes: read_fit_model() works correctly", {
