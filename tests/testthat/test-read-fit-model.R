@@ -2,7 +2,7 @@ context("reading fit model objects from disk")
 
 ### NONMEM Bayes
 
-test_that("nmbayes: read_fit_model() works correctly", {
+test_that("nmbayes: read_fit_model.character() works correctly", {
   res <- read_fit_model(NMBAYES_MOD1_PATH)
   expect_s3_class(res, "draws")
 })
