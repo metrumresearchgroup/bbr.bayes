@@ -30,7 +30,7 @@ read_fit_model <- function(.mod, ...) {
 #' @export
 read_fit_model.character <- function(.mod, ...) {
   checkmate::assert_string(.mod)
-  read_fit_model(read_model(.mod))
+  read_fit_model(read_model(.mod), ...)
 }
 
 #' @describeIn read_fit_model Returns a \pkg{posterior} draws object.
