@@ -108,7 +108,7 @@
 #' `<run>-output/bbi_config.json` - This file is created by `bbr` when a model
 #' run finishes successfully. It stores some configuration information about the
 #' run, as well as the md5 hashes of the necessary files. These hashes are later
-#' used (by `bbr::check_up_to_date()` to check whether the files have changed
+#' used (by [bbr::check_up_to_date()] to check whether the files have changed
 #' since the model was run, primarily for reproducibility purposes.
 #'
 #' **Some Helper Functions**
