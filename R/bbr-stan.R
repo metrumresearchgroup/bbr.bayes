@@ -57,7 +57,7 @@
 #'     used to find data files for loading, for example
 #'     `read_csv(file.path(.dir, "..", "..", "data", "derived", "my_data.csv"))`
 #'
-#'   * Can be called (by `bbr::build_data()`) to generate the data for model
+#'   * Can be called (by [build_data()]) to generate the data for model
 #'     submission or to compare the resulting data to previously saved data on
 #'     disk.
 #'

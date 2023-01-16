@@ -57,7 +57,7 @@ single argument and returns the data list to pass to
 \item The \code{.dir} argument will be the directory containing the script. This is
 used to find data files for loading, for example
 \code{read_csv(file.path(.dir, "..", "..", "data", "derived", "my_data.csv"))}
-\item Can be called (by \code{bbr::build_data()}) to generate the data for model
+\item Can be called (by \code{\link[=build_data]{build_data()}}) to generate the data for model
 submission or to compare the resulting data to previously saved data on
 disk.
 }
