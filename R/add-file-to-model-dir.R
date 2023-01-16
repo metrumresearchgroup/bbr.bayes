@@ -64,20 +64,13 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
 #' @param .file_suffix Destination path is created with `build_path_from_model(.mod, .file_suffix)`
 #' @param .scaffold_string If `.source_file` is `NULL`, the default, this string will be written
 #'   into a new file at the destination path.
-#' @param .overwrite Logical scalar for whether to overwrite and existing
-#'   file at the destination path. If `is.null(.source_file)` this defaults
-#'   to `FALSE`, forcing the user to explicitly confirm overwriting an
-#'   existing file with a scaffold. However, **if `.source_file` is passed
-#'   then `.overwrite` defaults to `TRUE`**, assuming that the user intends
-#'   to use the `.source_file` instead of the existing file.
 #' @noRd
 add_file_to_model_dir_impl <- function(
   .mod,
   .model_class,
   .file_suffix,
   .scaffold_string,
-  .source_file = NULL,
-  .overwrite = ifelse(is.null(.source_file), FALSE, TRUE)
+  .source_file = NULL
 ) {
   checkmate::assert_class(.mod, .model_class)
 
@@ -87,15 +80,7 @@ add_file_to_model_dir_impl <- function(
   if(!is.null(.source_file)) {
     checkmate::assert_string(.source_file)
 
-    if (fs::file_exists(dest_path)) {
-      if (isTRUE(.overwrite)) {
-        fs::file_delete(dest_path)
-      } else {
-        stop(glue("File already exists at {dest_path}. To overwrite existing file with a {.source_file} pass `.overwrite = TRUE`"), call. = FALSE)
-      }
-    }
-
-    fs::file_copy(.source_file, dest_path)
+    fs::file_copy(.source_file, dest_path, overwrite = TRUE)
     message(glue("Copied {.source_file} to {dest_path}"))
     return(invisible(.mod))
   }
@@ -104,9 +89,8 @@ add_file_to_model_dir_impl <- function(
   if (fs::file_exists(dest_path)) {
     if (file_matches_string(dest_path, .scaffold_string)) {
       return(invisible(.mod))
-    } else if (!isTRUE(.overwrite)) {
-      stop(glue("File already exists at {dest_path}. To overwrite existing file with a scaffold pass `.overwrite = TRUE`"), call. = FALSE)
     }
+    stop("File already exists at ", dest_path, call. = FALSE)
   }
   writeLines(.scaffold_string, dest_path)
 
