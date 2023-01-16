@@ -23,6 +23,7 @@ STAN_GQ_MOD_CLASS <- "bbi_stan_gq_model"
 STAN_GQ_SUM_CLASS <- "bbi_stan_gq_summary"
 
 STAN_FIT_CLASS <- "CmdStanMCMC"
+STAN_GQ_FIT_CLASS <- "CmdStanGQ"
 
 STANMOD_SUFFIX <- ".stan"
 STANDATA_R_SUFFIX <- "-standata.R"

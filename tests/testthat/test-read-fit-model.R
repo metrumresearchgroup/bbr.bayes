@@ -69,3 +69,15 @@ test_that("stan: read_fit_model() adjusts output files to be in model directory"
   expect_identical(basename(files),
                    basename(read_fit_model(STAN_MOD1)$output_files()))
 })
+
+test_that("stan gq: read_fit_model.character() works correctly", {
+  res <- read_fit_model(STAN_GQ_MOD_PATH)
+  expect_s3_class(res, STAN_GQ_FIT_CLASS)
+})
+
+test_that("stan gq: read_fit_model() works correctly", {
+  res <- read_fit_model(STAN_GQ_MOD)
+  expect_s3_class(res, STAN_GQ_FIT_CLASS)
+
+  expect_match(res$fitted_params_files(), "bern")
+})
