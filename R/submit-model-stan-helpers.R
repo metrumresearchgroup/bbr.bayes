@@ -40,6 +40,13 @@ import_stan_init <- function(.mod, .standata, .stanargs) {
   return(init_res)
 }
 
+import_stan_fitted_params <- function(.mod) {
+  path <- build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX)
+  make_fitted_params <- safe_source_function(path, "make_fitted_params")
+  safe_call_sourced(.func = make_fitted_params,
+                    .args = list(.mod = .mod),
+                    .file = path)
+}
 
 #' Private helper to compile a stan model and save a gitignore that ignores the
 #' binary and posterior csv's

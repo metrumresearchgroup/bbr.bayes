@@ -134,7 +134,17 @@ run_chains <- function(.mod, ...) {
 
 #' Submit model based on a `bbi_stan_model` object
 #'
-#' The model is executed via [cmdstanr::sample()].
+#' @description
+#'
+#' Run the model via \pkg{cmdstanr}, selecting the `CmdStanModel` method based
+#' the model type:
+#'
+#'  * execute the model with [$sample()][cmdstanr::model-method-sample] by
+#'    default
+#'
+#'  * if object inherits from `bbi_stan_gq_model`, call
+#'    [$generate_quantities()][cmdstanr::model-method-generate-quantities]
+#'    instead
 #'
 #' @name stan_submit_model
 #' @inheritParams bbr::submit_model
@@ -154,6 +164,21 @@ submit_model.bbi_stan_model <- function(
   rlang::check_dots_empty()
   res <- submit_stan_model_cmdstanr(
     .mod,
+    "sample",
+    .mode = .mode,
+    .overwrite = .overwrite
+  )
+  return(res)
+}
+
+#' @rdname stan_submit_model
+#' @export
+submit_model.bbi_stan_gq_model <- function(.mod, .mode = c("local"),
+                                           ..., .overwrite = NULL) {
+  rlang::check_dots_empty()
+  res <- submit_stan_model_cmdstanr(
+    .mod,
+    "generate_quantities",
     .mode = .mode,
     .overwrite = .overwrite
   )
@@ -167,6 +192,7 @@ submit_model.bbi_stan_model <- function(
 #' @return The object returned from [cmdstanr::sample()]
 #' @noRd
 submit_stan_model_cmdstanr <- function(.mod,
+                                       .method = c("sample", "generate_quantities"),
                                        .mode = c("local"), # TODO: add sge mode for cmdstanr
                                        .overwrite = NULL) {
 
@@ -193,34 +219,32 @@ submit_stan_model_cmdstanr <- function(.mod,
   }
 
   stanmod <- compile_stanmod(.mod)
-
-  # build args to pass to cmdstanr::sample()
   stanargs <- get_stanargs(.mod)
-  check_reserved_stanargs(stanargs, method = "sample")
+  check_reserved_stanargs(stanargs, method = .method)
 
   if(is.null(stanargs$seed)) {
     stop("You must set a seed to run `submit_model()`. Use `set_stanargs(.mod, list(seed = <num>))` to set.", call. = FALSE)
   }
 
-  cli::cli_h1("Running model with the following specified arguments")
+  cli::cli_h1(glue("Calling ${.method} with the following specified arguments"))
   cli::cli_h3("(all other arguments will be cmdstan defaults)")
   print(stanargs)
 
   stanargs[["output_dir"]] <- get_output_dir(.mod)
   stanargs[["data"]] <- standata_json_path
 
-  # construct input data set and initial estimates
   standata_list <- build_data(.mod, .out_path = standata_json_path)
-  stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list, .stanargs = stanargs)
+  if (.method == "sample") {
+    stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list, .stanargs = stanargs)
+  } else {
+    stanargs[["fitted_params"]] <- import_stan_fitted_params(.mod)
+  }
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
 
-  check_unknown_stanargs(stanargs, method = "sample")
+  check_unknown_stanargs(stanargs, method = .method)
 
   # launch model
-  res <- do.call(
-    stanmod$sample,
-    args = stanargs
-  )
+  res <- do.call(stanmod[[.method]], args = stanargs)
 
   # if successful, save model and write bbi_config.json to disk
   save_fit_stanmod(res, build_path_from_model(.mod, STAN_MODEL_FIT_RDS))

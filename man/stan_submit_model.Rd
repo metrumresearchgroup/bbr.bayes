@@ -3,9 +3,12 @@
 \name{stan_submit_model}
 \alias{stan_submit_model}
 \alias{submit_model.bbi_stan_model}
+\alias{submit_model.bbi_stan_gq_model}
 \title{Submit model based on a \code{bbi_stan_model} object}
 \usage{
 \method{submit_model}{bbi_stan_model}(.mod, .mode = c("local"), ..., .overwrite = NULL)
+
+\method{submit_model}{bbi_stan_gq_model}(.mod, .mode = c("local"), ..., .overwrite = NULL)
 }
 \arguments{
 \item{.mod}{The model object to submit.}
@@ -21,5 +24,13 @@ setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will o
 settings in \code{.bbi_args} or \code{bbi.yaml}.}
 }
 \description{
-The model is executed via \code{\link[cmdstanr:model-method-sample]{cmdstanr::sample()}}.
+Run the model via \pkg{cmdstanr}, selecting the \code{CmdStanModel} method based
+the model type:
+\itemize{
+\item execute the model with \link[cmdstanr:model-method-sample]{$sample()} by
+default
+\item if object inherits from \code{bbi_stan_gq_model}, call
+\link[cmdstanr:model-method-generate-quantities]{$generate_quantities()}
+instead
+}
 }
