@@ -55,6 +55,7 @@ STAN_RESERVED_ARGS <- c(
 STANCFG_DATA_MD5 <- "standata_script_md5"
 STANCFG_INIT_MD5 <- "init_script_md5"
 STANCFG_ARGS_MD5 <- "stanargs_md5"
+STANCFG_FITTED_PARAMS_MD5 <- "stan_fitted_params_md5"
 
 STAN_BBI_VERSION_STRING <- "STAN"
 

@@ -112,12 +112,19 @@ build_stan_bbi_config <- function(.mod, .write) {
     !!CONFIG_DATA_MD5    := tools::md5sum(build_path_from_model(.mod, STANDATA_JSON_SUFFIX)),
     !!STANCFG_DATA_MD5   := tools::md5sum(build_path_from_model(.mod, STANDATA_R_SUFFIX)),
     !!STANCFG_ARGS_MD5   := tools::md5sum(build_path_from_model(.mod, STANARGS_SUFFIX)),
-    !!STANCFG_INIT_MD5   := tools::md5sum(build_path_from_model(.mod, STANINIT_SUFFIX)),
-    "configuration" = rlang::list2(
-      "cmdstan_version"     = cmdstanr::cmdstan_version(),
-      "cmdstanr_version"    = as.character(utils::packageVersion('cmdstanr')),
-    )
   )
+
+  if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
+    stan_config[[STANCFG_FITTED_PARAMS_MD5]] <- tools::md5sum(
+      build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX))
+  } else {
+    stan_config[[STANCFG_INIT_MD5]] <- tools::md5sum(
+      build_path_from_model(.mod, STANINIT_SUFFIX))
+  }
+
+  stan_config[["configuration"]] <-  list(
+    "cmdstan_version" = cmdstanr::cmdstan_version(),
+    "cmdstanr_version" = as.character(utils::packageVersion("cmdstanr")))
 
   # write to disk
   stan_json <- jsonlite::toJSON(stan_config, pretty = TRUE, auto_unbox = TRUE)
