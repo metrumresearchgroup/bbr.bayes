@@ -68,13 +68,8 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE) {
   config <- jsonlite::fromJSON(config_path)
 
   # check necessary files for changes
-  changed_files <- c()
-
   stan_file <- get_model_path(.mod)
-  changed_files <- c(
-    changed_files,
-    config[[CONFIG_MODEL_MD5]] != tools::md5sum(stan_file)
-  )
+  changed_files <- config[[CONFIG_MODEL_MD5]] != tools::md5sum(stan_file)
 
   init_file <- build_path_from_model(.mod, STANINIT_SUFFIX)
   changed_files <- c(
