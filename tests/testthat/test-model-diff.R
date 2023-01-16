@@ -50,15 +50,10 @@ test_that("stan: model_diff() works with other files", {
   mod2 <- copy_model_from(STAN_MOD1, new_mod_name)
   on.exit(cleanup_model(mod2))
 
-  .test_cases <- list(
-    list(file = "standata", content = "make_standata"),
-    list(file = "init", content = "make_init"),
-    list(file = "stanargs", content = "list")
-  )
-
-  for (.tc in .test_cases) {
-    expect_message(res_object <- model_diff(mod2, .file = .tc$file),
+  files <- c("standata", "init", "stanargs")
+  for (f in files) {
+    expect_message(res <- model_diff(mod2, .file = f),
                    "identical")
-    expect_null(res_object)
+    expect_null(res)
   }
 })
