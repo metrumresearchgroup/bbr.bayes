@@ -3,11 +3,11 @@ test_that("set_stanargs modifies file", {
   mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   file_res <- readLines(build_path_from_model(mod2, STANARGS_SUFFIX))
-  expect_false(any(grepl("chains = 8", file_res)))
+  expect_false(any(grepl("parallel_chains = 8", file_res)))
 
-  set_stanargs(mod2, list(chains = 8))
+  set_stanargs(mod2, list(parallel_chains = 8))
   file_res <- readLines(build_path_from_model(mod2, STANARGS_SUFFIX))
-  expect_true(any(grepl("chains = 8", file_res)))
+  expect_true(any(grepl("parallel_chains = 8", file_res)))
 })
 
 
