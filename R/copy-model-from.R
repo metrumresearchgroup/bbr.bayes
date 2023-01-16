@@ -38,6 +38,12 @@ copy_model_from.bbi_stan_model <- function(
   return(.mod)
 }
 
+# In copy_model_from context, we can't use real build_path_from_model() because
+# the new model doesn't exist yet.
+build_path_from_new_model_path <- function(.new_model, .suffix) {
+  file.path(.new_model, paste0(basename(.new_model), .suffix))
+}
+
 #' Copy necessary Stan files
 #'
 #' Helper function to copy a necessary Stan files from parent model to new model
@@ -57,14 +63,6 @@ copy_stan_files <- function(.parent_mod, .new_model, .overwrite) {
     }
   }
   fs::dir_create(.new_model)
-
-  # can't use real build_path_from_model() because the new model doesn't exist yet
-  build_path_from_new_model_path <- function(.new_model, .suffix) {
-    file.path(
-      .new_model,
-      paste0(basename(.new_model), .suffix)
-    )
-  }
 
   purrr::walk(STAN_MODEL_REQ_FILES, function(.s) {
     parent_file <- build_path_from_model(.parent_mod, .s)
