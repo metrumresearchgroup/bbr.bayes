@@ -14,7 +14,7 @@
 #'
 #' **Model Structure**
 #'
-#' **`<run>`** - The "run" is, in some sense, the “name” of a given model.
+#' **`<run>`** - The "run" is, in some sense, the "name" of a given model.
 #' Practically, it will correspond to the model directory name, the base name of
 #' the bbr-created YAML (`<run>.yaml`), as well as the base name for some files
 #' in that directory. Calling [get_model_id()] on a model object will return
@@ -55,7 +55,7 @@
 #'
 #'   * The `.dir` argument will be the directory containing the script. This is
 #'     used to find data files for loading, for example
-#'     `read_csv(file.path(.dir, “..”, “..”, “data”, “derived”, “my_data.csv”))`
+#'     `read_csv(file.path(.dir, "..", "..", "data", "derived", "my_data.csv"))`
 #'
 #'   * Can be called (by `bbr::build_data()`) to generate the data for model
 #'     submission or to compare the resulting data to previously saved data on

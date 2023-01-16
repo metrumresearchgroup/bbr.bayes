@@ -16,7 +16,7 @@ any \code{bbi_stan_model}.
 \details{
 \strong{Model Structure}
 
-\strong{\verb{<run>}} - The "run" is, in some sense, the “name” of a given model.
+\strong{\verb{<run>}} - The "run" is, in some sense, the "name" of a given model.
 Practically, it will correspond to the model directory name, the base name of
 the bbr-created YAML (\verb{<run>.yaml}), as well as the base name for some files
 in that directory. Calling \code{\link[=get_model_id]{get_model_id()}} on a model object will return
@@ -56,7 +56,7 @@ single argument and returns the data list to pass to
 \code{cmdstanr::sample()}.
 \item The \code{.dir} argument will be the directory containing the script. This is
 used to find data files for loading, for example
-\verb{read_csv(file.path(.dir, “..”, “..”, “data”, “derived”, “my_data.csv”))}
+\code{read_csv(file.path(.dir, "..", "..", "data", "derived", "my_data.csv"))}
 \item Can be called (by \code{bbr::build_data()}) to generate the data for model
 submission or to compare the resulting data to previously saved data on
 disk.
