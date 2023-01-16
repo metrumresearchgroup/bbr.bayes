@@ -25,15 +25,15 @@ column which is populated by calling \code{basename(.mod$absolute_model_path)} f
 each model. Note: this is \emph{not} actually stored in the model object because
 it can be unequivocally extracted as just described.
 
-\strong{\code{absolute_model_path}} - Like the \code{bbi_nonmem_model}, the \code{bbi_stan_model}
-will carry around only an absolute path to the model directory. This will
-point to the model directory (named \verb{<run>}) containing all of the files
-described below, as well as a \verb{<run>.yaml} file that \code{bbr} uses to persist
-model metadata. A model is loaded or created by passing a relative path to
-this directory to either \code{\link[bbr:read_model]{bbr::read_model()}} or \code{\link[bbr:new_model]{bbr::new_model()}}, both of which
-return the \code{bbi_stan_model} object. When this object is created, it checks
-the model directory for the relevant files and populates
-\code{absolute_model_path}.
+\strong{\code{absolute_model_path}} - Like the \code{bbi_nonmem_model} object, the
+\code{bbi_stan_model} object will carry around only an absolute path to the model
+directory. This will point to the model directory (named \verb{<run>}) containing
+all of the files described below, as well as a \verb{<run>.yaml} file that \code{bbr}
+uses to persist model metadata. A model is loaded or created by passing a
+relative path to this directory to either \code{\link[bbr:read_model]{bbr::read_model()}} or
+\code{\link[bbr:new_model]{bbr::new_model()}}, both of which return the \code{bbi_stan_model} object. When
+this object is created, it checks the model directory for the relevant files
+and populates \code{absolute_model_path}.
 
 \strong{Necessary Files}
 
