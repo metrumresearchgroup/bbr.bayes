@@ -56,13 +56,17 @@ set_stanargs_impl <- function(method, .mod, .stanargs, .clear) {
 
   # reorder list and write to disk
   stanargs_path <- build_path_from_model(.mod, STANARGS_SUFFIX)
-  if (length(.args) > 1) {
-    .args <- .args[order(names(.args))]
-  }
-  dput(.args, stanargs_path)
-  utils::capture.output(styler::style_file(stanargs_path))
+  write_stanargs(.args, stanargs_path)
 
   return(invisible(.mod))
+}
+
+write_stanargs <- function(args, file) {
+  if (length(args) > 1) {
+    args <- args[order(names(args))]
+  }
+  dput(args, file)
+  utils::capture.output(styler::style_file(file))
 }
 
 #' @rdname stanargs
