@@ -72,8 +72,7 @@ model is run or as it prepares to run.
 \strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
 initial values passed to \code{cmdstanr::sample()}. This file is a lot like
 \verb{<run>-standata.R} (discussed above) and a scaffold can be created with
-\code{\link[=add_staninit_file]{add_staninit_file()}}. However, this file is \emph{not} necessary. If it is
-missing, Stan will fall back to the \href{https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values}{default initial values}.
+\code{\link[=add_staninit_file]{add_staninit_file()}}.
 \itemize{
 \item Contains only one function, called \code{make_init(.data)}, that takes a
 single argument and returns something that can be passed to the \code{init}

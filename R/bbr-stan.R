@@ -69,9 +69,7 @@
 #' **`<run>-init.R`** - This file contains all necessary R code to create the
 #' initial values passed to `cmdstanr::sample()`. This file is a lot like
 #' `<run>-standata.R` (discussed above) and a scaffold can be created with
-#' [add_staninit_file()]. However, this file is _not_ necessary. If it is
-#' missing, Stan will fall back to the [default initial
-#' values](https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values).
+#' [add_staninit_file()].
 #'
 #'   * Contains only one function, called `make_init(.data)`, that takes a
 #'     single argument and returns something that can be passed to the `init`
