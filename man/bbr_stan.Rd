@@ -52,11 +52,14 @@ details on modifying.
 any source data and transform them to a Stan-ready data object (list).
 \itemize{
 \item Contains only one function, called \code{make_standata(.dir)}, that takes a
-single argument and returns the data list to pass to \code{cmdstanr::sample()}.
+single argument and returns the data list to pass to
+\code{cmdstanr::sample()}.
 \item The \code{.dir} argument will be the directory containing the script. This is
-used to find data files for loading, for example \verb{read_csv(file.path(.dir, “..”, “..”, “data”, “derived”, “my_data.csv”))}
+used to find data files for loading, for example
+\verb{read_csv(file.path(.dir, “..”, “..”, “data”, “derived”, “my_data.csv”))}
 \item Can be called (by \code{bbr::build_data()}) to generate the data for model
-submission or to compare the resulting data to previously saved data on disk.
+submission or to compare the resulting data to previously saved data on
+disk.
 }
 
 \strong{Other Files and Directories}
@@ -70,18 +73,18 @@ initial values passed to \code{cmdstanr::sample()}. This file is a lot like
 \code{\link[=add_staninit_file]{add_staninit_file()}}. However, this file is \emph{not} necessary. If it is
 missing, Stan will fall back to the \href{https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values}{default initial values}.
 \itemize{
-\item Contains only one function, called \code{make_init(.data)}, that takes a single
-argument and returns something that can be passed to the \code{init} argument of
-\code{cmdstanr::sample()}. There are several options; see \code{?cmdstanr::sample} for
-details.
+\item Contains only one function, called \code{make_init(.data)}, that takes a
+single argument and returns something that can be passed to the \code{init}
+argument of \code{cmdstanr::sample()}. There are several options; see
+\code{?cmdstanr::sample} for details.
 \item The object returned from \code{make_standata()} will be passed to the \code{.data}
 argument of \code{make_init()}.
 \item Will be called internally by \code{bbr} and the result passed to
 \code{cmdstanr::sample(init)}
-\item Note that one of the options \code{cmdstanr::sample(init)} is to pass \emph{"A
-function that returns a single list..."}. If you intend to use this option,
-your \code{make_init()} function must return \emph{the function} described, \emph{not} the
-"single list...".
+\item Note that one of the options \code{cmdstanr::sample(init)} is to pass
+\emph{"A function that returns a single list..."}. If you intend to use this
+option, your \code{make_init()} function must return \emph{the function} described,
+\emph{not} the "single list...".
 }
 
 \strong{\verb{<run>}} - This is the binary file created when the \verb{<run>.stan} file is
@@ -93,8 +96,8 @@ posteriors will be saved (currently as CSV’s) and also where the
 that we \emph{don’t} call this \verb{<run>} (as is done in NONMEM) for two primary
 reasons:
 \itemize{
-\item It is more informative to call it \verb{<run>-output} to distinguish it from all
-the other files and directories that start with \verb{<run>}.
+\item It is more informative to call it \verb{<run>-output} to distinguish it from
+all the other files and directories that start with \verb{<run>}.
 \item There is also the binary called \verb{<run>} (previously mentioned) that could
 cause confusion. In fact, there was a bug in \code{cmdstanr} in February 2021
 involving exactly this scenario.

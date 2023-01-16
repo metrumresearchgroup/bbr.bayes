@@ -49,15 +49,17 @@
 #' **`<run>-standata.R`** - Contains all necessary R code to read in
 #' any source data and transform them to a Stan-ready data object (list).
 #'
-#' * Contains only one function, called `make_standata(.dir)`, that takes a
-#' single argument and returns the data list to pass to `cmdstanr::sample()`.
+#'   * Contains only one function, called `make_standata(.dir)`, that takes a
+#'     single argument and returns the data list to pass to
+#'     `cmdstanr::sample()`.
 #'
-#' * The `.dir` argument will be the directory containing the script. This is
-#' used to find data files for loading, for example `read_csv(file.path(.dir,
-#' “..”, “..”, “data”, “derived”, “my_data.csv”))`
+#'   * The `.dir` argument will be the directory containing the script. This is
+#'     used to find data files for loading, for example
+#'     `read_csv(file.path(.dir, “..”, “..”, “data”, “derived”, “my_data.csv”))`
 #'
-#' * Can be called (by `bbr::build_data()`) to generate the data for model
-#' submission or to compare the resulting data to previously saved data on disk.
+#'   * Can be called (by `bbr::build_data()`) to generate the data for model
+#'     submission or to compare the resulting data to previously saved data on
+#'     disk.
 #'
 #' **Other Files and Directories**
 #'
@@ -71,21 +73,21 @@
 #' missing, Stan will fall back to the [default initial
 #' values](https://mc-stan.org/docs/2_25/reference-manual/initialization.html#random-initial-values).
 #'
-#' * Contains only one function, called `make_init(.data)`, that takes a single
-#' argument and returns something that can be passed to the `init` argument of
-#' `cmdstanr::sample()`. There are several options; see `?cmdstanr::sample` for
-#' details.
+#'   * Contains only one function, called `make_init(.data)`, that takes a
+#'     single argument and returns something that can be passed to the `init`
+#'     argument of `cmdstanr::sample()`. There are several options; see
+#'     `?cmdstanr::sample` for details.
 #'
-#' * The object returned from `make_standata()` will be passed to the `.data`
-#' argument of `make_init()`.
+#'   * The object returned from `make_standata()` will be passed to the `.data`
+#'     argument of `make_init()`.
 #'
-#' * Will be called internally by `bbr` and the result passed to
-#' `cmdstanr::sample(init)`
+#'   * Will be called internally by `bbr` and the result passed to
+#'     `cmdstanr::sample(init)`
 #'
-#' * Note that one of the options `cmdstanr::sample(init)` is to pass _"A
-#' function that returns a single list..."_. If you intend to use this option,
-#' your `make_init()` function must return _the function_ described, _not_ the
-#' "single list...".
+#'   * Note that one of the options `cmdstanr::sample(init)` is to pass
+#'     _"A function that returns a single list..."_. If you intend to use this
+#'     option, your `make_init()` function must return _the function_ described,
+#'     _not_ the "single list...".
 #'
 #' **`<run>`** - This is the binary file created when the `<run>.stan` file is
 #' compiled by `cmdstan`. We `.gitignore` this automatically.
@@ -96,12 +98,12 @@
 #' that we _don’t_ call this `<run>` (as is done in NONMEM) for two primary
 #' reasons:
 #'
-#' * It is more informative to call it `<run>-output` to distinguish it from all
-#' the other files and directories that start with `<run>`.
+#'   * It is more informative to call it `<run>-output` to distinguish it from
+#'     all the other files and directories that start with `<run>`.
 #'
-#' * There is also the binary called `<run>` (previously mentioned) that could
-#' cause confusion. In fact, there was a bug in `cmdstanr` in February 2021
-#' involving exactly this scenario.
+#'   * There is also the binary called `<run>` (previously mentioned) that could
+#'     cause confusion. In fact, there was a bug in `cmdstanr` in February 2021
+#'     involving exactly this scenario.
 #'
 #' `<run>-output/bbi_config.json` - This file is created by `bbr` when a model
 #' run finishes successfully. It stores some configuration information about the
