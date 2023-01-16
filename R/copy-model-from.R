@@ -19,7 +19,8 @@ copy_model_from.bbi_stan_model <- function(
   setup <- function() {
     copy_stan_files(.parent_mod,
                     .new_model,
-                    .overwrite)
+                    .overwrite,
+                    STAN_MODEL_REQ_FILES)
   }
 
   .mod <- copy_model_from_impl(
@@ -52,8 +53,10 @@ build_path_from_new_model_path <- function(.new_model, .suffix) {
 #' @param .parent_mod a `bbi_stan_model` object to copy from
 #' @param .new_model Path to new model directory
 #' @param .overwrite If `TRUE`, overwrite existing directory at `.new_model`. If `FALSE` and directory exists at `.new_model` error.
+#' @param files_to_copy Character vector of files to copy from `.parent_mod` to
+#'   `.new_model`.
 #' @noRd
-copy_stan_files <- function(.parent_mod, .new_model, .overwrite) {
+copy_stan_files <- function(.parent_mod, .new_model, .overwrite, files_to_copy) {
 
   if (fs::dir_exists(.new_model)) {
     if (isTRUE(.overwrite)) {
@@ -64,7 +67,7 @@ copy_stan_files <- function(.parent_mod, .new_model, .overwrite) {
   }
   fs::dir_create(.new_model)
 
-  purrr::walk(STAN_MODEL_REQ_FILES, function(.s) {
+  purrr::walk(files_to_copy, function(.s) {
     parent_file <- build_path_from_model(.parent_mod, .s)
     if (fs::file_exists(parent_file)) {
       fs::file_copy(
