@@ -40,3 +40,37 @@ test_that("stan: copy_model_from() handles .new_model=NULL", {
     expect_identical(get_model_id(m2), "002")
   }
 })
+
+test_that("copy_stan_model_as_gq() creates stan_gq model", {
+  tdir <- local_test_dir()
+  m1 <- copy_stan_model_as_gq(STAN_MOD1, file.path(tdir, "gq"))
+  expect_s3_class(m1, STAN_GQ_MOD_CLASS)
+
+
+  should_exist <- c(STANMOD_SUFFIX,
+                    STANDATA_R_SUFFIX,
+                    STAN_FITTED_PARAMS_SUFFIX)
+  for (ext in should_exist) {
+    checkmate::expect_file_exists(build_path_from_model(m1, ext))
+  }
+
+  should_not_exist <- c(STANINIT_SUFFIX,
+                        STANDATA_JSON_SUFFIX)
+  for (ext in should_not_exist) {
+    expect_false(file.exists(build_path_from_model(m1, ext)))
+  }
+
+  # Most arguments aren't copied...
+  m1_args <- get_stanargs(m1)
+  parent_args <- get_stanargs(STAN_MOD1)
+  expect_false(length(m1_args) == length(parent_args))
+  # ... but seed is.
+  expect_false(is.null(m1_args$seed))
+  expect_identical(m1_args$seed, parent_args$seed)
+})
+
+test_that("copy_stan_model_as_gq() aborts if parent is stan_gq model", {
+  tdir <- local_test_dir()
+  expect_error(copy_stan_model_as_gq(STAN_GQ_MOD),
+               "already a stan_gq")
+})
