@@ -43,15 +43,16 @@
 #' **`<run>.stan`** - The Stan file.
 #'
 #' **`<run>-stanargs.R`** - Contains a named list with all of the arguments that
-#' will be passed through to `cmdstanr$sample()`. See [set_stanargs()] for
-#' details on modifying.
+#' will be passed through to the [$sample()][cmdstanr::model-method-sample]
+#' method of [cmdstanr::CmdStanModel]. See [set_stanargs()] for details on
+#' modifying.
 #'
 #' **`<run>-standata.R`** - Contains all necessary R code to read in
 #' any source data and transform them to a Stan-ready data object (list).
 #'
 #'   * Contains only one function, called `make_standata(.dir)`, that takes a
-#'     single argument and returns the data list to pass to
-#'     `cmdstanr::sample()`.
+#'     single argument and returns the data list to pass to the
+#'     [CmdStanModel$sample()][cmdstanr::model-method-sample].
 #'
 #'   * The `.dir` argument will be the directory containing the script. This is
 #'     used to find data files for loading, for example
@@ -67,22 +68,23 @@
 #' model is run or as it prepares to run.
 #'
 #' **`<run>-init.R`** - This file contains all necessary R code to create the
-#' initial values passed to `cmdstanr::sample()`. This file is a lot like
+#' initial values passed to the cmdstanr's
+#' [$sample()][cmdstanr::model-method-sample] method. This file is a lot like
 #' `<run>-standata.R` (discussed above) and a scaffold can be created with
 #' [add_staninit_file()].
 #'
 #'   * Contains only one function, called `make_init(.data)`, that takes a
 #'     single argument and returns something that can be passed to the `init`
-#'     argument of `cmdstanr::sample()`. There are several options; see
-#'     `?cmdstanr::sample` for details.
+#'     argument of `$sample()`. There are several options; see the
+#'     [$sample()][cmdstanr::model-method-sample] documentation for details.
 #'
 #'   * The object returned from `make_standata()` will be passed to the `.data`
 #'     argument of `make_init()`.
 #'
-#'   * Will be called internally by `bbr` and the result passed to
-#'     `cmdstanr::sample(init)`
+#'   * Will be called internally by `bbr` and the result passed as the `init`
+#'     argument to `$sample()`.
 #'
-#'   * Note that one of the options `cmdstanr::sample(init)` is to pass
+#'   * Note that `$sample()` supports passing
 #'     _"A function that returns a single list..."_. If you intend to use this
 #'     option, your `make_init()` function must return _the function_ described,
 #'     _not_ the "single list...".

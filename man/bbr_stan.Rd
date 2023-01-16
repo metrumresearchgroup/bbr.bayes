@@ -46,15 +46,16 @@ newly created model directory.
 \strong{\verb{<run>.stan}} - The Stan file.
 
 \strong{\verb{<run>-stanargs.R}} - Contains a named list with all of the arguments that
-will be passed through to \code{cmdstanr$sample()}. See \code{\link[=set_stanargs]{set_stanargs()}} for
-details on modifying.
+will be passed through to the \link[cmdstanr:model-method-sample]{$sample()}
+method of \link[cmdstanr:CmdStanModel]{cmdstanr::CmdStanModel}. See \code{\link[=set_stanargs]{set_stanargs()}} for details on
+modifying.
 
 \strong{\verb{<run>-standata.R}} - Contains all necessary R code to read in
 any source data and transform them to a Stan-ready data object (list).
 \itemize{
 \item Contains only one function, called \code{make_standata(.dir)}, that takes a
-single argument and returns the data list to pass to
-\code{cmdstanr::sample()}.
+single argument and returns the data list to pass to the
+\link[cmdstanr:model-method-sample]{CmdStanModel$sample()}.
 \item The \code{.dir} argument will be the directory containing the script. This is
 used to find data files for loading, for example
 \code{read_csv(file.path(.dir, "..", "..", "data", "derived", "my_data.csv"))}
@@ -70,19 +71,20 @@ There will be several other things created in the model directory, as the
 model is run or as it prepares to run.
 
 \strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
-initial values passed to \code{cmdstanr::sample()}. This file is a lot like
+initial values passed to the cmdstanr's
+\link[cmdstanr:model-method-sample]{$sample()} method. This file is a lot like
 \verb{<run>-standata.R} (discussed above) and a scaffold can be created with
 \code{\link[=add_staninit_file]{add_staninit_file()}}.
 \itemize{
 \item Contains only one function, called \code{make_init(.data)}, that takes a
 single argument and returns something that can be passed to the \code{init}
-argument of \code{cmdstanr::sample()}. There are several options; see
-\code{?cmdstanr::sample} for details.
+argument of \verb{$sample()}. There are several options; see the
+\link[cmdstanr:model-method-sample]{$sample()} documentation for details.
 \item The object returned from \code{make_standata()} will be passed to the \code{.data}
 argument of \code{make_init()}.
-\item Will be called internally by \code{bbr} and the result passed to
-\code{cmdstanr::sample(init)}
-\item Note that one of the options \code{cmdstanr::sample(init)} is to pass
+\item Will be called internally by \code{bbr} and the result passed as the \code{init}
+argument to \verb{$sample()}.
+\item Note that \verb{$sample()} supports passing
 \emph{"A function that returns a single list..."}. If you intend to use this
 option, your \code{make_init()} function must return \emph{the function} described,
 \emph{not} the "single list...".
