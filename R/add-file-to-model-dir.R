@@ -22,7 +22,7 @@ add_stanmod_file <- function(.mod, .source_file = NULL) {
     .mod,
     STAN_MOD_CLASS,
     STANMOD_SUFFIX,
-    STANMOD_SCAFFOLD_STRING,
+    STANMOD_SCAFFOLD,
     .source_file
   )
 }
@@ -34,7 +34,7 @@ add_standata_file <- function(.mod, .source_file = NULL) {
     .mod,
     STAN_MOD_CLASS,
     STANDATA_R_SUFFIX,
-    STANDATA_SCAFFOLD_STRING,
+    STANDATA_SCAFFOLD,
     .source_file
   )
 }
@@ -46,7 +46,7 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
     .mod,
     STAN_MOD_CLASS,
     STANINIT_SUFFIX,
-    STANINIT_SCAFFOLD_STRING,
+    STANINIT_SCAFFOLD,
     .source_file
   )
 }
@@ -62,14 +62,14 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
 #' @inheritParams add_file_to_model_dir
 #' @param .model_class Function will assert that `.mod` inherits from this class.
 #' @param .file_suffix Destination path is created with `build_path_from_model(.mod, .file_suffix)`
-#' @param .scaffold_string If `.source_file` is `NULL`, the default, this string will be written
-#'   into a new file at the destination path.
+#' @param .scaffold If `.source_file` is `NULL`, the default, write
+#'   `inst/stan-scaffolds/{.scaffold}` to the destination path.
 #' @noRd
 add_file_to_model_dir_impl <- function(
   .mod,
   .model_class,
   .file_suffix,
-  .scaffold_string,
+  .scaffold,
   .source_file = NULL
 ) {
   checkmate::assert_class(.mod, .model_class)
@@ -86,13 +86,15 @@ add_file_to_model_dir_impl <- function(
   }
 
   # write scaffold to file, first checking if a non-scaffold file would be overwritten
+  .scaffold <- system.file("stan-scaffolds", .scaffold,
+                           package = "bbr.bayes", mustWork = TRUE)
   if (fs::file_exists(dest_path)) {
-    if (file_matches_string(dest_path, .scaffold_string)) {
+    if (tools::md5sum(.scaffold) == tools::md5sum(dest_path)) {
       return(invisible(.mod))
     }
     stop("File already exists at ", dest_path, call. = FALSE)
   }
-  writeLines(.scaffold_string, dest_path)
+  fs::file_copy(.scaffold, dest_path)
 
   # return invisibly so this will work in pipes
   return(invisible(.mod))

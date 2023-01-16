@@ -54,77 +54,13 @@ STAN_BBI_VERSION_STRING <- "STAN"
 # SCAFFOLDS
 ############
 
-STANMOD_SCAFFOLD_STRING <- "//
-// This Stan program defines a simple model, with a
-// vector of values 'y' modeled as normally distributed
-// with mean 'mu' and standard deviation 'sigma'.
-//
-
-// The input data is a vector 'y' of length 'N'.
-data {
-  int<lower=0> N;
-  vector[N] y;
-}
-
-// The parameters accepted by the model. Our model
-// accepts two parameters 'mu' and 'sigma'.
-parameters {
-  real mu;
-  real<lower=0> sigma;
-}
-
-// The model to be estimated. We model the output
-// 'y' to be normally distributed with mean 'mu'
-// and standard deviation 'sigma'.
-model {
-  y ~ normal(mu, sigma);
-}"
-
+STANMOD_SCAFFOLD <- "mod.stan"
 STANMOD_SCAFFOLD_MD5 <- "cb1c31e0f34cd0c196b64b6cd5492669"
 
-
-STANDATA_SCAFFOLD_STRING <- "# Create Stan data
-#
-# This function must return the list that will be passed to `data` argument
-#   of `cmdstanr::sample()`
-#
-# The `.dir` argument represents the absolute path to the directory containing
-#   this file. This is useful for building file paths to the input files you will
-#   load. Note: you _don't_ need to pass anything to this argument, you only use
-#   it within the function. `bbr` will pass in the correct path when it calls
-#   `make_standata()` under the hood.
-make_standata <- function(.dir) {
-  # read in any input data
-  in_data <- readr::read_csv(file.path(.dir, '..', 'my_data.csv'))
-  # do any transformations
-  # return the list that can be passed to cmdstanr
-}"
-
+STANDATA_SCAFFOLD <- "data.R"
 STANDATA_SCAFFOLD_MD5 <- "44721f8445919647cc59ecc3ecc44072"
 
-
-STANINIT_SCAFFOLD_STRING <- "# Create Stan initial values
-#
-# This function must return something that can be passed to the `init` argument
-#   of `cmdstanr::sample()`. There are several options; see `?cmdstanr::sample`
-#   for details.
-#
-# `.data` represents the list returned from `make_standata()` for this model.
-#   This is provided in case any of your initial values are dependent on some
-#   aspect of the data (e.g. the number of rows).
-#
-# `.args` represents the list of attached arguments that will be passed through to
-#   cmdstanr::sample(). This is provided in case any of your initial values are
-#   dependent on any of these arguments (e.g. the number of chains).
-#
-# Note: you _don't_ need to pass anything to either of these arguments, you only
-#   use it within the function. `bbr` will pass in the correct objects when it calls
-#   `make_init()` under the hood.
-#
-make_init <- function(.data, .args) {
-  # returning NULL causes cmdstanr::sample() to use the default initial values
-  return(NULL)
-}"
+STANINIT_SCAFFOLD <- "init.R"
 
 STANARGS_SCAFFOLD_MD5 <- "8b11f83c3293f3b89a30807b3b69b58e"
 
