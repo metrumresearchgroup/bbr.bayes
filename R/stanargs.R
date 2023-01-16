@@ -1,11 +1,20 @@
-#' Set arguments to be passed to cmdstanr$sample()
+#' Set or get arguments to pass when submitting Stan model
+#'
+#' @description
+#'
+#' When [submit_model()] is called with a Stan model, it collects the arguments
+#' from `<run>-stanargs.R` and passes them to `CmdStanModel`s
+#' [$sample()][cmdstanr::model-method-sample].
+#'
+#' `set_stanargs()` and `get_stanargs()` provide an interface for specifying and
+#' inspecting the arguments attached to a model.
 #'
 #' @param .mod A `bbi_stan_model` object.
-#' @param .stanargs args passed through to [cmdstanr::sample()].
+#' @param .stanargs args passed through to `$sample()`.
 #' @param .clear If `FALSE`, the default, add any new args and only overwrite
 #'   existing args that are passed in through `.stanargs`. If `TRUE`, overwrite
 #'   _all_ attached args so that only `.stanargs` will be attached.
-#'
+#' @name stanargs
 #' @export
 set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
 
@@ -37,8 +46,7 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
   return(invisible(.mod))
 }
 
-#' Return the current stanargs attached to a model
-#' @inheritParams set_stanargs
+#' @rdname stanargs
 #' @export
 get_stanargs <- function(.mod) {
   stanargs_path <- build_path_from_model(.mod, STANARGS_SUFFIX)
