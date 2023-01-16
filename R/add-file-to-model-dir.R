@@ -42,6 +42,9 @@ add_standata_file <- function(.mod, .source_file = NULL) {
 #' @describeIn add_file_to_model_dir Adds a `<run>-init.R` file for building the initial values. See `?`[bbi_stan_model] for details.
 #' @export
 add_staninit_file <- function(.mod, .source_file = NULL) {
+  if (inherits(.mod, "bbi_stan_gq_model")) {
+    stop("*-init.R file not applicable to stan_gq models")
+  }
   add_file_to_model_dir_impl(
     .mod,
     STAN_MOD_CLASS,
