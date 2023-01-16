@@ -19,6 +19,10 @@ STAN_MOD1_PATH <- file.path(STAN_MODEL_DIR, STAN_MOD_ID)
 STAN_MOD1 <- read_model(STAN_MOD1_PATH)
 STAN_MOD_ID2 <- paste0(STAN_MOD_ID, "2")
 
+STAN_MOD_ID3 <- "bern"
+
+STAN_GQ_MOD_ID <- "bern-gq"
+
 STAN_ABS_RUN_ROOT <- file.path(STAN_ABS_MODEL_DIR, STAN_MOD_ID, STAN_MOD_ID)
 
 STAN_SMP_DIAG_CLASS <- "draws_array"

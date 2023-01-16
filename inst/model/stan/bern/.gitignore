@@ -1,0 +1,5 @@
+# ignore model binary
+bern
+
+# ignore csv posterior output
+bern-output/*csv
