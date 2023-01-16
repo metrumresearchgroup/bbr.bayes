@@ -5,6 +5,7 @@
 \alias{open_stanmod_file}
 \alias{open_standata_file}
 \alias{open_staninit_file}
+\alias{open_stan_fitted_params_file}
 \title{Open Stan model file in a text editor}
 \usage{
 open_stanmod_file(.mod)
@@ -12,6 +13,8 @@ open_stanmod_file(.mod)
 open_standata_file(.mod)
 
 open_staninit_file(.mod)
+
+open_stan_fitted_params_file(.mod)
 }
 \arguments{
 \item{.mod}{a \code{bbi_stan_model}}
@@ -27,6 +30,10 @@ jumping to a model file in RStudio or any other editor supported by
 
 \item \code{open_standata_file()}: Open \verb{<run>-standata.R}.
 
-\item \code{open_staninit_file()}: Open \verb{<run>-init.R}.
+\item \code{open_staninit_file()}: Open \verb{<run>-init.R} (not relevant for standalone
+generated quantities).
+
+\item \code{open_stan_fitted_params_file()}: Open \verb{<run>-fitted-params.R} (only relevant for
+standalone generated quantities).
 
 }}

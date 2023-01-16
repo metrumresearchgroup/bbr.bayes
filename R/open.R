@@ -23,11 +23,28 @@ open_standata_file <- function(.mod) {
     file_edit()
 }
 
-#' @describeIn open_stan_file Open `<run>-init.R`.
+#' @describeIn open_stan_file Open `<run>-init.R` (not relevant for standalone
+#'   generated quantities).
 #' @export
 open_staninit_file <- function(.mod) {
   checkmate::assert_class(.mod, "bbi_stan_model")
+  if (inherits(.mod, "bbi_stan_gq_model")) {
+    stop("*-init.R file not applicable to stan_gq models")
+  }
   .mod %>%
     build_path_from_model(STANINIT_SUFFIX) %>%
+    file_edit()
+}
+
+#' @describeIn open_stan_file Open `<run>-fitted-params.R` (only relevant for
+#'   standalone generated quantities).
+#' @export
+open_stan_fitted_params_file <- function(.mod) {
+  checkmate::assert_class(.mod, "bbi_stan_model")
+  if (!inherits(.mod, "bbi_stan_gq_model")) {
+    stop("*-fitted-params.R file only applicable to stan_gq models")
+  }
+  .mod %>%
+    build_path_from_model(STAN_FITTED_PARAMS_SUFFIX) %>%
     file_edit()
 }
