@@ -13,3 +13,7 @@ test_that("print() contains proper fields", {
       purrr::walk(fields, ~ expect_message(print(mod), regexp = .x)))
   }
 })
+
+test_that("stan: print includes -init.R", {
+  expect_output(print(STAN_MOD1), regexp = "-init.R")
+})
