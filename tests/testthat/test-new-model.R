@@ -53,7 +53,7 @@ test_that("stan: new_model() works", {
   mod_name <- "testmod_new_model2"
   expect_message(
     .m <- new_model(file.path(STAN_MODEL_DIR, mod_name), .model_type = "stan"),
-    regexp = MISSING_STAN_FILES_ERR_MSG
+    regexp = sprintf(MISSING_STAN_FILES_ERR_MSG, "bbi_stan_model")
   )
   on.exit(cleanup_model(.m))
 
@@ -67,7 +67,7 @@ test_that("stan_gq: new_model() works", {
   tdir <- local_test_dir()
   expect_message(
     m <- new_model(file.path(tdir, "gq"), .model_type = "stan_gq"),
-    regexp = MISSING_STAN_FILES_ERR_MSG)
+    regexp = sprintf(MISSING_STAN_FILES_ERR_MSG, "bbi_stan_gq_model"))
 
   expect_identical(m[[YAML_MOD_TYPE]], "stan_gq")
   expect_identical(m[[ABS_MOD_PATH]], file.path(tdir, "gq"))

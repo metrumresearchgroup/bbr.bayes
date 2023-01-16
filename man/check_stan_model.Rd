@@ -21,8 +21,11 @@ these files.)
 Will look for the following:
 \itemize{
 \item \code{build_path_from_model(.mod, "-standata.R")}
-\item \code{build_path_from_model(.mod, "-init.R")}
 \item \code{build_path_from_model(.mod, "-stanargs.R")}
 \item \code{build_path_from_model(.mod, ".stan")}
+\item \code{build_path_from_model(.mod, "-init.R")}, unless it is a generated
+quantities model (i.e. a \code{bbi_stan_gq_model} subclass).
+\item \code{build_path_from_model(.mod, "-fitted-params.R")}, if it is a generated
+quantities model (i.e. a \code{bbi_stan_gq_model} subclass).
 }
 }

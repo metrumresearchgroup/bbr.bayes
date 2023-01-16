@@ -82,7 +82,7 @@ STAN_SCAFFOLD_MD5_VEC <- c(
   # scaffolds; they return working default values.
 )
 
-MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model`, are missing"
-STAN_SCAFFOLD_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model`, are only scaffolds:"
+MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `%s`, are missing"
+STAN_SCAFFOLD_ERR_MSG <- "The following files, which are necessary to run a `%s`, are only scaffolds:"
 
 utils::globalVariables("make_standata")
