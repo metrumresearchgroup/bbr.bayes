@@ -111,8 +111,8 @@ build_stan_bbi_config <- function(.mod, .write) {
     !!CONFIG_MODEL_MD5   := tools::md5sum(get_model_path(.mod)),
     !!CONFIG_DATA_MD5    := tools::md5sum(build_path_from_model(.mod, STANDATA_JSON_SUFFIX)),
     !!STANCFG_DATA_MD5   := tools::md5sum(build_path_from_model(.mod, STANDATA_R_SUFFIX)),
-    !!STANCFG_INIT_MD5   := tools::md5sum(build_path_from_model(.mod, STANINIT_SUFFIX)),
     !!STANCFG_ARGS_MD5   := tools::md5sum(build_path_from_model(.mod, STANARGS_SUFFIX)),
+    !!STANCFG_INIT_MD5   := tools::md5sum(build_path_from_model(.mod, STANINIT_SUFFIX)),
     "configuration" = rlang::list2(
       "cmdstan_version"     = cmdstanr::cmdstan_version(),
       "cmdstanr_version"    = as.character(utils::packageVersion('cmdstanr')),
