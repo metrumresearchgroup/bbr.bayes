@@ -198,7 +198,7 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   # build args to pass to cmdstanr::sample()
   stanargs <- get_stanargs(.mod)
-  check_reserved_stanargs(stanargs)
+  check_reserved_stanargs(stanargs, method = "sample")
 
   if(is.null(stanargs$seed)) {
     stop("You must set a seed to run `submit_model()`. Use `set_stanargs(.mod, list(seed = <num>))` to set.", call. = FALSE)
@@ -216,7 +216,7 @@ submit_stan_model_cmdstanr <- function(.mod,
   stanargs[["init"]] <- import_stan_init(.mod, .standata = standata_list, .stanargs = stanargs)
   rm(standata_list) # once we've passed this to import_stan_init() we don't need it in memory
 
-  check_unknown_stanargs(stanargs)
+  check_unknown_stanargs(stanargs, method = "sample")
 
   # launch model
   res <- do.call(

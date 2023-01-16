@@ -4,13 +4,16 @@
 #'
 #' When [submit_model()] is called with a Stan model, it collects the arguments
 #' from `<run>-stanargs.R` and passes them to `CmdStanModel`s
-#' [$sample()][cmdstanr::model-method-sample].
+#' [$sample()][cmdstanr::model-method-sample] (for `bbi_stan_model` objects) or
+#' [$generate_quantities()][cmdstanr::model-method-generate-quantities] (for
+#' `bbi_stan_gq_model` objects).
 #'
 #' `set_stanargs()` and `get_stanargs()` provide an interface for specifying and
 #' inspecting the arguments attached to a model.
 #'
-#' @param .mod A `bbi_stan_model` object.
-#' @param .stanargs args passed through to `$sample()`.
+#' @param .mod A Stan model object.
+#' @param .stanargs args passed through to `$sample()` or
+#'   `$generate_quantities()`.
 #' @param .clear If `FALSE`, the default, add any new args and only overwrite
 #'   existing args that are passed in through `.stanargs`. If `TRUE`, overwrite
 #'   _all_ attached args so that only `.stanargs` will be attached.
@@ -23,6 +26,16 @@ set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
 #' @rdname stanargs
 #' @export
 set_stanargs.bbi_stan_model <- function(.mod, .stanargs, .clear = FALSE) {
+  set_stanargs_impl("sample", .mod, .stanargs, .clear)
+}
+
+#' @rdname stanargs
+#' @export
+set_stanargs.bbi_stan_gq_model <- function(.mod, .stanargs, .clear = FALSE) {
+  set_stanargs_impl("generate_quantities", .mod, .stanargs, .clear)
+}
+
+set_stanargs_impl <- function(method, .mod, .stanargs, .clear) {
   # load existing args
   .args <- if (isTRUE(.clear)) {
     list()
@@ -31,8 +44,8 @@ set_stanargs.bbi_stan_model <- function(.mod, .stanargs, .clear = FALSE) {
   }
 
   # check passed args
-  check_reserved_stanargs(.stanargs)
-  check_unknown_stanargs(.stanargs)
+  check_reserved_stanargs(.stanargs, method = method)
+  check_unknown_stanargs(.stanargs, method = method)
 
   # add or overwrite args
   # TODO: do we need to do any evaluation of variables or anything here?
@@ -72,10 +85,14 @@ print.bbr_stanargs <- function(x, ...) {
     cli::cli_bullets()
 }
 
-#' @keywords internal
-check_reserved_stanargs <- function(.stanargs) {
+check_reserved_stanargs <- function(.stanargs,
+                                    method = c("sample", "generate_quantities")) {
   checkmate::assert_list(.stanargs, names = "named")
-  if (any(names(.stanargs) %in% "init")) {
+  method <- match.arg(method)
+
+  if (identical(method, "sample") && any(names(.stanargs) %in% "init")) {
+    # ^ If it's not for the sample method, just let "init" be caught by
+    # check_unknown_stanargs.
     stop(paste(
       "Cannot pass `init` via stanargs. Please add initial values in the `{.mod}-init.R` file.",
       "You can use `open_init_file(.mod)` to easily open this file for editing."
@@ -89,10 +106,13 @@ check_reserved_stanargs <- function(.stanargs) {
   }
 }
 
-check_unknown_stanargs <- function(args) {
-  invalid_stanargs <- setdiff(names(args), get_known_params("sample"))
+check_unknown_stanargs <- function(args,
+                                   method = c("sample", "generate_quantities")) {
+  method <- match.arg(method)
+  invalid_stanargs <- setdiff(names(args), get_known_params(method))
   if (length(invalid_stanargs) > 0) {
-    stop("The following arguments are not accepted by cmdstanr::sample():\n",
+    stop(glue("The following arguments are not accepted by CmdStanModel${method}():\n",
+              .trim = FALSE),
          paste(invalid_stanargs, collapse = ", "),
          call. = FALSE)
   }

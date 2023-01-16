@@ -4,6 +4,7 @@
 \alias{stanargs}
 \alias{set_stanargs}
 \alias{set_stanargs.bbi_stan_model}
+\alias{set_stanargs.bbi_stan_gq_model}
 \alias{get_stanargs}
 \title{Set or get arguments to pass when submitting Stan model}
 \usage{
@@ -11,12 +12,15 @@ set_stanargs(.mod, .stanargs, .clear = FALSE)
 
 \method{set_stanargs}{bbi_stan_model}(.mod, .stanargs, .clear = FALSE)
 
+\method{set_stanargs}{bbi_stan_gq_model}(.mod, .stanargs, .clear = FALSE)
+
 get_stanargs(.mod)
 }
 \arguments{
-\item{.mod}{A \code{bbi_stan_model} object.}
+\item{.mod}{A Stan model object.}
 
-\item{.stanargs}{args passed through to \verb{$sample()}.}
+\item{.stanargs}{args passed through to \verb{$sample()} or
+\verb{$generate_quantities()}.}
 
 \item{.clear}{If \code{FALSE}, the default, add any new args and only overwrite
 existing args that are passed in through \code{.stanargs}. If \code{TRUE}, overwrite
@@ -25,7 +29,9 @@ existing args that are passed in through \code{.stanargs}. If \code{TRUE}, overw
 \description{
 When \code{\link[=submit_model]{submit_model()}} is called with a Stan model, it collects the arguments
 from \verb{<run>-stanargs.R} and passes them to \code{CmdStanModel}s
-\link[cmdstanr:model-method-sample]{$sample()}.
+\link[cmdstanr:model-method-sample]{$sample()} (for \code{bbi_stan_model} objects) or
+\link[cmdstanr:model-method-generate-quantities]{$generate_quantities()} (for
+\code{bbi_stan_gq_model} objects).
 
 \code{set_stanargs()} and \code{get_stanargs()} provide an interface for specifying and
 inspecting the arguments attached to a model.
