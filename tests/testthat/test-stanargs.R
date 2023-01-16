@@ -55,3 +55,7 @@ test_that("get_stanargs returns expected list", {
   })
 })
 
+test_that("get_known_params() aborts on unknown method", {
+  expect_error(get_known_params("youdontknowme"),
+               "Unknown")
+})

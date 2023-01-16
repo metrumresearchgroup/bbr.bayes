@@ -85,7 +85,7 @@ check_reserved_stanargs <- function(.stanargs) {
 }
 
 check_unknown_stanargs <- function(args) {
-  invalid_stanargs <- setdiff(names(args), get_sample_params())
+  invalid_stanargs <- setdiff(names(args), get_known_params("sample"))
   if (length(invalid_stanargs) > 0) {
     stop("The following arguments are not accepted by cmdstanr::sample():\n",
          paste(invalid_stanargs, collapse = ", "),
@@ -95,17 +95,25 @@ check_unknown_stanargs <- function(args) {
 
 known_params <- new.env(parent = emptyenv())
 
-get_sample_params <- function() {
-  kw <- "sample"
-  if (exists(kw, known_params)) {
-    return(get(kw, envir = known_params))
+#' Return valid parameters for a CmdStanModel method
+#'
+#' @param method Method of interest (e.g., "sample").
+#' @return Character vector of parameters for `method`.
+#' @noRd
+get_known_params <- function(method) {
+  if (exists(method, known_params)) {
+    return(get(method, envir = known_params))
   }
 
   mfile <- system.file("model", "stan", "fxa", "fxa.stan",
                        mustWork = TRUE, package = "bbr.bayes")
   mod <- cmdstanr::cmdstan_model(mfile, compile = FALSE)
-  params <- methods::formalArgs(mod$sample)
-  assign(kw, params, envir = known_params)
+  fn <- mod[[method]]
+  if (is.null(fn)) {
+    stop("Unknown CmdStanModel method: ", method)
+  }
+  params <- methods::formalArgs(fn)
+  assign(method, params, envir = known_params)
 
   return(params)
 }
