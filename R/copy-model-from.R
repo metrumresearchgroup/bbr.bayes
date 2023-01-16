@@ -11,7 +11,35 @@ copy_model_from.bbi_stan_model <- function(
   .update_model_file = TRUE,
   .overwrite = FALSE
 ) {
+  copy_stan_model_impl(
+    STAN_MODEL_REQ_FILES,
+    .parent_mod = .parent_mod,
+    .new_model = .new_model,
+    .description = .description,
+    .based_on_additional = .based_on_additional,
+    .add_tags = .add_tags,
+    .star = .star,
+    .inherit_tags = .inherit_tags,
+    .update_model_file = .update_model_file,
+    .overwrite = .overwrite)
+}
 
+#' Internal logic for copying a Stan model
+#'
+#' The main argument of interest is `files_to_copy`, which defines that set of
+#' files that `copy_stan_files()` transfers to the new model. The remaining
+#' arguments are relayed to bbr's `copy_model_from_impl()`.
+#' @noRd
+copy_stan_model_impl <- function(files_to_copy,
+                                 .parent_mod,
+                                 .new_model = NULL,
+                                 .description = NULL,
+                                 .based_on_additional = NULL,
+                                 .add_tags = NULL,
+                                 .star = NULL,
+                                 .inherit_tags = FALSE,
+                                 .update_model_file = TRUE,
+                                 .overwrite = FALSE) {
   check_stan_model(.parent_mod, .error = TRUE)
 
   .new_model <- build_new_model_path(.parent_mod, .new_model)
@@ -20,7 +48,7 @@ copy_model_from.bbi_stan_model <- function(
     copy_stan_files(.parent_mod,
                     .new_model,
                     .overwrite,
-                    STAN_MODEL_REQ_FILES)
+                    files_to_copy)
   }
 
   .mod <- copy_model_from_impl(
