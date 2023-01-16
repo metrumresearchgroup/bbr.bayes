@@ -7,7 +7,7 @@
 set_stanargs(.mod, .stanargs, .clear = FALSE)
 }
 \arguments{
-\item{.mod}{The model object to submit.}
+\item{.mod}{A \code{bbi_stan_model} object.}
 
 \item{.stanargs}{args passed through to \code{\link[cmdstanr:model-method-sample]{cmdstanr::sample()}}.}
 

@@ -1,6 +1,6 @@
 #' Set arguments to be passed to cmdstanr$sample()
 #'
-#' @inheritParams bbr::submit_model
+#' @param .mod A `bbi_stan_model` object.
 #' @param .stanargs args passed through to [cmdstanr::sample()].
 #' @param .clear If `FALSE`, the default, add any new args and only overwrite
 #'   existing args that are passed in through `.stanargs`. If `TRUE`, overwrite

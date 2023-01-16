@@ -7,7 +7,7 @@
 get_stanargs(.mod)
 }
 \arguments{
-\item{.mod}{The model object to submit.}
+\item{.mod}{A \code{bbi_stan_model} object.}
 }
 \description{
 Return the current stanargs attached to a model
