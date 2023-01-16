@@ -6,7 +6,6 @@
 #'   existing args that are passed in through `.stanargs`. If `TRUE`, overwrite
 #'   _all_ attached args so that only `.stanargs` will be attached.
 #'
-#' @importFrom styler style_file
 #' @export
 set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
 
