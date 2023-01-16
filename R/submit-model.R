@@ -151,6 +151,8 @@ run_chains <- function(.mod, ...) {
 #' @param .mode Mode of model submission. Stan models currently only support
 #'   local execution.
 #' @param ... Additional arguments (ignored for all Stan models).
+#' @seealso [bbr_stan] for a high-level description of how Stan models are
+#'   structured
 NULL
 
 #' @rdname stan_submit_model

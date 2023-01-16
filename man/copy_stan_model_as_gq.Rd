@@ -68,3 +68,7 @@ generated quantities.
 copied to the new model's \verb{<run>-stanargs.R}.
 }
 }
+\seealso{
+\link{bbr_stan} for a high-level description of how Stan models are
+structured
+}

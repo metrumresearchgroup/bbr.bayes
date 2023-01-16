@@ -34,3 +34,7 @@ default
 instead
 }
 }
+\seealso{
+\link{bbr_stan} for a high-level description of how Stan models are
+structured
+}

@@ -3,6 +3,7 @@
 \name{bbr_stan}
 \alias{bbr_stan}
 \alias{bbi_stan_model}
+\alias{bbi_stan_gq_model}
 \title{Stan models in \code{bbr}}
 \description{
 This page provides an overview of the basic structure of Stan models in
@@ -88,6 +89,9 @@ argument to \verb{$sample()}.
 \emph{"A function that returns a single list..."}. If you intend to use this
 option, your \code{make_init()} function must return \emph{the function} described,
 \emph{not} the "single list...".
+\item Note that this file will not be included when you're defining a model for
+\emph{standalone} generated quantities. See "Standalone Generated Quantities"
+section below for more information.
 }
 
 \strong{\verb{<run>}} - This is the binary file created when the \verb{<run>.stan} file is
@@ -119,13 +123,53 @@ since the model was run, primarily for reproducibility purposes.
 before running or copying the model.
 \item \strong{\code{\link[bbr:build_path_from_model]{bbr::build_path_from_model()}}} - Builds the absolute path a file in the
 model folder from a model object and a suffix.
-\item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}}} -
-Helpers for adding one of the necessary files to the model folder.
+\item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}},
+\code{\link[=add_stan_fitted_params_file]{add_stan_fitted_params_file()}}} - Helpers for adding one of the necessary
+files to the model folder.
 \item \strong{\code{\link[bbr:model_diff]{bbr::model_diff()}}} - Compare necessary files between two models.
 Defaults to comparing \verb{<run>.stan} files.
 \item Also has many of the same helpers as \code{bbi_nonmem_model} objects:
 \code{\link[bbr:tags_diff]{bbr::tags_diff()}}, \code{\link[bbr:modify_tags]{bbr::add_tags()}}, \code{\link[bbr:modify_notes]{bbr::add_notes()}},
 \code{\link[bbr:get_path_from_object]{bbr::get_model_path()}}, \code{\link[bbr:get_path_from_object]{bbr::get_output_dir()}}, \code{\link[bbr:get_model_id]{bbr::get_model_id()}}
 }
+}
+
+\subsection{Standalone Generated Quantities}{
+
+Stan supports generating quantities of interest from existing posterior
+samples (see \href{https://mc-stan.org/docs/stan-users-guide/stand-alone-generated-quantities-and-ongoing-prediction.html}{Stan user's guide}).
+\pkg{cmdstanr} exposes this through the
+\link[cmdstanr:model-method-generate-quantities]{$generate_quantities()} of
+\link[cmdstanr:CmdStanModel]{cmdstanr::CmdStanModel}.
+
+\emph{Note:} The information below applies to \emph{standalone} generated quantities.
+If the model defines generated quantities that are produced at the same time
+as the MCMC samples, the model will have the structure defined above.
+
+In \code{bbr}, models for standalone generated quantities are defined via the
+\code{bbi_stan_gq_model} object, a subclass of \code{bbi_stan_model}. On the file
+system, these models look very similar to regular Stan models, with the
+following differences:
+\itemize{
+\item the "model_type" value in the model YAML is "stan_gq" instead of "stan"
+\item there is no \verb{<run>-init.R} file;
+\link[cmdstanr:model-method-generate-quantities]{$generate_quantities()} does
+not have an \code{init} argument.
+\item there is a \verb{<run>-fitted-params.R} file. This file must define a function,
+\code{make_fitted_params}, that takes a single argument, the model object. The
+function can return any value accepted for the \code{fitted_params} argument of
+\link[cmdstanr:model-method-generate-quantities]{$generate_quantities()}.
+}
+
+"stan_gq" models can be created fresh with \code{new_model(..., .model_type = "stan_gq")}. However, for the more common case where the "stan_gq" model is
+derived from an existing "stan" model, you can use the
+\code{\link[=copy_stan_model_as_gq]{copy_stan_model_as_gq()}} helper, which takes care of copying over the
+relevant files and setting up a default \verb{<run>-fitted-params.R} that returns
+the paths to the parent model's posteriors.
+
+To run a "stan_gq" model, pass the \code{bbi_stan_gq_model} object to
+\link[=stan_submit_model]{submit_model()}, which will use the model files to
+construct a call to
+\link[cmdstanr:model-method-generate-quantities]{CmdStanModel$generate_quantities()}.
 }
 }

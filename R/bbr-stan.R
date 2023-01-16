@@ -89,6 +89,10 @@
 #'     option, your `make_init()` function must return _the function_ described,
 #'     _not_ the "single list...".
 #'
+#'   * Note that this file will not be included when you're defining a model for
+#'     _standalone_ generated quantities. See "Standalone Generated Quantities"
+#'     section below for more information.
+#'
 #' **`<run>`** - This is the binary file created when the `<run>.stan` file is
 #' compiled by `cmdstan`. We `.gitignore` this automatically.
 #'
@@ -119,8 +123,9 @@
 #' * **[bbr::build_path_from_model()]** - Builds the absolute path a file in the
 #'   model folder from a model object and a suffix.
 #'
-#' * **[add_stanmod_file()], [add_standata_file()], [add_staninit_file()]** -
-#' Helpers for adding one of the necessary files to the model folder.
+#' * **[add_stanmod_file()], [add_standata_file()], [add_staninit_file()],
+#'   [add_stan_fitted_params_file()]** - Helpers for adding one of the necessary
+#'   files to the model folder.
 #'
 #' * **[bbr::model_diff()]** - Compare necessary files between two models.
 #'   Defaults to comparing `<run>.stan` files.
@@ -128,6 +133,48 @@
 #' * Also has many of the same helpers as `bbi_nonmem_model` objects:
 #'   [bbr::tags_diff()], [bbr::add_tags()], [bbr::add_notes()],
 #'   [bbr::get_model_path()], [bbr::get_output_dir()], [bbr::get_model_id()]
+#'
+#' ## Standalone Generated Quantities
+#'
+#' Stan supports generating quantities of interest from existing posterior
+#' samples (see [Stan user's
+#' guide](https://mc-stan.org/docs/stan-users-guide/stand-alone-generated-quantities-and-ongoing-prediction.html)).
+#' \pkg{cmdstanr} exposes this through the
+#' [$generate_quantities()][cmdstanr::model-method-generate-quantities] of
+#' [cmdstanr::CmdStanModel].
+#'
+#' *Note:* The information below applies to _standalone_ generated quantities.
+#' If the model defines generated quantities that are produced at the same time
+#' as the MCMC samples, the model will have the structure defined above.
+#'
+#' In `bbr`, models for standalone generated quantities are defined via the
+#' `bbi_stan_gq_model` object, a subclass of `bbi_stan_model`. On the file
+#' system, these models look very similar to regular Stan models, with the
+#' following differences:
+#'
+#'  * the "model_type" value in the model YAML is "stan_gq" instead of "stan"
+#'
+#'  * there is no `<run>-init.R` file;
+#'    [$generate_quantities()][cmdstanr::model-method-generate-quantities] does
+#'    not have an `init` argument.
+#'
+#'  * there is a `<run>-fitted-params.R` file. This file must define a function,
+#'    `make_fitted_params`, that takes a single argument, the model object. The
+#'    function can return any value accepted for the `fitted_params` argument of
+#'    [$generate_quantities()][cmdstanr::model-method-generate-quantities].
+#'
+#' "stan_gq" models can be created fresh with `new_model(..., .model_type =
+#' "stan_gq")`. However, for the more common case where the "stan_gq" model is
+#' derived from an existing "stan" model, you can use the
+#' [copy_stan_model_as_gq()] helper, which takes care of copying over the
+#' relevant files and setting up a default `<run>-fitted-params.R` that returns
+#' the paths to the parent model's posteriors.
+#'
+#' To run a "stan_gq" model, pass the `bbi_stan_gq_model` object to
+#' [submit_model()][stan_submit_model], which will use the model files to
+#' construct a call to
+#' [CmdStanModel$generate_quantities()][cmdstanr::model-method-generate-quantities].
+#'
 #' @name bbr_stan
-#' @aliases bbi_stan_model
+#' @aliases bbi_stan_model bbi_stan_gq_model
 NULL
