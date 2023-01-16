@@ -29,7 +29,7 @@ These functions take a model object and create the appropriate file in the
 required location. If \code{.source_file} argument is used, this file will be
 copied to the location. Otherwise, a template "scaffold" of the required file
 is created in that location. \strong{Note, this primarily intended for Stan
-models} which require several necessary files to run. (See \verb{?}\link{bbi_stan_model}
+models} which require several necessary files to run. (See \verb{?}\link{bbr_stan}
 for details about these files.) Users can call \code{check_stan_model(.mod)} to
 see if any of these files are missing.
 }
@@ -37,12 +37,14 @@ see if any of these files are missing.
 \itemize{
 \item \code{add_stanmod_file()}: Adds a \verb{<run>.stan} model file.
 
-\item \code{add_standata_file()}: Adds a \verb{<run>-standata.R} file for building the data. See \verb{?}\link{bbi_stan_model} for details.
+\item \code{add_standata_file()}: Adds a \verb{<run>-standata.R} file for building
+the data. See \verb{?}\link{bbr_stan} for details.
 
-\item \code{add_staninit_file()}: Adds a \verb{<run>-init.R} file for building the initial values. See \verb{?}\link{bbi_stan_model} for details.
+\item \code{add_staninit_file()}: Adds a \verb{<run>-init.R} file for building the
+initial values. See \verb{?}\link{bbr_stan} for details.
 
 \item \code{add_stan_fitted_params_file()}: Adds a \verb{<run>-fitted-params.R} file that
 prepares previously generated MCMC samples as input for a standalone
-generated quantities run. See \verb{?}\link{bbi_stan_model} for details.
+generated quantities run. See \verb{?}\link{bbr_stan} for details.
 
 }}

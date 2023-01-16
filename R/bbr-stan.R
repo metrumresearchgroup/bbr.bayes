@@ -1,9 +1,14 @@
-#' @title `bbi_stan_model` object
+#' @title Stan models in `bbr`
 #'
-#' @description This page describes the basic structure of the `bbi_stan_model`
-#'   object which is used for defining and submitting models with Stan and
-#'   `bbr`. The Details section contains information about the model structure
-#'   and the necessary files that will exist on disk for any `bbi_stan_model`.
+#' @description
+#'
+#' This page provides an overview of the basic structure of Stan models in
+#' `bbr`. The main entry point for interacting with Stan models is the
+#' `bbi_stan_model` object. With it, you can create a new model on disk from
+#' "scaffold" files, copy a new model from an existing one, jump to model files
+#' of interest, and submit models. The Details section contains information
+#' about the model structure and the necessary files that will exist on disk for
+#' any `bbi_stan_model`.
 #'
 #' @details
 #'
@@ -121,5 +126,6 @@
 #' * Also has many of the same helpers as `bbi_nonmem_model` objects:
 #' [tags_diff()], [add_tags()], [add_notes()], [get_model_path()],
 #' [get_output_dir()], [get_model_id()]
-#' @name bbi_stan_model
+#' @name bbr_stan
+#' @aliases bbi_stan_model
 NULL

@@ -4,7 +4,7 @@
 #' required location. If `.source_file` argument is used, this file will be
 #' copied to the location. Otherwise, a template "scaffold" of the required file
 #' is created in that location. **Note, this primarily intended for Stan
-#' models** which require several necessary files to run. (See `?`[bbi_stan_model]
+#' models** which require several necessary files to run. (See `?`[bbr_stan]
 #' for details about these files.) Users can call `check_stan_model(.mod)` to
 #' see if any of these files are missing.
 #' @param .mod a `bbi_{.model_type}_model` object
@@ -27,7 +27,8 @@ add_stanmod_file <- function(.mod, .source_file = NULL) {
   )
 }
 
-#' @describeIn add_file_to_model_dir Adds a `<run>-standata.R` file for building the data. See `?`[bbi_stan_model] for details.
+#' @describeIn add_file_to_model_dir Adds a `<run>-standata.R` file for building
+#'   the data. See `?`[bbr_stan] for details.
 #' @export
 add_standata_file <- function(.mod, .source_file = NULL) {
   add_file_to_model_dir_impl(
@@ -39,7 +40,8 @@ add_standata_file <- function(.mod, .source_file = NULL) {
   )
 }
 
-#' @describeIn add_file_to_model_dir Adds a `<run>-init.R` file for building the initial values. See `?`[bbi_stan_model] for details.
+#' @describeIn add_file_to_model_dir Adds a `<run>-init.R` file for building the
+#'   initial values. See `?`[bbr_stan] for details.
 #' @export
 add_staninit_file <- function(.mod, .source_file = NULL) {
   if (inherits(.mod, "bbi_stan_gq_model")) {
@@ -56,7 +58,7 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
 
 #' @describeIn add_file_to_model_dir Adds a `<run>-fitted-params.R` file that
 #'   prepares previously generated MCMC samples as input for a standalone
-#'   generated quantities run. See `?`[bbi_stan_model] for details.
+#'   generated quantities run. See `?`[bbr_stan] for details.
 #' @export
 add_stan_fitted_params_file <- function(.mod, .source_file = NULL) {
   add_file_to_model_dir_impl(
