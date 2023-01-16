@@ -40,7 +40,7 @@ copy_model_from.bbi_stan_model <- function(
 #' @param .parent_mod a `bbi_stan_model` object to copy from
 #' @param .new_model Path to new model directory
 #' @param .overwrite If `TRUE`, overwrite existing directory at `.new_model`. If `FALSE` and directory exists at `.new_model` error.
-#' @keywords internal
+#' @noRd
 copy_stan_files <- function(.parent_mod, .new_model, .overwrite) {
 
   if (fs::dir_exists(.new_model)) {

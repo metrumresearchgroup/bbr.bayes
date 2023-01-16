@@ -167,7 +167,7 @@ submit_model.bbi_stan_model <- function(
 #' Private implementation function called by `submit_model()` dispatches.
 #' @param .mod An S3 object of class `bbi_stan_model`
 #' @return The object returned from [cmdstanr::sample()]
-#' @keywords internal
+#' @noRd
 submit_stan_model_cmdstanr <- function(.mod,
                                        .mode = c("local"), # TODO: add sge mode for cmdstanr
                                        .overwrite = NULL) {

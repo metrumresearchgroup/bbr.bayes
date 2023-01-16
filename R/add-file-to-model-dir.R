@@ -70,7 +70,7 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
 #'   existing file with a scaffold. However, **if `.source_file` is passed
 #'   then `.overwrite` defaults to `TRUE`**, assuming that the user intends
 #'   to use the `.source_file` instead of the existing file.
-#' @keywords internal
+#' @noRd
 add_file_to_model_dir_impl <- function(
   .mod,
   .model_class,

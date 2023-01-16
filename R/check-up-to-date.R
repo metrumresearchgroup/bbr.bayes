@@ -55,7 +55,7 @@ check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, .
 #'   (named `"data"`) refers to the data files mentioned above. For both
 #'   elements, they will be `TRUE` if nothing has changed, `FALSE` if anything
 #'   has changed.
-#' @keywords internal
+#' @noRd
 check_up_to_date_stan <- function(.mod, .build_data = FALSE) {
 
   # check model and load config
