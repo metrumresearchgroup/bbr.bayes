@@ -56,4 +56,48 @@ test_that("stan: model_diff() works with other files", {
                    "identical")
     expect_null(res)
   }
+
+  expect_message(res <- model_diff(mod2, .file = "fitted-params"),
+                 "Only stan_gq")
+  expect_null(res)
+})
+
+test_that("stan gq: model_diff() works with other files", {
+  new_mod_name <- "model_diff_stan4"
+  mod2 <- copy_model_from(STAN_GQ_MOD, new_mod_name)
+  on.exit(cleanup_model(mod2))
+
+  files <- c("standata", "fitted-params", "stanargs")
+  for (f in files) {
+    expect_message(res <- model_diff(mod2, .file = f),
+                   "identical")
+    expect_null(res)
+  }
+
+  expect_message(res <- model_diff(mod2, .file = "init"),
+                 "stan_gq models do not")
+  expect_null(res)
+})
+
+test_that("stan: model_diff() works between regular and gq models", {
+  new_mod_name <- "model_diff_stan5"
+  mod2 <- copy_stan_model_as_gq(STAN_MOD3, new_mod_name)
+  on.exit(cleanup_model(mod2))
+
+  res <- model_diff(mod2, .file = "stanargs")
+  expect_true(inherits(res, "Diff"))
+  out_lines <- capture.output(print(res))
+  expect_match(out_lines, "iter_sampling", all = FALSE)
+
+  expect_message(res <- model_diff(mod2, .file = "standata"),
+                 "identical")
+  expect_null(res)
+
+  expect_message(res <- model_diff(mod2, .file = "init"),
+                 "stan_gq models do not")
+  expect_null(res)
+
+  expect_message(res <- model_diff(mod2, .file = "fitted-params"),
+                 "Only stan_gq")
+  expect_null(res)
 })

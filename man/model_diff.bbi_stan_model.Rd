@@ -7,7 +7,7 @@
 \method{model_diff}{bbi_stan_model}(
   .mod,
   .mod2 = NULL,
-  .file = c("model", "standata", "init", "stanargs"),
+  .file = c("model", "standata", "stanargs", "init", "fitted-params"),
   ...,
   .viewer = FALSE
 )
@@ -20,8 +20,11 @@
 \itemize{
 \item model: \verb{<run>.stan}
 \item standata: \verb{<run>-standata.R}
-\item init: \verb{<run>-init.R}
 \item stanargs: \verb{<run>-stanargs.R}
+\item init: \verb{<run>-init.R} (not valid if either \code{.mod} or \code{.mod2} is a
+\code{bbi_stan_gq_model} object)
+\item fitted-params: \verb{<run>-fitted-params.R} (only valid if both \code{.mod} and
+\code{.mod2} are \code{bbi_stan_gq_model} objects)
 }}
 
 \item{...}{arguments passed through to methods. (Currently none.)}
@@ -32,7 +35,7 @@ will hold the console with \verb{Press ENTER to continue...} so it is only
 recommended for interactive use.}
 }
 \description{
-Diff files between \code{bbi_stan_model} objects.
+Diff files between \code{bbi_stan_model} (or \code{bbi_stan_gq_model}) objects.
 }
 \seealso{
 \code{\link[bbr:model_diff]{bbr::model_diff()}}
