@@ -2,7 +2,7 @@
 #' @export
 copy_model_from.bbi_stan_model <- function(
   .parent_mod,
-  .new_model,
+  .new_model = NULL,
   .description = NULL,
   .based_on_additional = NULL,
   .add_tags = NULL,

@@ -27,3 +27,10 @@ test_that("copy_from_model() creates accurate copy", {
     expect_null(new_mod[[YAML_DESCRIPTION]])
   }
 })
+
+test_that("stan: copy_model_from() handles .new_model=NULL", {
+  tdir <- local_test_dir()
+  m1 <- copy_model_from(STAN_MOD1, file.path(tdir, "001"))
+  m2 <- copy_model_from(m1)
+  expect_identical(get_model_id(m2), "002")
+})
