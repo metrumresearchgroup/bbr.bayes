@@ -14,7 +14,7 @@ about the model structure and the necessary files that will exist on disk for
 any \code{bbi_stan_model}.
 }
 \details{
-\strong{Model Structure}
+\subsection{Model Structure}{
 
 \strong{\verb{<run>}} - The "run" is, in some sense, the "name" of a given model.
 Practically, it will correspond to the model directory name, the base name of
@@ -34,8 +34,9 @@ relative path to this directory to either \code{\link[bbr:read_model]{bbr::read_
 \code{\link[bbr:new_model]{bbr::new_model()}}, both of which return the \code{bbi_stan_model} object. When
 this object is created, it checks the model directory for the relevant files
 and populates \code{absolute_model_path}.
+}
 
-\strong{Necessary Files}
+\subsection{Necessary Files}{
 
 All of the files described below will exist inside the model directory named
 \verb{<run>}. If you call \code{new_model(..., .model_type = "stan")} without any of
@@ -61,8 +62,9 @@ used to find data files for loading, for example
 submission or to compare the resulting data to previously saved data on
 disk.
 }
+}
 
-\strong{Other Files and Directories}
+\subsection{Other Files and Directories}{
 
 There will be several other things created in the model directory, as the
 model is run or as it prepares to run.
@@ -108,8 +110,9 @@ run finishes successfully. It stores some configuration information about the
 run, as well as the md5 hashes of the necessary files. These hashes are later
 used (by \code{\link[bbr:check_up_to_date]{bbr::check_up_to_date()}} to check whether the files have changed
 since the model was run, primarily for reproducibility purposes.
+}
 
-\strong{Some Helper Functions}
+\subsection{Some Helper Functions}{
 \itemize{
 \item \strong{\code{\link[=check_stan_model]{check_stan_model()}}} (mentioned above) - Checks for the necessary files
 before running or copying the model.
@@ -122,5 +125,6 @@ Defaults to comparing \verb{<run>.stan} files.
 \item Also has many of the same helpers as \code{bbi_nonmem_model} objects:
 \code{\link[bbr:tags_diff]{bbr::tags_diff()}}, \code{\link[bbr:modify_tags]{bbr::add_tags()}}, \code{\link[bbr:modify_notes]{bbr::add_notes()}},
 \code{\link[bbr:get_path_from_object]{bbr::get_model_path()}}, \code{\link[bbr:get_path_from_object]{bbr::get_output_dir()}}, \code{\link[bbr:get_model_id]{bbr::get_model_id()}}
+}
 }
 }

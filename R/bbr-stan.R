@@ -12,7 +12,7 @@
 #'
 #' @details
 #'
-#' **Model Structure**
+#' ## Model Structure
 #'
 #' **`<run>`** - The "run" is, in some sense, the "name" of a given model.
 #' Practically, it will correspond to the model directory name, the base name of
@@ -33,7 +33,7 @@
 #' this object is created, it checks the model directory for the relevant files
 #' and populates `absolute_model_path`.
 #'
-#' **Necessary Files**
+#' ## Necessary Files
 #'
 #' All of the files described below will exist inside the model directory named
 #' `<run>`. If you call `new_model(..., .model_type = "stan")` without any of
@@ -61,7 +61,7 @@
 #'     submission or to compare the resulting data to previously saved data on
 #'     disk.
 #'
-#' **Other Files and Directories**
+#' ## Other Files and Directories
 #'
 #' There will be several other things created in the model directory, as the
 #' model is run or as it prepares to run.
@@ -111,7 +111,7 @@
 #' used (by [bbr::check_up_to_date()] to check whether the files have changed
 #' since the model was run, primarily for reproducibility purposes.
 #'
-#' **Some Helper Functions**
+#' ## Some Helper Functions
 #'
 #' * **[check_stan_model()]** (mentioned above) - Checks for the necessary files
 #' before running or copying the model.
