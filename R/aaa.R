@@ -18,6 +18,10 @@ IPH_NONPARAM_NAMES <- c("ITERATION", IPH_ID_NAMES)
 
 STAN_MOD_CLASS <- "bbi_stan_model"
 STAN_SUM_CLASS <- "bbi_stan_summary"
+
+STAN_GQ_MOD_CLASS <- "bbi_stan_gq_model"
+STAN_GQ_SUM_CLASS <- "bbi_stan_gq_summary"
+
 STAN_FIT_CLASS <- "CmdStanMCMC"
 
 STANMOD_SUFFIX <- ".stan"
