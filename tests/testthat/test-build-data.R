@@ -27,8 +27,8 @@ test_that("build_data.bbi_stan_model write to disk", {
 })
 
 test_that("build_data.bbi_stan_model errors with flawed -standata.R", {
-  new_mod <- copy_model_from(STAN_MOD1, tempfile())
-  on.exit(cleanup_model(new_mod))
+  tdir <- local_test_dir()
+  new_mod <- copy_model_from(STAN_MOD1, file.path(tdir, "new"))
 
   # fails because it can't find the relative path to the data from the temp dir
   expect_error(

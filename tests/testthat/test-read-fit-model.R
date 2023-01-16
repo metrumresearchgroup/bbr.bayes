@@ -58,7 +58,7 @@ test_that("stan: read_fit_model() works correctly", {
 })
 
 test_that("stan: read_fit_model() adjusts output files to be in model directory", {
-  tdir <- withr::local_tempdir("bbr.bayes-read-model-test")
+  tdir <- local_test_dir()
   mdir <- file.path(tdir, STAN_MOD_ID)
   fs::dir_copy(STAN_MOD1_PATH, mdir)
   fs::file_copy(file.path(STAN_ABS_MODEL_DIR, paste0(STAN_MOD_ID, ".yaml")),

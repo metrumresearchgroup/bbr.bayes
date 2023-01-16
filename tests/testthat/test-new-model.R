@@ -19,7 +19,7 @@ test_that("nmbayes: new_model() errors without .model_type", {
 })
 
 test_that("nmbayes: new_model() works", {
-  tdir <- withr::local_tempdir("bbr-bayes-")
+  tdir <- local_test_dir()
   model_path <- file.path(tdir, "100")
   fs::file_copy(paste0(NMBAYES_MOD1_PATH, ".ctl"),
                 paste0(model_path, ".ctl"))

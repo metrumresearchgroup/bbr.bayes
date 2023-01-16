@@ -29,7 +29,7 @@ test_that("get_chain_files() optionally checks existence: basic", {
 })
 
 test_that("get_chain_files() optionally checks existence: some missing", {
-  tdir <- withr::local_tempdir("bbr-bayes-")
+  tdir <- local_test_dir()
   modfile <- get_model_path(NMBAYES_MOD1)
   fs::file_copy(modfile, tdir)
   fs::file_copy(get_yaml_path(NMBAYES_MOD1), tdir)
