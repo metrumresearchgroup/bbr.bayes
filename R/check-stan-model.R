@@ -16,6 +16,11 @@
 #'   missing. If `TRUE` will error instead.
 #' @export
 check_stan_model <- function(.mod, .error = FALSE) {
+  UseMethod("check_stan_model")
+}
+
+#' @export
+check_stan_model.bbi_stan_model <- function(.mod, .error = FALSE) {
   # check if output dir exists and if not create an empty one
   model_dir <- dirname(get_output_dir(.mod, .check_exists = FALSE))
   if (!fs::dir_exists(model_dir)) fs::dir_create(model_dir)
