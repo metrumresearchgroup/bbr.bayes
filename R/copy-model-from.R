@@ -16,6 +16,12 @@ copy_model_from.bbi_stan_model <- function(
 
   .new_model <- build_new_model_path(.parent_mod, .new_model)
 
+  setup <- function() {
+    copy_stan_files(.parent_mod,
+                    .new_model,
+                    .overwrite)
+  }
+
   .mod <- copy_model_from_impl(
     .parent_mod = .parent_mod,
     .new_model = .new_model,
@@ -26,7 +32,7 @@ copy_model_from.bbi_stan_model <- function(
     .inherit_tags = .inherit_tags,
     .update_model_file = .update_model_file,
     .overwrite = .overwrite,
-    setup_fn = function() copy_stan_files(.parent_mod, .new_model, .overwrite)
+    setup_fn = setup
   )
 
   return(.mod)
