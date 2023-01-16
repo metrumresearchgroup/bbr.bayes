@@ -17,7 +17,12 @@
 #' @name stanargs
 #' @export
 set_stanargs <- function(.mod, .stanargs, .clear = FALSE) {
+  UseMethod("set_stanargs")
+}
 
+#' @rdname stanargs
+#' @export
+set_stanargs.bbi_stan_model <- function(.mod, .stanargs, .clear = FALSE) {
   # load existing args
   .args <- if (isTRUE(.clear)) {
     list()

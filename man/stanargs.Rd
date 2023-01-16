@@ -3,10 +3,13 @@
 \name{stanargs}
 \alias{stanargs}
 \alias{set_stanargs}
+\alias{set_stanargs.bbi_stan_model}
 \alias{get_stanargs}
 \title{Set or get arguments to pass when submitting Stan model}
 \usage{
 set_stanargs(.mod, .stanargs, .clear = FALSE)
+
+\method{set_stanargs}{bbi_stan_model}(.mod, .stanargs, .clear = FALSE)
 
 get_stanargs(.mod)
 }
