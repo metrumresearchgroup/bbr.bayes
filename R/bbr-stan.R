@@ -17,11 +17,11 @@
 #' **`<run>`** - The "run" is, in some sense, the "name" of a given model.
 #' Practically, it will correspond to the model directory name, the base name of
 #' the bbr-created YAML (`<run>.yaml`), as well as the base name for some files
-#' in that directory. Calling [get_model_id()] on a model object will return
-#' `<run>` as a string. The `bbi_log_df` tibbles also all contain a run column
-#' which is populated by calling `basename(.mod$absolute_model_path)` for each
-#' model. Note: this is _not_ actually stored in the model object because it can
-#' be unequivocally extracted as just described.
+#' in that directory. Calling [bbr::get_model_id()] on a model object will
+#' return `<run>` as a string. The `bbi_log_df` tibbles also all contain a run
+#' column which is populated by calling `basename(.mod$absolute_model_path)` for
+#' each model. Note: this is _not_ actually stored in the model object because
+#' it can be unequivocally extracted as just described.
 #'
 #' **`absolute_model_path`** - Like the `bbi_nonmem_model`, the `bbi_stan_model`
 #' will carry around only an absolute path to the model directory. This will
@@ -116,18 +116,18 @@
 #' * **[check_stan_model()]** (mentioned above) - Checks for the necessary files
 #' before running or copying the model.
 #'
-#' * **[build_path_from_model()]** - Builds the absolute path a file in the
-#' model folder from a model object and a suffix.
+#' * **[bbr::build_path_from_model()]** - Builds the absolute path a file in the
+#'   model folder from a model object and a suffix.
 #'
 #' * **[add_stanmod_file()], [add_standata_file()], [add_staninit_file()]** -
 #' Helpers for adding one of the necessary files to the model folder.
 #'
-#' * **[model_diff()]** - Compare necessary files between two models. Defaults
-#' to comparing `<run>.stan` files.
+#' * **[bbr::model_diff()]** - Compare necessary files between two models.
+#'   Defaults to comparing `<run>.stan` files.
 #'
 #' * Also has many of the same helpers as `bbi_nonmem_model` objects:
-#' [tags_diff()], [add_tags()], [add_notes()], [get_model_path()],
-#' [get_output_dir()], [get_model_id()]
+#'   [bbr::tags_diff()], [bbr::add_tags()], [bbr::add_notes()],
+#'   [bbr::get_model_path()], [bbr::get_output_dir()], [bbr::get_model_id()]
 #' @name bbr_stan
 #' @aliases bbi_stan_model
 NULL

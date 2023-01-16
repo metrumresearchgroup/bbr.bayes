@@ -19,11 +19,11 @@ any \code{bbi_stan_model}.
 \strong{\verb{<run>}} - The "run" is, in some sense, the "name" of a given model.
 Practically, it will correspond to the model directory name, the base name of
 the bbr-created YAML (\verb{<run>.yaml}), as well as the base name for some files
-in that directory. Calling \code{\link[=get_model_id]{get_model_id()}} on a model object will return
-\verb{<run>} as a string. The \code{bbi_log_df} tibbles also all contain a run column
-which is populated by calling \code{basename(.mod$absolute_model_path)} for each
-model. Note: this is \emph{not} actually stored in the model object because it can
-be unequivocally extracted as just described.
+in that directory. Calling \code{\link[bbr:get_model_id]{bbr::get_model_id()}} on a model object will
+return \verb{<run>} as a string. The \code{bbi_log_df} tibbles also all contain a run
+column which is populated by calling \code{basename(.mod$absolute_model_path)} for
+each model. Note: this is \emph{not} actually stored in the model object because
+it can be unequivocally extracted as just described.
 
 \strong{\code{absolute_model_path}} - Like the \code{bbi_nonmem_model}, the \code{bbi_stan_model}
 will carry around only an absolute path to the model directory. This will
@@ -113,14 +113,14 @@ since the model was run, primarily for reproducibility purposes.
 \itemize{
 \item \strong{\code{\link[=check_stan_model]{check_stan_model()}}} (mentioned above) - Checks for the necessary files
 before running or copying the model.
-\item \strong{\code{\link[=build_path_from_model]{build_path_from_model()}}} - Builds the absolute path a file in the
+\item \strong{\code{\link[bbr:build_path_from_model]{bbr::build_path_from_model()}}} - Builds the absolute path a file in the
 model folder from a model object and a suffix.
 \item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}}} -
 Helpers for adding one of the necessary files to the model folder.
-\item \strong{\code{\link[=model_diff]{model_diff()}}} - Compare necessary files between two models. Defaults
-to comparing \verb{<run>.stan} files.
+\item \strong{\code{\link[bbr:model_diff]{bbr::model_diff()}}} - Compare necessary files between two models.
+Defaults to comparing \verb{<run>.stan} files.
 \item Also has many of the same helpers as \code{bbi_nonmem_model} objects:
-\code{\link[=tags_diff]{tags_diff()}}, \code{\link[=add_tags]{add_tags()}}, \code{\link[=add_notes]{add_notes()}}, \code{\link[=get_model_path]{get_model_path()}},
-\code{\link[=get_output_dir]{get_output_dir()}}, \code{\link[=get_model_id]{get_model_id()}}
+\code{\link[bbr:tags_diff]{bbr::tags_diff()}}, \code{\link[bbr:modify_tags]{bbr::add_tags()}}, \code{\link[bbr:modify_notes]{bbr::add_notes()}},
+\code{\link[bbr:get_path_from_object]{bbr::get_model_path()}}, \code{\link[bbr:get_path_from_object]{bbr::get_output_dir()}}, \code{\link[bbr:get_model_id]{bbr::get_model_id()}}
 }
 }
