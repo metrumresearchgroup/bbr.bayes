@@ -97,7 +97,7 @@ add_file_to_model_dir_impl <- function(
 
     fs::file_copy(.source_file, dest_path)
     message(glue("Copied {.source_file} to {dest_path}"))
-    return(.mod)
+    return(invisible(.mod))
   }
 
   # write scaffold to file, first checking if a non-scaffold file would be overwritten
