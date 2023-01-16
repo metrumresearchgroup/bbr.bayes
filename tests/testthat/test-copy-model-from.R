@@ -7,7 +7,11 @@ test_that("copy_from_model() creates accurate copy", {
                 list(name = "testmod_copy_stan1",
                      mod = STAN_MOD1,
                      expected_class = STAN_MOD_CLASS,
-                     expected_based_on = STAN_MOD_ID))
+                     expected_based_on = STAN_MOD_ID),
+                list(name = "testmod_copy_stan_gq1",
+                     mod = STAN_GQ_MOD,
+                     expected_class = STAN_GQ_MOD_CLASS,
+                     expected_based_on = STAN_GQ_MOD_ID))
 
   mods <- vector(mode = "list", length = length(cases))
   on.exit(purrr::walk(mods, cleanup_model))
@@ -29,8 +33,10 @@ test_that("copy_from_model() creates accurate copy", {
 })
 
 test_that("stan: copy_model_from() handles .new_model=NULL", {
-  tdir <- local_test_dir()
-  m1 <- copy_model_from(STAN_MOD1, file.path(tdir, "001"))
-  m2 <- copy_model_from(m1)
-  expect_identical(get_model_id(m2), "002")
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+    tdir <- local_test_dir()
+    m1 <- copy_model_from(mod, file.path(tdir, "001"))
+    m2 <- copy_model_from(m1)
+    expect_identical(get_model_id(m2), "002")
+  }
 })

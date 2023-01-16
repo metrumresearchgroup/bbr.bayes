@@ -24,6 +24,29 @@ copy_model_from.bbi_stan_model <- function(
     .overwrite = .overwrite)
 }
 
+#' @export
+copy_model_from.bbi_stan_gq_model <- function(.parent_mod,
+                                              .new_model = NULL,
+                                              .description = NULL,
+                                              .based_on_additional = NULL,
+                                              .add_tags = NULL,
+                                              .star = NULL,
+                                              .inherit_tags = FALSE,
+                                              .update_model_file = TRUE,
+                                              .overwrite = FALSE) {
+  copy_stan_model_impl(
+    STAN_GQ_MODEL_REQ_FILES,
+    .parent_mod = .parent_mod,
+    .new_model = .new_model,
+    .description = .description,
+    .based_on_additional = .based_on_additional,
+    .add_tags = .add_tags,
+    .star = .star,
+    .inherit_tags = .inherit_tags,
+    .update_model_file = .update_model_file,
+    .overwrite = .overwrite)
+}
+
 #' Internal logic for copying a Stan model
 #'
 #' The main argument of interest is `files_to_copy`, which defines that set of
