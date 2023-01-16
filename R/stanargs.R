@@ -2,9 +2,10 @@
 #'
 #' @description
 #'
-#' When [submit_model()] is called with a Stan model, it collects the arguments
-#' from `<run>-stanargs.R` and passes them to `CmdStanModel`s
-#' [$sample()][cmdstanr::model-method-sample] (for `bbi_stan_model` objects) or
+#' When [submit_model()][stan_submit_model] is called with a Stan model, it
+#' collects the arguments from `<run>-stanargs.R` and passes them to
+#' `CmdStanModel`s [$sample()][cmdstanr::model-method-sample] (for
+#' `bbi_stan_model` objects) or
 #' [$generate_quantities()][cmdstanr::model-method-generate-quantities] (for
 #' `bbi_stan_gq_model` objects).
 #'

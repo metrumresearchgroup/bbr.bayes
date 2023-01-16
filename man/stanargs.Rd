@@ -27,9 +27,10 @@ existing args that are passed in through \code{.stanargs}. If \code{TRUE}, overw
 \emph{all} attached args so that only \code{.stanargs} will be attached.}
 }
 \description{
-When \code{\link[=submit_model]{submit_model()}} is called with a Stan model, it collects the arguments
-from \verb{<run>-stanargs.R} and passes them to \code{CmdStanModel}s
-\link[cmdstanr:model-method-sample]{$sample()} (for \code{bbi_stan_model} objects) or
+When \link[=stan_submit_model]{submit_model()} is called with a Stan model, it
+collects the arguments from \verb{<run>-stanargs.R} and passes them to
+\code{CmdStanModel}s \link[cmdstanr:model-method-sample]{$sample()} (for
+\code{bbi_stan_model} objects) or
 \link[cmdstanr:model-method-generate-quantities]{$generate_quantities()} (for
 \code{bbi_stan_gq_model} objects).
 
