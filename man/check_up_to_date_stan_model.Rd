@@ -3,12 +3,18 @@
 \name{check_up_to_date_stan_model}
 \alias{check_up_to_date_stan_model}
 \alias{check_up_to_date.bbi_stan_model}
+\alias{check_up_to_date.bbi_stan_gq_model}
 \alias{check_up_to_date.bbi_stan_summary}
+\alias{check_up_to_date.bbi_stan_gq_summary}
 \title{Check that Stan model is up to date}
 \usage{
 \method{check_up_to_date}{bbi_stan_model}(.bbi_object, .build_data = TRUE, ...)
 
+\method{check_up_to_date}{bbi_stan_gq_model}(.bbi_object, .build_data = TRUE, ...)
+
 \method{check_up_to_date}{bbi_stan_summary}(.bbi_object, .build_data = TRUE, ...)
+
+\method{check_up_to_date}{bbi_stan_gq_summary}(.bbi_object, .build_data = TRUE, ...)
 }
 \arguments{
 \item{.bbi_object}{the object to check. Could be
@@ -37,8 +43,11 @@ detailed in the \code{\link[bbr:check_up_to_date]{bbr::check_up_to_date()}} docs
 \item The model files:
 \itemize{
 \item \verb{<run>.stan}
-\item \verb{<run>-init.R}
 \item \verb{<run>-stanargs.R}
+\item \verb{<run>-init.R}, if the model is \emph{not} a standalone generated quantities
+model
+\item \verb{<run>-fitted-params.R}, if the model is a standalone generated
+quantities model (i.e. a model that inherits from \code{bbi_stan_gq_model}).
 }
 \item The data files (see \code{.build_data} argument):
 \itemize{

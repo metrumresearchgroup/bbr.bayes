@@ -6,11 +6,19 @@
 #'
 #' * The model files:
 #'   * `<run>.stan`
-#'   * `<run>-init.R`
+#'
 #'   * `<run>-stanargs.R`
 #'
+#'   * `<run>-init.R`, if the model is _not_ a standalone generated quantities
+#'     model
+#'
+#'   * `<run>-fitted-params.R`, if the model is a standalone generated
+#'     quantities model (i.e. a model that inherits from `bbi_stan_gq_model`).
+#'
 #' * The data files (see `.build_data` argument):
+#'
 #'   * `<run>-standata.R`
+#'
 #'   * `<run>-standata.json`
 #'
 #' @param .build_data If `TRUE`, the default, run `-standata.R` and save the
@@ -30,14 +38,28 @@ NULL
 #' @export
 check_up_to_date.bbi_stan_model <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
-  check_up_to_date_stan(.bbi_object, .build_data)
+  check_up_to_date_stan(.bbi_object, .build_data, gq = FALSE)
+}
+
+#' @rdname check_up_to_date_stan_model
+#' @export
+check_up_to_date.bbi_stan_gq_model <- function(.bbi_object, .build_data = TRUE, ...) {
+  ellipsis::check_dots_empty()
+  check_up_to_date_stan(.bbi_object, .build_data, gq = TRUE)
 }
 
 #' @rdname check_up_to_date_stan_model
 #' @export
 check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, ...) {
   ellipsis::check_dots_empty()
-  check_up_to_date_stan(.bbi_object, .build_data)
+  check_up_to_date_stan(.bbi_object, .build_data, gq = FALSE)
+}
+
+#' @rdname check_up_to_date_stan_model
+#' @export
+check_up_to_date.bbi_stan_gq_summary <- function(.bbi_object, .build_data = TRUE, ...) {
+  ellipsis::check_dots_empty()
+  check_up_to_date_stan(.bbi_object, .build_data, gq = TRUE)
 }
 
 #' Private implementation to check that a Stan model is up-to-date
@@ -49,15 +71,16 @@ check_up_to_date.bbi_stan_summary <- function(.bbi_object, .build_data = TRUE, .
 #' [bbr::check_up_to_date()] docs.
 #'
 #' @inheritParams bbr::check_up_to_date
-#'
+#' @param gq Is the check for a standalone generated quantities model? If so,
+#'   -init.R is dropped from the set of model files and -fitted-params.R is
+#'   included.
 #' @return A (named) logical vector of length 2. The first element (named
 #'   `"model"`) refers to the model files mentioned above. The second element
 #'   (named `"data"`) refers to the data files mentioned above. For both
 #'   elements, they will be `TRUE` if nothing has changed, `FALSE` if anything
 #'   has changed.
 #' @noRd
-check_up_to_date_stan <- function(.mod, .build_data = FALSE) {
-
+check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
   # check model and load config
   check_stan_model(.mod, .error = TRUE)
 
@@ -69,15 +92,25 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE) {
 
   # check necessary files for changes
   stan_file <- get_model_path(.mod)
+  args_file <- build_path_from_model(.mod, STANARGS_SUFFIX)
+  model_files <- c(stan_file, args_file)
+
   changed_files <- config[[CONFIG_MODEL_MD5]] != tools::md5sum(stan_file)
 
-  init_file <- build_path_from_model(.mod, STANINIT_SUFFIX)
-  changed_files <- c(
-    changed_files,
-    config[[STANCFG_INIT_MD5]] != tools::md5sum(init_file)
-  )
+  if (isTRUE(gq)) {
+    fp_file <- build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX)
+    changed_files <- c(
+      changed_files,
+      config[[STANCFG_FITTED_PARAMS_MD5]] != tools::md5sum(fp_file))
+    model_files <- c(model_files, fp_file)
+  } else {
+    init_file <- build_path_from_model(.mod, STANINIT_SUFFIX)
+    changed_files <- c(
+      changed_files,
+      config[[STANCFG_INIT_MD5]] != tools::md5sum(init_file))
+    model_files <- c(model_files, init_file)
+  }
 
-  args_file <- build_path_from_model(.mod, STANARGS_SUFFIX)
   changed_files <- c(
     changed_files,
     config[[STANCFG_ARGS_MD5]] != tools::md5sum(args_file)
@@ -119,7 +152,7 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE) {
 
   # build return value
   res <- c(
-    model = !any(changed_files[c(stan_file, init_file, args_file)]),
+    model = !any(changed_files[model_files]),
     data = !any(changed_files[c(data_r_file, data_json_file, temp_data_name)], na.rm = TRUE)
   )
 
