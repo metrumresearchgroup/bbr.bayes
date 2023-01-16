@@ -4,44 +4,21 @@
 \alias{submit_model.bbi_stan_model}
 \title{Submit model based on a \code{bbi_stan_model} object}
 \usage{
-\method{submit_model}{bbi_stan_model}(
-  .mod,
-  .bbi_args = NULL,
-  .mode = c("local"),
-  .overwrite = NULL,
-  .config_path = NULL,
-  .wait = NULL,
-  .dry_run = NULL
-)
+\method{submit_model}{bbi_stan_model}(.mod, .mode = c("local"), ..., .overwrite = NULL)
 }
 \arguments{
 \item{.mod}{The model object to submit.}
-
-\item{.bbi_args}{A named list specifying arguments to pass to bbi
-formatted like \code{list("nm_version" = "nm74gf_nmfe", "json" = T, "threads" = 4)}. Run \code{\link[bbr:print_bbi_args]{print_bbi_args()}} to see valid arguments. Note that bbr does
-not support changing the output directory (including through the model or
-global YAML files).}
 
 \item{.mode}{Either \code{"sge"}, the default, to submit model(s) to the grid or
 \code{"local"} for local execution. This can be passed directly to this argument
 or set globally with \code{options("bbr.bbi_exe_mode")}.}
 
+\item{...}{args passed through to \code{bbi_exec()}}
+
 \item{.overwrite}{Logical to specify whether or not to overwrite existing
 model output from a previous run. If \code{NULL}, the default, will defer to
 setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will override any
 settings in \code{.bbi_args} or \code{bbi.yaml}.}
-
-\item{.config_path}{Path to a bbi configuration file. If \code{NULL}, the
-default, will attempt to use a \code{bbi.yaml} in the same directory as the
-model.}
-
-\item{.wait}{If \code{TRUE}, the default, wait for the bbi process to return
-before this function call returns. If \code{FALSE} function will return while
-bbi process runs in the background.}
-
-\item{.dry_run}{Returns an object detailing the command that would be run,
-insted of running it. This is primarily for testing but also a debugging
-tool.}
 }
 \description{
 The model is executed via \code{\link[cmdstanr:model-method-sample]{cmdstanr::sample()}}.

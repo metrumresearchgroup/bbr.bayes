@@ -141,19 +141,11 @@ run_chains <- function(.mod, ...) {
 #' @export
 submit_model.bbi_stan_model <- function(
   .mod,
-  .bbi_args = NULL,
   .mode = c("local"),
-  .overwrite = NULL,
-  .config_path = NULL,
-  .wait = NULL,
-  .dry_run=NULL
+  ...,
+  .overwrite = NULL
 ) {
-
-  if(!is.null(.bbi_args))    {warning(".bbi_args is not a valid argument for submit_model.bbi_stan_model. Ignoring...")}
-  if(!is.null(.config_path)) {warning(".config_path is not a valid argument for submit_model.bbi_stan_model. Ignoring...")}
-  if(!is.null(.wait))        {warning(".wait is not a valid argument for submit_model.bbi_stan_model. Ignoring...")}
-  if(!is.null(.dry_run))     {warning(".dry_run is not a valid argument for submit_model.bbi_stan_model. Ignoring...")}
-
+  rlang::check_dots_empty()
   res <- submit_stan_model_cmdstanr(
     .mod,
     .mode = .mode,
