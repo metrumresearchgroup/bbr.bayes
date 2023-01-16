@@ -2,9 +2,7 @@ context("checking Stan model integrity")
 
 test_that("check_stan_object messages missing files", {
   mod_name <- "testmod_check_stan_model1"
-  suppressMessages(
-    .m <- new_model(mod_name, .model_type = "stan")
-  )
+  .m <- new_model(mod_name, .model_type = "stan")
   on.exit(cleanup_model(.m))
 
   fs::file_delete(get_model_path(.m))
@@ -22,9 +20,7 @@ test_that("check_stan_object messages missing files", {
 
 test_that("check_stan_object messages scaffold files", {
   mod_name <- "testmod_check_stan_model2"
-  suppressMessages(
-    .m <- new_model(mod_name, .model_type = "stan")
-  )
+  .m <- new_model(mod_name, .model_type = "stan")
   on.exit(cleanup_model(.m))
 
   # check all except init (because it's not a scaffold)
