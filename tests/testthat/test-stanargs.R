@@ -1,6 +1,6 @@
 test_that("set_stanargs modifies file", {
-  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite =T)
-  withr::defer(cleanup_model(mod2))
+  tdir <- local_test_dir()
+  mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   file_res <- readLines(build_path_from_model(mod2, STANARGS_SUFFIX))
   expect_false(any(grepl("chains = 8", file_res)))
@@ -12,8 +12,8 @@ test_that("set_stanargs modifies file", {
 
 
 test_that("set_stanargs catches reserved args", {
-  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite =T)
-  withr::defer(cleanup_model(mod2))
+  tdir <- local_test_dir()
+  mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   expect_error(
     set_stanargs(mod2, list(output_dir = "naw")),
@@ -22,8 +22,8 @@ test_that("set_stanargs catches reserved args", {
 })
 
 test_that("set_stanargs catches init", {
-  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite =T)
-  withr::defer(cleanup_model(mod2))
+  tdir <- local_test_dir()
+  mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   expect_error(
     set_stanargs(mod2, list(init = 3)),
@@ -32,8 +32,8 @@ test_that("set_stanargs catches init", {
 })
 
 test_that("set_stanargs checks for unknown args", {
-  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite = TRUE)
-  withr::defer(cleanup_model(mod2))
+  tdir <- local_test_dir()
+  mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   expect_error(
     set_stanargs(mod2, list(youdontknowme = NULL)),
@@ -42,8 +42,8 @@ test_that("set_stanargs checks for unknown args", {
 })
 
 test_that("get_stanargs returns expected list", {
-  mod2 <- copy_model_from(STAN_MOD1, STAN_MOD_ID2, .overwrite =T)
-  withr::defer(cleanup_model(mod2))
+  tdir <- local_test_dir()
+  mod2 <- copy_model_from(STAN_MOD1, file.path(tdir, "stanmod"))
 
   file_res <- dget(build_path_from_model(mod2, STANARGS_SUFFIX))
 
