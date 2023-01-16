@@ -136,8 +136,14 @@ run_chains <- function(.mod, ...) {
 #'
 #' The model is executed via [cmdstanr::sample()].
 #'
+#' @name stan_submit_model
 #' @inheritParams bbr::submit_model
-#'
+#' @param .mode Mode of model submission. Stan models currently only support
+#'   local execution.
+#' @param ... Additional arguments (ignored for all Stan models).
+NULL
+
+#' @rdname stan_submit_model
 #' @export
 submit_model.bbi_stan_model <- function(
   .mod,
