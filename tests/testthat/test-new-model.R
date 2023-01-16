@@ -62,3 +62,16 @@ test_that("stan: new_model() works", {
   expect_s3_class(.m, STAN_MOD_CLASS)
   expect_s3_class(.m, BBI_PARENT_CLASS)
 })
+
+test_that("stan_gq: new_model() works", {
+  tdir <- local_test_dir()
+  expect_message(
+    m <- new_model(file.path(tdir, "gq"), .model_type = "stan_gq"),
+    regexp = MISSING_STAN_FILES_ERR_MSG)
+
+  expect_identical(m[[YAML_MOD_TYPE]], "stan_gq")
+  expect_identical(m[[ABS_MOD_PATH]], file.path(tdir, "gq"))
+  expect_s3_class(m, STAN_GQ_MOD_CLASS)
+  expect_s3_class(m, STAN_MOD_CLASS)
+  expect_s3_class(m, BBI_PARENT_CLASS)
+})

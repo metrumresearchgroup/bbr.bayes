@@ -29,6 +29,7 @@ STANDATA_R_SUFFIX <- "-standata.R"
 STANDATA_JSON_SUFFIX <- "-standata.json"
 STANINIT_SUFFIX <- "-init.R"
 STANARGS_SUFFIX <- "-stanargs.R"
+STAN_FITTED_PARAMS_SUFFIX <- "-fitted-params.R"
 STAN_OUTDIR_SUFFIX <- "-output"
 STAN_MODEL_FIT_RDS <- file.path(STAN_OUTDIR_SUFFIX, "fit.RDS")
 
@@ -37,6 +38,13 @@ STAN_MODEL_REQ_FILES <- c(
   STANDATA_R_SUFFIX,
   STANINIT_SUFFIX,
   STANARGS_SUFFIX
+)
+
+STAN_GQ_MODEL_REQ_FILES <- c(
+  STANMOD_SUFFIX,
+  STANDATA_R_SUFFIX,
+  STANARGS_SUFFIX,
+  STAN_FITTED_PARAMS_SUFFIX
 )
 
 STAN_RESERVED_ARGS <- c(
@@ -64,11 +72,14 @@ STANINIT_SCAFFOLD <- "init.R"
 
 STANARGS_SCAFFOLD_MD5 <- "8b11f83c3293f3b89a30807b3b69b58e"
 
+STAN_FITTED_PARAMS_SCAFFOLD <- "fitted-params.R"
+
 STAN_SCAFFOLD_MD5_VEC <- c(
   STANMOD_SCAFFOLD_MD5,
   STANDATA_SCAFFOLD_MD5,
   STANARGS_SCAFFOLD_MD5
-  # NOTE: we don't check -init.R because it is _not_ a scaffold, it returns a working default value
+  # NOTE: we don't check -init.R or -fitted-params.R because they is _not_
+  # scaffolds; they return working default values.
 )
 
 MISSING_STAN_FILES_ERR_MSG <- "The following files, which are necessary to run a `bbi_stan_model`, are missing"

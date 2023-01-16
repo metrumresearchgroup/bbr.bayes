@@ -7,7 +7,7 @@
 scaffold_missing_stan_files(.mod)
 }
 \arguments{
-\item{.mod}{a \code{bbi_stan_model}}
+\item{.mod}{a \code{bbi_stan_model} or \code{bbi_stan_gq_model}}
 }
 \description{
 This is used when setting up a new model.

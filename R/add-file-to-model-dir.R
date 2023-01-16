@@ -54,6 +54,19 @@ add_staninit_file <- function(.mod, .source_file = NULL) {
   )
 }
 
+#' @describeIn add_file_to_model_dir Adds a `<run>-fitted-params.R` file that
+#'   prepares previously generated MCMC samples as input for a standalone
+#'   generated quantities run. See `?`[bbi_stan_model] for details.
+#' @export
+add_stan_fitted_params_file <- function(.mod, .source_file = NULL) {
+  add_file_to_model_dir_impl(
+    .mod,
+    STAN_GQ_MOD_CLASS,
+    STAN_FITTED_PARAMS_SUFFIX,
+    STAN_FITTED_PARAMS_SCAFFOLD,
+    .source_file
+  )
+}
 ###################################
 # PRIVATE IMPLEMENTATION FUNCTIONS
 ###################################
@@ -107,18 +120,27 @@ add_file_to_model_dir_impl <- function(
 #'
 #' This is used when setting up a new model.
 #'
-#' @param .mod a `bbi_stan_model`
+#' @param .mod a `bbi_stan_model` or `bbi_stan_gq_model`
 #' @keywords internal
 scaffold_missing_stan_files <- function(.mod) {
-  checkmate::assert_class(.mod, STAN_MOD_CLASS)
-  files_to_check <- build_path_from_model(.mod, STAN_MODEL_REQ_FILES)
-  missing_files <- STAN_MODEL_REQ_FILES[!fs::file_exists(files_to_check)]
+  if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
+    req_files <- STAN_GQ_MODEL_REQ_FILES
+  } else if (inherits(.mod, STAN_MOD_CLASS)) {
+    req_files <- STAN_MODEL_REQ_FILES
+  } else {
+    stop(sprintf(".mod must be bbi_stan_model subclass, got %s",
+                 deparse(class(.mod))))
+  }
+
+  files_to_check <- build_path_from_model(.mod, req_files)
+  missing_files <- req_files[!fs::file_exists(files_to_check)]
 
   SCAFFOLD_LOOKUP <- rlang::list2(
-    !!STANMOD_SUFFIX    := add_stanmod_file,
-    !!STANARGS_SUFFIX   := stanargs_scaffold,
-    !!STANDATA_R_SUFFIX := add_standata_file,
-    !!STANINIT_SUFFIX   := add_staninit_file
+    !!STANMOD_SUFFIX            := add_stanmod_file,
+    !!STANARGS_SUFFIX           := stanargs_scaffold,
+    !!STANDATA_R_SUFFIX         := add_standata_file,
+    !!STANINIT_SUFFIX           := add_staninit_file,
+    !!STAN_FITTED_PARAMS_SUFFIX := add_stan_fitted_params_file
   )
 
   purrr::walk(missing_files, function(.f) {
