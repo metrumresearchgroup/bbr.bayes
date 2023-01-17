@@ -63,7 +63,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
   mod <- errors
   iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
   if (length(iph_files)) {
-    draws <- posterior::as_draws_rvars(errors)
+    draws <- posterior::as_draws_rvars(mod)
     eta <- draws[["ETA"]]
     # For ETA[I,J,K], J is SUBPOP value. See reshape_iph().
     if (dim(eta[2]) != 1) {
