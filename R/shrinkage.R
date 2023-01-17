@@ -58,7 +58,7 @@ shrinkage <- function(errors, ..., use_sd = TRUE) {
 #' @rdname shrinkage
 #' @export
 shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
-  rlang::check_dots_used()
+  rlang::check_dots_empty()
 
   mod <- errors
   iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
@@ -108,7 +108,7 @@ shrinkage.draws <- function(errors,
                             group_idx = NULL,
                             ...,
                             use_sd = TRUE) {
-  rlang::check_dots_used()
+  rlang::check_dots_empty()
   checkmate::assert_string(errors_name)
 
   draws <- posterior::as_draws_rvars(errors)
@@ -131,7 +131,7 @@ shrinkage.rvar <- function(errors,
                            group_idx = NULL,
                            ...,
                            use_sd = TRUE) {
-  rlang::check_dots_used()
+  rlang::check_dots_empty()
   checkmate::assert_class(variance, "rvar", null.ok = TRUE)
   checkmate::assert_integerish(group_idx, null.ok = TRUE, lower = 1L)
 
