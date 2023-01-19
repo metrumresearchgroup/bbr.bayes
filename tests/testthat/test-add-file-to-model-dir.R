@@ -71,7 +71,7 @@ test_that("add_staninit_file() works correctly for scaffold", {
   )
 })
 
-test_that("add_staninit_file() aborts on bbi_stan_model", {
+test_that("add_staninit_file() aborts on bbi_stan_gq_model", {
   tdir <- local_test_dir()
   m <- new_model(file.path(tdir, "stanmod"), .model_type = "stan_gq")
   expect_error(add_staninit_file(m), "stan_gq")
