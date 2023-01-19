@@ -17,7 +17,7 @@ test_that("stan gq: submit_model() works with copied model", {
   res_output_mcmc <- capture.output(submit_model(mod1, .mode = "local"))
   expect_match(res_output_mcmc, "Running MCMC", all = FALSE)
 
-  mod2 <- copy_model_as_stan_gq(mod1, "bern-gq") %>%
+  mod2 <- copy_model_as_stan_gq(mod1) %>%
     set_stanargs(list(sig_figs = 3))
 
   expect_identical(get_stanargs(mod2)$sig_figs, 3)
@@ -45,12 +45,12 @@ test_that("stan gq: submit_model() works with copied model", {
 })
 
 test_that("stan gq: cmdstanr fit object can be reloaded", {
-  fit <- read_fit_model(file.path("model", "stan", "bern-gq"))
+  fit <- read_fit_model(file.path("model", "stan", "bern_gq"))
   expect_s3_class(fit, STAN_GQ_FIT_CLASS)
 })
 
 test_that("stan gq: supports posterior as_draws methods", {
-  mod <- read_model(file.path("model", "stan", "bern-gq"))
+  mod <- read_model(file.path("model", "stan", "bern_gq"))
 
   draws_list <- posterior::as_draws_list(mod)
   expect_s3_class(draws_list, "draws_list")
@@ -64,7 +64,7 @@ test_that("stan gq: run_log() captures runs correctly", {
   expect_identical(nrow(log_df), 2L)
   expect_identical(ncol(log_df), 10L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
-                  c("bern", "bern-gq"))
+                  c("bern", "bern_gq"))
 })
 
 test_that("stan gq: summary_log() captures runs correctly", {
@@ -75,7 +75,7 @@ test_that("stan gq: summary_log() captures runs correctly", {
   })
   expect_identical(nrow(log_df), 2L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
-                  c("bern", "bern-gq"))
+                  c("bern", "bern_gq"))
 
   n_class <- function(cls) {
     sum(purrr::map_lgl(log_df[[SL_SUMMARY]], ~ inherits(.x, cls)))
@@ -86,7 +86,7 @@ test_that("stan gq: summary_log() captures runs correctly", {
 })
 
 test_that("stan gq: make_fitted_params() can return draws object", {
-  mod2 <- read_model(file.path("model", "stan", "bern-gq"))
+  mod2 <- read_model(file.path("model", "stan", "bern_gq"))
   draws <- posterior::as_draws(mod2)
   # Initial model has 4 chains. The new -fitted-params.R will keep only 2.
   expect_identical(posterior::nchains(draws), 4L)

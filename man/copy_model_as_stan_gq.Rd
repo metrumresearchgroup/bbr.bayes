@@ -6,7 +6,7 @@
 \usage{
 copy_model_as_stan_gq(
   .parent_mod,
-  .new_model = NULL,
+  .new_model = paste0(bbr::get_model_id(.parent_mod), "_gq"),
   .description = NULL,
   .based_on_additional = NULL,
   .add_tags = NULL,
@@ -21,11 +21,9 @@ copy_model_as_stan_gq(
 copy the model in the standard way.}
 
 \item{.new_model}{Path to the new model, either absolute or relative to the
-path to \code{.parent_mod}. Represents an absolute model path, which is the path
-to the YAML file and model file, both without extension, and the output
-directory (once the model is run). Numeric values will be coerced to
-character. If \code{NULL}, the default, will try to increment to the next integer
-in the destination directory. See examples for usage.}
+path to \code{.parent_mod}. By default, this is the parent's model name with
+"_gq" appended. Aside from the default value, this is handled in the same
+way as the \code{.new_model} argument of \code{\link[bbr:copy_model_from]{bbr::copy_model_from()}}.}
 
 \item{.description}{Character scalar description of new model run. This will
 be stored in the yaml (and can be viewed later in \code{run_log()}).}

@@ -69,6 +69,20 @@ test_that("copy_model_as_stan_gq() creates stan_gq model", {
   expect_identical(m1_args$seed, parent_args$seed)
 })
 
+test_that("copy_model_as_stan_gq() derives default .new_model from parent", {
+  tdir <- local_test_dir()
+  parent <- copy_model_from(STAN_MOD3, file.path(tdir, "foo"))
+  mod_gq <- copy_model_as_stan_gq(parent)
+  expect_identical(get_model_id(mod_gq), "foo_gq")
+})
+
+test_that("copy_model_as_stan_gq() relays .new_model=NULL", {
+  tdir <- local_test_dir()
+  parent <- copy_model_from(STAN_MOD3, file.path(tdir, "100"))
+  mod_gq <- copy_model_as_stan_gq(parent, .new_model = NULL)
+  expect_identical(get_model_id(mod_gq), "101")
+})
+
 test_that("copy_model_as_stan_gq() aborts if parent is stan_gq model", {
   tdir <- local_test_dir()
   expect_error(copy_model_as_stan_gq(STAN_GQ_MOD),

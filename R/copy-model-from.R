@@ -115,11 +115,16 @@ copy_stan_model_impl <- function(files_to_copy,
 #' @param .parent_mod A `bbi_stan_model` object to copy. This should _not_ be a
 #'   `bbi_stan_gq_model` subclass; in that case, use [bbr::copy_model_from()] to
 #'   copy the model in the standard way.
+#' @param .new_model Path to the new model, either absolute or relative to the
+#'   path to `.parent_mod`. By default, this is the parent's model name with
+#'   "_gq" appended. Aside from the default value, this is handled in the same
+#'   way as the `.new_model` argument of [bbr::copy_model_from()].
 #' @seealso [bbr_stan] for a high-level description of how Stan models are
 #'   structured
 #' @export
 copy_model_as_stan_gq <- function(.parent_mod,
-                                  .new_model = NULL,
+                                  .new_model = paste0(bbr::get_model_id(.parent_mod),
+                                                      "_gq"),
                                   .description = NULL,
                                   .based_on_additional = NULL,
                                   .add_tags = NULL,
