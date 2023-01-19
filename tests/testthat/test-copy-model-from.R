@@ -41,9 +41,9 @@ test_that("stan: copy_model_from() handles .new_model=NULL", {
   }
 })
 
-test_that("copy_stan_model_as_gq() creates stan_gq model", {
+test_that("copy_model_as_stan_gq() creates stan_gq model", {
   tdir <- local_test_dir()
-  m1 <- copy_stan_model_as_gq(STAN_MOD1, file.path(tdir, "gq"))
+  m1 <- copy_model_as_stan_gq(STAN_MOD1, file.path(tdir, "gq"))
   expect_s3_class(m1, STAN_GQ_MOD_CLASS)
 
 
@@ -69,8 +69,8 @@ test_that("copy_stan_model_as_gq() creates stan_gq model", {
   expect_identical(m1_args$seed, parent_args$seed)
 })
 
-test_that("copy_stan_model_as_gq() aborts if parent is stan_gq model", {
+test_that("copy_model_as_stan_gq() aborts if parent is stan_gq model", {
   tdir <- local_test_dir()
-  expect_error(copy_stan_model_as_gq(STAN_GQ_MOD),
+  expect_error(copy_model_as_stan_gq(STAN_GQ_MOD),
                "already a stan_gq")
 })

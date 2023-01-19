@@ -81,7 +81,7 @@ test_that("stan gq: model_diff() works with other files", {
 
 test_that("stan: model_diff() works between regular and gq models", {
   new_mod_name <- "model_diff_stan5"
-  mod2 <- copy_stan_model_as_gq(STAN_MOD3, new_mod_name)
+  mod2 <- copy_model_as_stan_gq(STAN_MOD3, new_mod_name)
   on.exit(cleanup_model(mod2))
 
   res <- model_diff(mod2, .file = "stanargs")

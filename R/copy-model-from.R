@@ -118,7 +118,7 @@ copy_stan_model_impl <- function(files_to_copy,
 #' @seealso [bbr_stan] for a high-level description of how Stan models are
 #'   structured
 #' @export
-copy_stan_model_as_gq <- function(.parent_mod,
+copy_model_as_stan_gq <- function(.parent_mod,
                                   .new_model = NULL,
                                   .description = NULL,
                                   .based_on_additional = NULL,

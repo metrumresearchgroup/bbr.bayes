@@ -163,7 +163,7 @@ function can return any value accepted for the \code{fitted_params} argument of
 
 "stan_gq" models can be created fresh with \code{new_model(..., .model_type = "stan_gq")}. However, for the more common case where the "stan_gq" model is
 derived from an existing "stan" model, you can use the
-\code{\link[=copy_stan_model_as_gq]{copy_stan_model_as_gq()}} helper, which takes care of copying over the
+\code{\link[=copy_model_as_stan_gq]{copy_model_as_stan_gq()}} helper, which takes care of copying over the
 relevant files and setting up a default \verb{<run>-fitted-params.R} that returns
 the paths to the parent model's posteriors.
 
