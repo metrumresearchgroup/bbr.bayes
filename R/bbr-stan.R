@@ -127,6 +127,10 @@
 #'   [add_stan_fitted_params_file()]** - Helpers for adding one of the necessary
 #'   files to the model folder.
 #'
+#' * **[open_stanmod_file()], [open_standata_file()], [open_staninit_file()],
+#'   [open_stan_fitted_params_file()]** - Helpers for opening files within the
+#'   model directory.
+#'
 #' * **[bbr::model_diff()]** - Compare necessary files between two models.
 #'   Defaults to comparing `<run>.stan` files.
 #'

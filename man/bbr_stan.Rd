@@ -126,6 +126,9 @@ the model folder from a model object and a suffix.
 \item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}},
 \code{\link[=add_stan_fitted_params_file]{add_stan_fitted_params_file()}}} - Helpers for adding one of the necessary
 files to the model folder.
+\item \strong{\code{\link[=open_stanmod_file]{open_stanmod_file()}}, \code{\link[=open_standata_file]{open_standata_file()}}, \code{\link[=open_staninit_file]{open_staninit_file()}},
+\code{\link[=open_stan_fitted_params_file]{open_stan_fitted_params_file()}}} - Helpers for opening files within the
+model directory.
 \item \strong{\code{\link[bbr:model_diff]{bbr::model_diff()}}} - Compare necessary files between two models.
 Defaults to comparing \verb{<run>.stan} files.
 \item Also has many of the same helpers as \code{bbi_nonmem_model} objects:
