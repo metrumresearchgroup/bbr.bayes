@@ -135,9 +135,6 @@ copy_stan_model_as_gq <- function(.parent_mod,
 
   setup <- function() {
     # Exclude -stanargs.R because we only want the seed.
-    #
-    # TODO: Should this instead copy any arguments that are valid for
-    # $generate_quantities()?
     req_files <- setdiff(STAN_GQ_MODEL_REQ_FILES, "-stanargs.R")
     copy_stan_files(.parent_mod,
                     .new_model,
