@@ -121,8 +121,8 @@ since the model was run, primarily for reproducibility purposes.
 \itemize{
 \item \strong{\code{\link[=check_stan_model]{check_stan_model()}}} (mentioned above) - Checks for the necessary files
 before running or copying the model.
-\item \strong{\code{\link[bbr:build_path_from_model]{bbr::build_path_from_model()}}} - Builds the absolute path a file in the
-model folder from a model object and a suffix.
+\item \strong{\code{\link[bbr:build_path_from_model]{bbr::build_path_from_model()}}} - Builds the absolute path to a file in
+the model folder from a model object and a suffix.
 \item \strong{\code{\link[=add_stanmod_file]{add_stanmod_file()}}, \code{\link[=add_standata_file]{add_standata_file()}}, \code{\link[=add_staninit_file]{add_staninit_file()}},
 \code{\link[=add_stan_fitted_params_file]{add_stan_fitted_params_file()}}} - Helpers for adding one of the necessary
 files to the model folder.
