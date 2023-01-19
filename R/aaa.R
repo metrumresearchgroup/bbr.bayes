@@ -80,7 +80,7 @@ STAN_SCAFFOLD_MD5_VEC <- c(
   STANMOD_SCAFFOLD_MD5,
   STANDATA_SCAFFOLD_MD5,
   STANARGS_SCAFFOLD_MD5
-  # NOTE: we don't check -init.R or -fitted-params.R because they is _not_
+  # NOTE: we don't check -init.R or -fitted-params.R because they are _not_
   # scaffolds; they return working default values.
 )
 
