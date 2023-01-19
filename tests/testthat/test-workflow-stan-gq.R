@@ -82,3 +82,33 @@ test_that("stan gq: summary_log() captures runs correctly", {
   expect_identical(n_class(STAN_FIT_CLASS), 1L)
   expect_identical(n_class(STAN_GQ_FIT_CLASS), 1L)
 })
+
+test_that("stan gq: make_fitted_params() can return draws object", {
+  mod2 <- read_model(file.path("model", "stan", "bern-gq"))
+  draws <- posterior::as_draws(mod2)
+  # Initial model has 4 chains. The new -fitted-params.R will keep only 2.
+  expect_identical(posterior::nchains(draws), 4L)
+
+  mod3 <- copy_model_from(mod2, "bern-gq-draws")
+  fp_lines <- c(
+    # Two models back for regular bern stan model.
+    "make_fitted_params <- function(.mod) {",
+    "  bern_gq <- bbr::get_based_on(.mod)",
+    "  bern <- bbr::get_based_on(bbr::read_model(bern_gq))",
+    "  draws <- posterior::as_draws(bbr::read_model(bern))",
+    "  return(posterior::subset_draws(draws, chain = 1:2))",
+    "}")
+  writeLines(fp_lines,
+             build_path_from_model(mod3, STAN_FITTED_PARAMS_SUFFIX))
+
+  res_output <- capture.output(
+    res_submit <- submit_model(mod3, .mode = "local"))
+
+  expect_s3_class(res_submit, STAN_GQ_FIT_CLASS)
+  expect_match(res_output,
+               # Without custom -fitted-params.R, this would report 4 chains.
+               "standalone generated quantities after 2 MCMC chains",
+               all = FALSE)
+  checkmate::expect_file_exists(
+    build_path_from_model(mod3, STAN_MODEL_FIT_RDS))
+})
