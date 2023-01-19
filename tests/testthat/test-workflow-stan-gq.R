@@ -17,8 +17,10 @@ test_that("stan gq: submit_model() works with copied model", {
   res_output_mcmc <- capture.output(submit_model(mod1, .mode = "local"))
   expect_match(res_output_mcmc, "Running MCMC", all = FALSE)
 
-  mod2 <- copy_model_as_stan_gq(mod1, "bern-gq", .add_tags = "child") %>%
+  mod2 <- copy_model_as_stan_gq(mod1, "bern-gq") %>%
     set_stanargs(list(sig_figs = 3))
+
+  expect_identical(get_stanargs(mod2)$sig_figs, 3)
 
   add_stanmod_file(
     mod2,
