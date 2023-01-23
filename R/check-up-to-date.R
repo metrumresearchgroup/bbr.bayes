@@ -95,6 +95,12 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
   args_file <- build_path_from_model(.mod, STANARGS_SUFFIX)
   model_files <- c(stan_file, args_file)
 
+  data_r_file <- build_path_from_model(.mod, STANDATA_R_SUFFIX)
+  data_json_file <- build_path_from_model(.mod, STANDATA_JSON_SUFFIX)
+  temp_data_name <- as.character(
+    glue("Running {basename(data_r_file)} produces different results"))
+  data_files <- c(data_r_file, data_json_file, temp_data_name)
+
   changed_files <- config[[CONFIG_MODEL_MD5]] != tools::md5sum(stan_file)
 
   if (isTRUE(gq)) {
@@ -116,9 +122,6 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
     config[[STANCFG_ARGS_MD5]] != tools::md5sum(args_file)
   )
 
-  data_r_file <- build_path_from_model(.mod, STANDATA_R_SUFFIX)
-  data_json_file <- build_path_from_model(.mod, STANDATA_JSON_SUFFIX)
-  temp_data_name <- as.character(glue("Running {basename(data_r_file)} produces different results"))
   if (isTRUE(.build_data)) {
     # if building data, run -standata.R and write output to temp file, then check that file
     temp_data_path <- fs::path_ext_set(tempfile(), ".json")
@@ -153,7 +156,7 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
   # build return value
   res <- c(
     model = !any(changed_files[model_files]),
-    data = !any(changed_files[c(data_r_file, data_json_file, temp_data_name)], na.rm = TRUE)
+    data = !any(changed_files[data_files], na.rm = TRUE)
   )
 
   return(invisible(res))
