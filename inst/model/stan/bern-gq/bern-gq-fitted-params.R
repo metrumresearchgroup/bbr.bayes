@@ -1,12 +1,16 @@
 make_fitted_params <- function(.mod) {
-  # Note: get_based_on() resolves the based_on values to an absolute path.
-  based_on <- bbr::get_based_on(.mod)
-  if (!length(based_on)) {
-    stop("Model ", bbr::get_model_id(.mod), " does not have parent")
+  # Note: get_stan_gq_parent() resolves the gq_parent values (usually just one)
+  # to an absolute path.
+  parent <- bbr.bayes::get_stan_gq_parent(.mod)
+  if (!length(parent)) {
+    stop("Model ", bbr::get_model_id(.mod), " does not have gq_parent field")
+  }
+  if (length(parent) != 1) {
+    stop("Model ", bbr::get_model_id(.mod), " has multiple gq_parent values.\n",
+         "make_fitted_params() requires custom code.")
   }
 
-  parent <- bbr::read_model(based_on[1])
-  fit <- bbr.bayes::read_fit_model(parent)
+  fit <- bbr.bayes::read_fit_model(bbr::read_model(parent))
   files <- fit$output_files()
   exist <- file.exists(files)
   if (!all(exist)) {

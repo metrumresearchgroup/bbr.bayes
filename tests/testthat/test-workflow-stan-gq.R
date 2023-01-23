@@ -93,10 +93,8 @@ test_that("stan gq: make_fitted_params() can return draws object", {
 
   mod3 <- copy_model_from(mod2, "bern-gq-draws")
   fp_lines <- c(
-    # Two models back for regular bern stan model.
     "make_fitted_params <- function(.mod) {",
-    "  bern_gq <- bbr::get_based_on(.mod)",
-    "  bern <- bbr::get_based_on(bbr::read_model(bern_gq))",
+    "  bern <- bbr.bayes::get_stan_gq_parent(.mod)",
     "  draws <- posterior::as_draws(bbr::read_model(bern))",
     "  return(posterior::subset_draws(draws, chain = 1:2))",
     "}")

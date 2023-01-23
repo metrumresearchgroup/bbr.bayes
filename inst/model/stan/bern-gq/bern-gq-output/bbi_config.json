@@ -5,7 +5,7 @@
   "data_md5": "bbd614b5f22e35c2a7cfd6ce88a9bf41",
   "standata_script_md5": "05a2e69e5e8e8692321a06b513f291b1",
   "stanargs_md5": "4ba94ac65c357500f7a5279b710c96b9",
-  "stan_fitted_params_md5": "6099be69b6c53de6dada3cbe8c766ab5",
+  "stan_fitted_params_md5": "045b8ee6072c5652cc624342a42ee650",
   "configuration": {
     "cmdstan_version": "2.27.0",
     "cmdstanr_version": "0.5.2"
