@@ -1,5 +1,5 @@
 test_that("set_stanargs modifies file", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD) ) {
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()
     mod2 <- copy_model_from(mod, file.path(tdir, "stanmod"))
 
@@ -14,7 +14,7 @@ test_that("set_stanargs modifies file", {
 
 
 test_that("set_stanargs catches reserved args", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD) ) {
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()
     mod2 <- copy_model_from(mod, file.path(tdir, "stanmod"))
 
@@ -36,7 +36,7 @@ test_that("set_stanargs catches init", {
 })
 
 test_that("set_stanargs checks for unknown args", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD) ) {
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()
     mod2 <- copy_model_from(mod, file.path(tdir, "stanmod"))
 
@@ -48,7 +48,7 @@ test_that("set_stanargs checks for unknown args", {
 })
 
 test_that("get_stanargs returns expected list", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD) ) {
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()
     mod2 <- copy_model_from(mod, file.path(tdir, "stanmod"))
 
