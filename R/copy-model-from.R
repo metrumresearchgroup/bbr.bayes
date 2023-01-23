@@ -34,7 +34,7 @@ copy_model_from.bbi_stan_gq_model <- function(.parent_mod,
                                               .inherit_tags = FALSE,
                                               .update_model_file = TRUE,
                                               .overwrite = FALSE) {
-  copy_stan_model_impl(
+  mod <- copy_stan_model_impl(
     STAN_GQ_MODEL_REQ_FILES,
     .parent_mod = .parent_mod,
     .new_model = .new_model,
@@ -45,6 +45,13 @@ copy_model_from.bbi_stan_gq_model <- function(.parent_mod,
     .inherit_tags = .inherit_tags,
     .update_model_file = .update_model_file,
     .overwrite = .overwrite)
+
+  gq_parent <- get_stan_gq_parent(.parent_mod)
+  if (!is.null(gq_parent)) {
+    mod <- add_stan_gq_parent(mod, gq_parent)
+  }
+
+  return(mod)
 }
 
 #' Internal logic for copying a Stan model
@@ -111,6 +118,8 @@ copy_stan_model_impl <- function(files_to_copy,
 #'  * Only the `seed` argument from the parent model's `<run>-stanargs.R` is
 #'    copied to the new model's `<run>-stanargs.R`.
 #'
+#'  * Sets "gq_parent" field of `.new_model` to point to `.parent_mod`.
+#'
 #' @inheritParams bbr::copy_model_from
 #' @param .parent_mod A `bbi_stan_model` object to copy. This should _not_ be a
 #'   `bbi_stan_gq_model` subclass; in that case, use [bbr::copy_model_from()] to
@@ -168,6 +177,7 @@ copy_model_as_stan_gq <- function(.parent_mod,
     .overwrite = .overwrite,
     setup_fn = setup
   )
+  mod <- add_stan_gq_parent(mod, .parent_mod[[ABS_MOD_PATH]])
 
   return(mod)
 }

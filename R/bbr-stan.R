@@ -171,8 +171,10 @@
 #' "stan_gq")`. However, for the more common case where the "stan_gq" model is
 #' derived from an existing "stan" model, you can use the
 #' [copy_model_as_stan_gq()] helper, which takes care of copying over the
-#' relevant files and setting up a default `<run>-fitted-params.R` that returns
-#' the paths to the parent model's posteriors.
+#' relevant files, adding a "gq_parent" field to the model's YAML file that
+#' points back to the parent model, and setting up a default
+#' `<run>-fitted-params.R` that returns the paths to the parent model's
+#' posteriors.
 #'
 #' To run a "stan_gq" model, pass the `bbi_stan_gq_model` object to
 #' [submit_model()][stan_submit_model], which will use the model files to

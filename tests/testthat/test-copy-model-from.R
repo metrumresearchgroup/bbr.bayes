@@ -46,6 +46,8 @@ test_that("copy_model_as_stan_gq() creates stan_gq model", {
   m1 <- copy_model_as_stan_gq(STAN_MOD1, file.path(tdir, "gq"))
   expect_s3_class(m1, STAN_GQ_MOD_CLASS)
 
+  expect_identical(get_stan_gq_parent(m1),
+                   STAN_MOD1[[ABS_MOD_PATH]])
 
   should_exist <- c(STANMOD_SUFFIX,
                     STANDATA_R_SUFFIX,
@@ -83,8 +85,33 @@ test_that("copy_model_as_stan_gq() relays .new_model=NULL", {
   expect_identical(get_model_id(mod_gq), "101")
 })
 
+test_that("copy_model_as_stan_gq() sets gq_parent", {
+  tdir <- local_test_dir()
+  m <- copy_model_as_stan_gq(STAN_MOD1, file.path(tdir, "foo"))
+  expect_identical(get_stan_gq_parent(m),
+                   STAN_MOD1[[ABS_MOD_PATH]])
+})
+
 test_that("copy_model_as_stan_gq() aborts if parent is stan_gq model", {
   tdir <- local_test_dir()
   expect_error(copy_model_as_stan_gq(STAN_GQ_MOD),
                "already a stan_gq")
+})
+
+test_that("stan gq: copy_model_from() propagates gq_parent", {
+  tdir <- local_test_dir()
+
+  expect_identical(get_stan_gq_parent(STAN_GQ_MOD),
+                   STAN_MOD3[[ABS_MOD_PATH]])
+
+  m1 <- copy_model_from(STAN_GQ_MOD, file.path(tdir, "m1"))
+  m2 <- copy_model_from(m1, "m2")
+  expect_identical(get_stan_gq_parent(m1),
+                   STAN_MOD3[[ABS_MOD_PATH]])
+  expect_identical(get_stan_gq_parent(m2),
+                   STAN_MOD3[[ABS_MOD_PATH]])
+
+  m2 <- replace_all_stan_gq_parent(m2, NULL)
+  m3 <- copy_model_from(m2, "m3")
+  expect_null(get_stan_gq_parent(m3))
 })
