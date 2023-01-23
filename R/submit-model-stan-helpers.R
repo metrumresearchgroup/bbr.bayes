@@ -124,6 +124,9 @@ build_stan_bbi_config <- function(.mod, .write) {
   if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
     stan_config[[STANCFG_FITTED_PARAMS_MD5]] <- tools::md5sum(
       build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX))
+    # There may be multiple gq_parent values; use I() so that value is
+    # consistently "boxed".
+    stan_config[[STANCFG_GQ_PARENT_MD5]] <- I(get_gq_parent_md5(.mod))
   } else {
     stan_config[[STANCFG_INIT_MD5]] <- tools::md5sum(
       build_path_from_model(.mod, STANINIT_SUFFIX))
@@ -136,4 +139,16 @@ build_stan_bbi_config <- function(.mod, .write) {
   # write to disk
   stan_json <- jsonlite::toJSON(stan_config, pretty = TRUE, auto_unbox = TRUE)
   readr::write_lines(stan_json, file.path(get_output_dir(.mod), "bbi_config.json"))
+}
+
+get_gq_parent_md5 <- function(.mod) {
+    parent <- get_stan_gq_parent(.mod)
+    if (is.null(parent)) {
+      return(NULL)
+    }
+
+    parent_configs <- purrr::map_chr(
+      parent,
+      ~ get_config_path(read_model(.x), .check_exists = FALSE))
+    return(tools::md5sum(parent_configs))
 }

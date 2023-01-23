@@ -21,6 +21,12 @@
 #'
 #'   * `<run>-standata.json`
 #'
+#' For standalone generated quantities, the `bbi_config.json` files in the
+#' output directory of the models listed in the `gq_parent` fields are also
+#' considered "data" files. If a `gq_parent` is re-submitted and anything
+#' recorded in `bbi_config.json` changes, the linked "stan_gq" model is
+#' considered out of date.
+#'
 #' @param .build_data If `TRUE`, the default, run `-standata.R` and save the
 #'   output to a temp file and check the hash of _the temp file_ against the
 #'   `bbi_config.json` hash. This option actually runs the code and,
@@ -109,6 +115,13 @@ check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
       changed_files,
       config[[STANCFG_FITTED_PARAMS_MD5]] != tools::md5sum(fp_file))
     model_files <- c(model_files, fp_file)
+
+    gq_parent_name <- "bbi_config.json files in gq_parent models"
+    data_files <- c(data_files, gq_parent_name)
+    gq_changed <- !identical(config[[STANCFG_GQ_PARENT_MD5]],
+                             unname(get_gq_parent_md5(.mod)))
+    names(gq_changed) <- gq_parent_name
+    changed_files <- c(changed_files, gq_changed)
   } else {
     init_file <- build_path_from_model(.mod, STANINIT_SUFFIX)
     changed_files <- c(

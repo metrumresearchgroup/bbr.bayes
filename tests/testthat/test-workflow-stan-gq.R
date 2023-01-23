@@ -112,3 +112,50 @@ test_that("stan gq: make_fitted_params() can return draws object", {
   checkmate::expect_file_exists(
     build_path_from_model(mod3, STAN_MODEL_FIT_RDS))
 })
+
+test_that("check_up_to_date detects change in gq_parent's bbi_config.json", {
+  mod_parent <- read_model(file.path("model", "stan", "bern"))
+  mod_gq <- read_model(file.path("model", "stan", "bern_gq"))
+
+  expect_true(all(check_up_to_date(mod_gq)))
+  # If all the values in bbi_config.json are the same, check_up_to_date()
+  # considers the gq model up to date.
+  capture.output(submit_model(mod_parent, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # However, if a new run changes something (here the stanargs md5) then the gq
+  # model is considered out of date...
+  set_stanargs(mod_parent, list(seed = 321))
+  res_mod_parent <- check_up_to_date(mod_parent)
+  expect_false(res_mod_parent["model"])
+  expect_true(res_mod_parent["data"])
+  expect_true(all(check_up_to_date(mod_gq)))
+  # ... but only after the gq_parent model is executed.
+  capture.output(submit_model(mod_parent, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_parent)))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  capture.output(submit_model(mod_gq, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # If the gq_parent value is removed, this is detected as a change.
+  mod_gq <- remove_stan_gq_parent(mod_gq, "bern")
+  expect_null(get_stan_gq_parent(mod_gq))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  mod_gq <- add_stan_gq_parent(mod_gq, "bern")
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # Adding another gq_parent is detected as a change.
+  mod_gq <- add_stan_gq_parent(mod_gq, STAN_MOD1[[ABS_MOD_PATH]])
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  mod_gq <- remove_stan_gq_parent(mod_gq, STAN_MOD1[[ABS_MOD_PATH]])
+  expect_true(all(check_up_to_date(mod_gq)))
+})

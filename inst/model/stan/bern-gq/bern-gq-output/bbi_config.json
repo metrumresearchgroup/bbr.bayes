@@ -6,6 +6,7 @@
   "standata_script_md5": "05a2e69e5e8e8692321a06b513f291b1",
   "stanargs_md5": "4ba94ac65c357500f7a5279b710c96b9",
   "stan_fitted_params_md5": "045b8ee6072c5652cc624342a42ee650",
+  "gq_parent_md5": ["6d56e2884c2c9a99cd63d79782345c7c"],
   "configuration": {
     "cmdstan_version": "2.27.0",
     "cmdstanr_version": "0.5.2"

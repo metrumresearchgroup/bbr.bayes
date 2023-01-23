@@ -68,3 +68,12 @@ test_that("stan: check_up_to_date() with mismatched data .build_data=F", {
     expect_equal(res, DATA_BAD)
   }
 })
+
+test_that("stan gq: check_up_to_date() with change in gq_parent's bbi_config.json", {
+  perturb_file(file.path(get_output_dir(STAN_MOD3), "bbi_config.json"))
+  expect_message(
+    res <- check_up_to_date(STAN_GQ_MOD),
+    regexp = "gq_parent models"
+  )
+  expect_equal(res, DATA_BAD)
+})

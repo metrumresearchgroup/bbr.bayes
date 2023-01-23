@@ -55,4 +55,10 @@ quantities model (i.e. a model that inherits from \code{bbi_stan_gq_model}).
 \item \verb{<run>-standata.json}
 }
 }
+
+For standalone generated quantities, the \code{bbi_config.json} files in the
+output directory of the models listed in the \code{gq_parent} fields are also
+considered "data" files. If a \code{gq_parent} is re-submitted and anything
+recorded in \code{bbi_config.json} changes, the linked "stan_gq" model is
+considered out of date.
 }
