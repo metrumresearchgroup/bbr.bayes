@@ -60,6 +60,8 @@ STANCFG_FITTED_PARAMS_MD5 <- "stan_fitted_params_md5"
 
 STAN_BBI_VERSION_STRING <- "STAN"
 
+YAML_GQ_PARENT <- "gq_parent"
+
 ############
 # SCAFFOLDS
 ############
