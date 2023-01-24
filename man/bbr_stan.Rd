@@ -172,6 +172,19 @@ points back to the parent model, and setting up a default
 \verb{<run>-fitted-params.R} that returns the paths to the parent model's
 posteriors.
 
+The "gq_parent" field of "stan_gq" models links to the "stan" model whose
+samples are used as input. The default \verb{<run>-fitted-params.R} uses this
+value to retrieve the previous fit, and
+\link[=check_up_to_date_stan_model]{check_up_to_date} considers it when deciding
+whether a model is up to date.
+
+In the most common case, the "gq_parent" value will be automatically set up
+by \code{\link[=copy_model_as_stan_gq]{copy_model_as_stan_gq()}}. However, you may want to manually set this to
+multiple values (e.g., with \code{\link[=add_stan_gq_parent]{add_stan_gq_parent()}}) for cases where the
+fitted parameters are coming from multiple models. The field may also be
+absent, which is appropriate for cases where the fitted parameters are not
+coming from a previous model.
+
 To run a "stan_gq" model, pass the \code{bbi_stan_gq_model} object to
 \link[=stan_submit_model]{submit_model()}, which will use the model files to
 construct a call to

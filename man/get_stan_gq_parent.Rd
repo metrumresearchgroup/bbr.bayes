@@ -14,5 +14,10 @@ A vector of absolute paths to the models listed in the "gq_parent"
 field.
 }
 \description{
-Get gq_parent of a standalone generated quantities model
+For a model of type "stan_gq", the "gq_parent" field links to a model of type
+"stan" whose samples are input as the fitted parameters.
+}
+\seealso{
+\link{modify_stan_gq_parent} for modifying "gq_parent" value, \link{bbr_stan}
+for more information about standalone generated quantities
 }

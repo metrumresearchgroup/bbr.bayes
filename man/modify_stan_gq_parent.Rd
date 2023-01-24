@@ -23,5 +23,17 @@ paths are taken as relative to the directory containing \code{.mod}.}
 The modified model objects (after writing changes to disk).
 }
 \description{
-Modify gq_parent of a standalone generated quantities model
+In most cases, the "gq_parent" field is automatically handled by
+\code{\link[=copy_model_as_stan_gq]{copy_model_as_stan_gq()}}. However, the following convenience functions
+enable manually modifying the value if needed:
+\itemize{
+\item \code{add_stan_gq_parent()}: add specified values, keeping any existing values
+\item \code{replace_all_stan_gq_parent()}: replace all existing values with the
+specified values
+\item \code{remove_stan_gq_parent()}: remove the specified values
+}
+}
+\seealso{
+\link{modify_stan_gq_parent} for getting the "gq_parent" value,
+\link{bbr_stan} for more information about standalone generated quantities
 }

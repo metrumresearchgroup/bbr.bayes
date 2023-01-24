@@ -1,9 +1,14 @@
 
 #' Get gq_parent of a standalone generated quantities model
 #'
+#' For a model of type "stan_gq", the "gq_parent" field links to a model of type
+#' "stan" whose samples are input as the fitted parameters.
+#'
 #' @param .mod A `bbi_stan_gq_model` object.
 #' @return A vector of absolute paths to the models listed in the "gq_parent"
 #'   field.
+#' @seealso [modify_stan_gq_parent] for modifying "gq_parent" value, [bbr_stan]
+#'   for more information about standalone generated quantities
 #' @export
 get_stan_gq_parent <- function(.mod) {
   checkmate::assert_class(.mod, STAN_GQ_MOD_CLASS)
@@ -23,10 +28,25 @@ get_stan_gq_parent <- function(.mod) {
 
 #' Modify gq_parent of a standalone generated quantities model
 #'
+#' @description
+#'
+#' In most cases, the "gq_parent" field is automatically handled by
+#' [copy_model_as_stan_gq()]. However, the following convenience functions
+#' enable manually modifying the value if needed:
+#'
+#'   * `add_stan_gq_parent()`: add specified values, keeping any existing values
+#'
+#'   * `replace_all_stan_gq_parent()`: replace all existing values with the
+#'      specified values
+#'
+#'   * `remove_stan_gq_parent()`: remove the specified values
+#'
 #' @param .mod A `bbi_stan_gq_model` object.
 #' @param .parent Character vector of paths to parent model. If relative, the
 #'   paths are taken as relative to the directory containing `.mod`.
 #' @return The modified model objects (after writing changes to disk).
+#' @seealso [modify_stan_gq_parent] for getting the "gq_parent" value,
+#'   [bbr_stan] for more information about standalone generated quantities
 #' @name modify_stan_gq_parent
 NULL
 
