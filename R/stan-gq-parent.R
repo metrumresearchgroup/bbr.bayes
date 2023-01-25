@@ -12,6 +12,15 @@
 #' @export
 get_stan_gq_parent <- function(.mod) {
   checkmate::assert_class(.mod, STAN_GQ_MOD_CLASS)
+  resolved <- get_stan_gq_parent_no_check(.mod)
+  if (!is.null(resolved)) {
+    check_gq_parent(resolved)
+  }
+
+  return(resolved)
+}
+
+get_stan_gq_parent_no_check <- function(.mod) {
   gq_parent <- .mod[[YAML_GQ_PARENT]]
   if (is.null(gq_parent) || !length(gq_parent)) {
     # ^ Check length() to get a consistent NULL return value even when
@@ -19,11 +28,8 @@ get_stan_gq_parent <- function(.mod) {
     # won't be written out to the YAML).
     return(NULL)
   }
-  resolved <- resolve_gq_parent(get_model_working_directory(.mod),
-                                gq_parent)
-  check_gq_parent(resolved)
-
-  return(resolved)
+  resolve_gq_parent(get_model_working_directory(.mod),
+                    gq_parent)
 }
 
 #' Modify gq_parent of a standalone generated quantities model

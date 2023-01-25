@@ -113,6 +113,37 @@ test_that("stan gq: make_fitted_params() can return draws object", {
     build_path_from_model(mod3, STAN_MODEL_FIT_RDS))
 })
 
+test_that("stan gq: works with missing output directory", {
+  mod1 <- read_model(file.path("model", "stan", "bern"))
+  mod_unrun <- copy_model_from(mod1, "bern-unrun")
+  mod2 <- read_model(file.path("model", "stan", "bern_gq"))
+  mod_mp <- copy_model_from(mod2, "bern-gq-multi-parent")
+
+  mod_mp <- add_stan_gq_parent(mod_mp, mod_unrun[[ABS_MOD_PATH]])
+
+  fp_lines <- c(
+    "make_fitted_params <- function(.mod) {",
+    "  bern <- bbr.bayes::get_stan_gq_parent(.mod)[1]",
+    "  bbr.bayes::read_fit_model(bern)$output_files()",
+    "}")
+  writeLines(fp_lines,
+             build_path_from_model(mod_mp, STAN_FITTED_PARAMS_SUFFIX))
+
+  res_output <- capture.output(
+    res_submit <- submit_model(mod_mp, .mode = "local"))
+
+  expect_s3_class(res_submit, STAN_GQ_FIT_CLASS)
+  expect_match(res_output,
+               "standalone generated quantities after 4 MCMC chains",
+               all = FALSE)
+  checkmate::expect_file_exists(
+    build_path_from_model(mod_mp, STAN_MODEL_FIT_RDS))
+
+  expect_true(all(check_up_to_date(mod_mp)))
+  capture.output(submit_model(mod_unrun, .mode = "local"))
+  expect_false(check_up_to_date(mod_mp)["data"])
+})
+
 test_that("check_up_to_date detects change in gq_parent's bbi_config.json", {
   mod_parent <- read_model(file.path("model", "stan", "bern"))
   mod_gq <- read_model(file.path("model", "stan", "bern_gq"))
@@ -158,4 +189,16 @@ test_that("check_up_to_date detects change in gq_parent's bbi_config.json", {
 
   mod_gq <- remove_stan_gq_parent(mod_gq, STAN_MOD1[[ABS_MOD_PATH]])
   expect_true(all(check_up_to_date(mod_gq)))
+
+  # Deleting the output directory of gq_parent is detected as a change.
+  fs::dir_delete(get_output_dir(mod_parent))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  # Deleting the entire gq_parent model directory is detected as a change.
+  fs::dir_delete(mod_parent[[ABS_MOD_PATH]])
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
 })
