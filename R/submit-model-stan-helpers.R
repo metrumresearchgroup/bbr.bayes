@@ -142,13 +142,13 @@ build_stan_bbi_config <- function(.mod, .write) {
 }
 
 get_gq_parent_md5 <- function(.mod) {
-    parent <- get_stan_gq_parent(.mod)
-    if (is.null(parent)) {
-      return(NULL)
-    }
+  parent <- get_stan_gq_parent(.mod)
+  if (is.null(parent)) {
+    return(NULL)
+  }
 
-    parent_configs <- purrr::map_chr(
-      parent,
-      ~ get_config_path(read_model(.x), .check_exists = FALSE))
-    return(tools::md5sum(parent_configs))
+  parent_configs <- purrr::map_chr(
+    parent,
+    ~ get_config_path(read_model(.x), .check_exists = FALSE))
+  return(tools::md5sum(parent_configs))
 }
