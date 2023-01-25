@@ -64,6 +64,7 @@ model.
 generated quantities.
 \item Only the \code{seed} argument from the parent model's \verb{<run>-stanargs.R} is
 copied to the new model's \verb{<run>-stanargs.R}.
+\item Sets "gq_parent" field of \code{.new_model} to point to \code{.parent_mod}.
 }
 }
 \seealso{

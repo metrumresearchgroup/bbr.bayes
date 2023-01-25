@@ -124,6 +124,9 @@ build_stan_bbi_config <- function(.mod, .write) {
   if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
     stan_config[[STANCFG_FITTED_PARAMS_MD5]] <- tools::md5sum(
       build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX))
+    # There may be multiple gq_parent values; use I() so that value is
+    # consistently "boxed".
+    stan_config[[STANCFG_GQ_PARENT_MD5]] <- I(get_gq_parent_md5(.mod))
   } else {
     stan_config[[STANCFG_INIT_MD5]] <- tools::md5sum(
       build_path_from_model(.mod, STANINIT_SUFFIX))
@@ -136,4 +139,39 @@ build_stan_bbi_config <- function(.mod, .write) {
   # write to disk
   stan_json <- jsonlite::toJSON(stan_config, pretty = TRUE, auto_unbox = TRUE)
   readr::write_lines(stan_json, file.path(get_output_dir(.mod), "bbi_config.json"))
+}
+
+get_gq_parent_md5 <- function(.mod) {
+  parent <- get_stan_gq_parent_no_check(.mod)
+  if (is.null(parent)) {
+    return(NULL)
+  }
+
+  parent_configs <- build_config_paths(parent)
+  return(tools::md5sum(parent_configs))
+}
+
+#' Return paths to bbi_config.json files
+#'
+#' This custom function exists in favor of mapping over `get_config_path(.mod)`
+#' for the following reasons:
+#'
+#'  * `get_config_path()` errors if the output directory doesn't exist even when
+#'     `.check_exists = FALSE` is passed because `get_config_path.bbi_model()`
+#'     doesn't relay the `.check_exists` value to its `get_output_dir()` call.
+#'
+#'     (Issue is present at least up to bbr 1.5.0.)
+#'
+#'  * The goal of this function is to return the paths, letting the caller deal
+#'    with things like missing files (even entire model directories). With
+#'    `get_config_path()`, each model needs to be read in.
+#'
+#' @param mod_paths Absolute paths to the model (i.e. the "absolute_model_path"
+#'   value of the models).
+#' @return Absolute paths to the corresponding bbi_config.json files.
+#' @noRd
+build_config_paths <- function(mod_paths) {
+  file.path(mod_paths,
+            paste0(get_model_id(mod_paths), STAN_OUTDIR_SUFFIX),
+            "bbi_config.json")
 }

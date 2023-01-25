@@ -93,10 +93,8 @@ test_that("stan gq: make_fitted_params() can return draws object", {
 
   mod3 <- copy_model_from(mod2, "bern-gq-draws")
   fp_lines <- c(
-    # Two models back for regular bern stan model.
     "make_fitted_params <- function(.mod) {",
-    "  bern_gq <- bbr::get_based_on(.mod)",
-    "  bern <- bbr::get_based_on(bbr::read_model(bern_gq))",
+    "  bern <- bbr.bayes::get_stan_gq_parent(.mod)",
     "  draws <- posterior::as_draws(bbr::read_model(bern))",
     "  return(posterior::subset_draws(draws, chain = 1:2))",
     "}")
@@ -113,4 +111,75 @@ test_that("stan gq: make_fitted_params() can return draws object", {
                all = FALSE)
   checkmate::expect_file_exists(
     build_path_from_model(mod3, STAN_MODEL_FIT_RDS))
+})
+
+test_that("stan gq: aborts if gq_parent is missing bbi_config.json", {
+  mod1 <- read_model(file.path("model", "stan", "bern"))
+  mod_unrun <- copy_model_from(mod1, "bern-unrun")
+  mod2 <- read_model(file.path("model", "stan", "bern_gq"))
+  mod_mp <- copy_model_from(mod2, "bern-gq-multi-parent")
+
+  mod_mp <- add_stan_gq_parent(mod_mp, mod_unrun[[ABS_MOD_PATH]])
+
+  expect_error(submit_model(mod_mp, .mode = "local"),
+               "gq_parent first")
+})
+
+test_that("check_up_to_date detects change in gq_parent's bbi_config.json", {
+  mod_parent <- read_model(file.path("model", "stan", "bern"))
+  mod_gq <- read_model(file.path("model", "stan", "bern_gq"))
+
+  expect_true(all(check_up_to_date(mod_gq)))
+  # If all the values in bbi_config.json are the same, check_up_to_date()
+  # considers the gq model up to date.
+  capture.output(submit_model(mod_parent, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # However, if a new run changes something (here the stanargs md5) then the gq
+  # model is considered out of date...
+  set_stanargs(mod_parent, list(seed = 321))
+  res_mod_parent <- check_up_to_date(mod_parent)
+  expect_false(res_mod_parent["model"])
+  expect_true(res_mod_parent["data"])
+  expect_true(all(check_up_to_date(mod_gq)))
+  # ... but only after the gq_parent model is executed.
+  capture.output(submit_model(mod_parent, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_parent)))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  capture.output(submit_model(mod_gq, .overwrite = TRUE))
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # If the gq_parent value is removed, this is detected as a change.
+  mod_gq <- remove_stan_gq_parent(mod_gq, "bern")
+  expect_null(get_stan_gq_parent(mod_gq))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  mod_gq <- add_stan_gq_parent(mod_gq, "bern")
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # Adding another gq_parent is detected as a change.
+  mod_gq <- add_stan_gq_parent(mod_gq, STAN_MOD1[[ABS_MOD_PATH]])
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  mod_gq <- remove_stan_gq_parent(mod_gq, STAN_MOD1[[ABS_MOD_PATH]])
+  expect_true(all(check_up_to_date(mod_gq)))
+
+  # Deleting the output directory of gq_parent is detected as a change.
+  fs::dir_delete(get_output_dir(mod_parent))
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
+
+  # Deleting the entire gq_parent model directory is detected as a change.
+  fs::dir_delete(mod_parent[[ABS_MOD_PATH]])
+  res_mod_gq <- check_up_to_date(mod_gq)
+  expect_true(res_mod_gq["model"])
+  expect_false(res_mod_gq["data"])
 })
