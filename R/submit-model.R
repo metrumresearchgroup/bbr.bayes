@@ -178,6 +178,17 @@ submit_model.bbi_stan_model <- function(
 submit_model.bbi_stan_gq_model <- function(.mod, .mode = c("local"),
                                            ..., .overwrite = NULL) {
   rlang::check_dots_empty()
+
+  # Note: get_stan_gq_parent() will abort if any gq_parent lacks a YAML.
+  gq_parent <- get_stan_gq_parent(.mod)
+  if (!is.null(gq_parent)) {
+    configs_exist <- fs::file_exists(build_config_paths(gq_parent))
+    if (!all(configs_exist)) {
+      stop("Run gq_parent first:\n",
+           paste("  -", gq_parent[!configs_exist]), collapse = "\n")
+    }
+  }
+
   res <- submit_stan_model_cmdstanr(
     .mod,
     "generate_quantities",
