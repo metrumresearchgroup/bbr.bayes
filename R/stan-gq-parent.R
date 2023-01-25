@@ -118,3 +118,38 @@ check_gq_parent <- function(paths) {
          call. = FALSE)
   }
 }
+
+#' Search for models that have a given model as the gq_parent
+#'
+#' By looking at the "gq_parent" field of a "stan_gq" model, you can identify
+#' which "stan" models are used as input. This function helps you go in the
+#' other direction: find which "stan_gq" models under a directory point to the
+#' specified "stan" model.
+#'
+#' @inheritParams bbr::run_log
+#' @param .mod A `bbi_stan_model` object.
+#' @param .base_dir Base directory to look in for models. If `NULL` (the
+#'   default), look for models in the directory that contains `.mod`.
+#' @seealso [get_stan_gq_parent()] and [modify_stan_gq_parent] for getting and
+#'   modifying the "gq_parent" value of a `bbi_stan_gq_model` object, [bbr_stan]
+#'   for more information about standalone generated quantities
+#' @export
+find_stan_gq_children <- function(.mod,
+                                  .base_dir = NULL,
+                                  .recurse = FALSE) {
+  checkmate::assert_class(.mod, STAN_MOD_CLASS)
+  if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
+    stop(".mod must be model_type=stan, not model_type=stan_gq")
+  }
+
+  .base_dir <- .base_dir %||% get_model_working_directory(.mod)
+  mod_path <- .mod[[ABS_MOD_PATH]]
+
+  is_child <- function(cand) {
+    inherits(cand, STAN_GQ_MOD_CLASS) &&
+      mod_path %in% get_stan_gq_parent_no_check(cand)
+  }
+
+  find_models(.base_dir = .base_dir, .recurse = .recurse, .include = NULL) %>%
+    purrr::keep(is_child)
+}
