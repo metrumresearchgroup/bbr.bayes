@@ -40,6 +40,13 @@ import_stan_init <- function(.mod, .standata, .stanargs) {
   return(init_res)
 }
 
+import_stan_fitted_params <- function(.mod) {
+  path <- build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX)
+  make_fitted_params <- safe_source_function(path, "make_fitted_params")
+  safe_call_sourced(.func = make_fitted_params,
+                    .args = list(.mod = .mod),
+                    .file = path)
+}
 
 #' Private helper to compile a stan model and save a gitignore that ignores the
 #' binary and posterior csv's
@@ -111,15 +118,60 @@ build_stan_bbi_config <- function(.mod, .write) {
     !!CONFIG_MODEL_MD5   := tools::md5sum(get_model_path(.mod)),
     !!CONFIG_DATA_MD5    := tools::md5sum(build_path_from_model(.mod, STANDATA_JSON_SUFFIX)),
     !!STANCFG_DATA_MD5   := tools::md5sum(build_path_from_model(.mod, STANDATA_R_SUFFIX)),
-    !!STANCFG_INIT_MD5   := tools::md5sum(build_path_from_model(.mod, STANINIT_SUFFIX)),
     !!STANCFG_ARGS_MD5   := tools::md5sum(build_path_from_model(.mod, STANARGS_SUFFIX)),
-    "configuration" = rlang::list2(
-      "cmdstan_version"     = cmdstanr::cmdstan_version(),
-      "cmdstanr_version"    = as.character(utils::packageVersion('cmdstanr')),
-    )
   )
+
+  if (inherits(.mod, STAN_GQ_MOD_CLASS)) {
+    stan_config[[STANCFG_FITTED_PARAMS_MD5]] <- tools::md5sum(
+      build_path_from_model(.mod, STAN_FITTED_PARAMS_SUFFIX))
+    # There may be multiple gq_parent values; use I() so that value is
+    # consistently "boxed".
+    stan_config[[STANCFG_GQ_PARENT_MD5]] <- I(get_gq_parent_md5(.mod))
+  } else {
+    stan_config[[STANCFG_INIT_MD5]] <- tools::md5sum(
+      build_path_from_model(.mod, STANINIT_SUFFIX))
+  }
+
+  stan_config[["configuration"]] <-  list(
+    "cmdstan_version" = cmdstanr::cmdstan_version(),
+    "cmdstanr_version" = as.character(utils::packageVersion("cmdstanr")))
 
   # write to disk
   stan_json <- jsonlite::toJSON(stan_config, pretty = TRUE, auto_unbox = TRUE)
   readr::write_lines(stan_json, file.path(get_output_dir(.mod), "bbi_config.json"))
+}
+
+get_gq_parent_md5 <- function(.mod) {
+  parent <- get_stan_gq_parent_no_check(.mod)
+  if (is.null(parent)) {
+    return(NULL)
+  }
+
+  parent_configs <- build_config_paths(parent)
+  return(tools::md5sum(parent_configs))
+}
+
+#' Return paths to bbi_config.json files
+#'
+#' This custom function exists in favor of mapping over `get_config_path(.mod)`
+#' for the following reasons:
+#'
+#'  * `get_config_path()` errors if the output directory doesn't exist even when
+#'     `.check_exists = FALSE` is passed because `get_config_path.bbi_model()`
+#'     doesn't relay the `.check_exists` value to its `get_output_dir()` call.
+#'
+#'     (Issue is present at least up to bbr 1.5.0.)
+#'
+#'  * The goal of this function is to return the paths, letting the caller deal
+#'    with things like missing files (even entire model directories). With
+#'    `get_config_path()`, each model needs to be read in.
+#'
+#' @param mod_paths Absolute paths to the model (i.e. the "absolute_model_path"
+#'   value of the models).
+#' @return Absolute paths to the corresponding bbi_config.json files.
+#' @noRd
+build_config_paths <- function(mod_paths) {
+  file.path(mod_paths,
+            paste0(get_model_id(mod_paths), STAN_OUTDIR_SUFFIX),
+            "bbi_config.json")
 }

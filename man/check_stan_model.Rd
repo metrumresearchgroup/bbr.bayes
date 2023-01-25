@@ -13,16 +13,19 @@ check_stan_model(.mod, .error = FALSE)
 missing. If \code{TRUE} will error instead.}
 }
 \description{
-Checks a \link{bbi_stan_model} object to make sure it can find all of the files
-necesssary to submit the model. (See \verb{?}\link{bbi_stan_model} for details about
-these files.)
+Checks a \code{bbi_stan_model} object to make sure it can find all of the files
+necessary to submit the model. (See \verb{?}\link{bbr_stan} for details about these
+files.)
 }
 \details{
 Will look for the following:
 \itemize{
 \item \code{build_path_from_model(.mod, "-standata.R")}
-\item \code{build_path_from_model(.mod, "-init.R")}
 \item \code{build_path_from_model(.mod, "-stanargs.R")}
 \item \code{build_path_from_model(.mod, ".stan")}
+\item \code{build_path_from_model(.mod, "-init.R")}, unless it is a generated
+quantities model (i.e. a \code{bbi_stan_gq_model} subclass).
+\item \code{build_path_from_model(.mod, "-fitted-params.R")}, if it is a generated
+quantities model (i.e. a \code{bbi_stan_gq_model} subclass).
 }
 }

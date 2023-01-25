@@ -1,0 +1,13 @@
+{
+  "output_dir": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/stan/bern/bern-output",
+  "data_path": "../bern-standata.json",
+  "model_md5": "c4e3d876bc12f182717cde338c2e686a",
+  "data_md5": "bbd614b5f22e35c2a7cfd6ce88a9bf41",
+  "standata_script_md5": "05a2e69e5e8e8692321a06b513f291b1",
+  "stanargs_md5": "b89dbc514470b8a306c14a2609bba0f8",
+  "init_script_md5": "c51ce095c6f6fc3de21e59cd408f9ed0",
+  "configuration": {
+    "cmdstan_version": "2.27.0",
+    "cmdstanr_version": "0.5.2"
+  }
+}

@@ -17,3 +17,10 @@ test_that("stan: model_summary() correctly calls read_fit_model()", {
   expect_true(inherits(smp, STAN_SMP_DIAG_CLASS))
   expect_equal(dim(smp), STAN_SMP_DIAG_DIM)
 })
+
+test_that("stan gq: model_summary() correctly calls read_fit_model()", {
+  expect_warning(res <- model_summary(STAN_GQ_MOD),
+                 "not fully implemented")
+  expect_s3_class(res, STAN_GQ_FIT_CLASS)
+  expect_match(res$fitted_params_files(), "bern")
+})

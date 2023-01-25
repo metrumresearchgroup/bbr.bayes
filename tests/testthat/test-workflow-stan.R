@@ -97,6 +97,8 @@ test_that("stan: run_log() captures runs correctly", {
 })
 
 test_that("stan: summary_log() captures runs correctly", {
+  skip_if_no_bbi()
+
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
     log_df <- summary_log(MODEL_DIR_STAN_TEST)
   })

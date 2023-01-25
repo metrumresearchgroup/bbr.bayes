@@ -64,7 +64,8 @@ setup <- function() {
 
   fs::dir_create(file.path(MODEL_DIR, "fxaInc"))
 
-  writeLines(bbr.bayes:::STANINIT_SCAFFOLD_STRING, file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
+  fs::file_copy(system.file("stan-scaffolds", "init.R", package = "bbr.bayes", mustWork = TRUE),
+                file.path(MODEL_DIR, "fxaInc", "fxaInc-init.R"))
   
   readLines(file.path(MODEL_DIR, "fxa", "fxa.stan")) %>%
     stringr::str_replace("uniform", "cauchy") %>%

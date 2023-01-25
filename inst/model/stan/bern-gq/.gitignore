@@ -1,0 +1,5 @@
+# ignore model binary
+bern-gq
+
+# ignore csv posterior output
+bern-gq-output/*csv

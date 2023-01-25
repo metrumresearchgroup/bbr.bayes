@@ -70,3 +70,32 @@ test_that("add_staninit_file() works correctly for scaffold", {
     as.character(tools::md5sum(build_path_from_model(.m, STANINIT_SUFFIX)))
   )
 })
+
+test_that("add_staninit_file() aborts on bbi_stan_gq_model", {
+  tdir <- local_test_dir()
+  m <- new_model(file.path(tdir, "stanmod"), .model_type = "stan_gq")
+  expect_error(add_staninit_file(m), "stan_gq")
+})
+
+test_that("add_stan_fitted_params_file() works correctly for scaffold", {
+  tdir <- local_test_dir()
+  m <- new_model(file.path(tdir, "stanmod"), .model_type = "stan_gq")
+  add_stan_fitted_params_file(m)
+  expect_match(
+    readLines(build_path_from_model(m, STAN_FITTED_PARAMS_SUFFIX)),
+    "make_fitted_params",
+    fixed = TRUE, all = FALSE)
+
+  sf <- file.path(tdir, "source")
+  cat("custom\n", file = sf)
+  add_stan_fitted_params_file(m, .source_file = sf)
+  expect_identical(
+    readLines(build_path_from_model(m, STAN_FITTED_PARAMS_SUFFIX)),
+    "custom")
+})
+
+test_that("add_stan_fitted_params_file() aborts on bbi_stan_model", {
+  tdir <- local_test_dir()
+  m <- new_model(file.path(tdir, "stanmod"), .model_type = "stan")
+  expect_error(add_stan_fitted_params_file(m), "bbi_stan_gq_model")
+})

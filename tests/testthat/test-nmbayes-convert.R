@@ -4,7 +4,7 @@ test_that("nmbayes_convert() errors on non-nonmem model", {
 })
 
 test_that("nmbayes_convert() converts nonmem to nmbayes", {
-  model_dir <- withr::local_tempdir("bbr-nmbayes-convert-")
+  model_dir <- local_test_dir()
   cat("", file = file.path(model_dir, "bbi.yaml"))
   mod <- read_model(
     system.file("model", "nonmem", "basic", "1",

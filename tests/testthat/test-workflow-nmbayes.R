@@ -6,8 +6,7 @@ if (identical(Sys.getenv("METWORX_VERSION"), "")) {
 
 # TODO: Consider reworking this helper to be used elsewhere.
 local_model_tempdir <- function(clean = TRUE, .local_envir = parent.frame()) {
-  tdir <- withr::local_tempdir("bbr-bayes-nmbayes-",
-                               clean = clean, .local_envir = .local_envir)
+  tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)
   withr::local_dir(tdir, .local_envir = .local_envir)
 
   fs::dir_copy(

@@ -29,16 +29,20 @@ test_that("nmbayes: check_up_to_date() with mismatched data", {
 ### Stan
 
 test_that("stan: check_up_to_date() happy path", {
-  expect_equal(check_up_to_date(STAN_MOD1), ALL_GOOD)
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+    expect_equal(check_up_to_date(mod), ALL_GOOD)
+  }
 })
 
 test_that("stan: check_up_to_date() with mismatched model", {
-  perturb_file(build_path_from_model(STAN_MOD1, STANMOD_SUFFIX))
-  expect_message(
-    res <- check_up_to_date(STAN_MOD1),
-    regexp = "The following files have changed.+\\.stan"
-  )
-  expect_equal(res, MODEL_BAD)
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+    perturb_file(build_path_from_model(mod, STANMOD_SUFFIX))
+    expect_message(
+      res <- check_up_to_date(STAN_MOD1),
+      regexp = "The following files have changed.+\\.stan"
+    )
+    expect_equal(res, MODEL_BAD)
+  }
 })
 
 test_that("stan: check_up_to_date() with mismatched data .build_data=TRUE", {
@@ -55,10 +59,21 @@ test_that("stan: check_up_to_date() with mismatched data .build_data=TRUE", {
 })
 
 test_that("stan: check_up_to_date() with mismatched data .build_data=F", {
-  perturb_file(build_path_from_model(STAN_MOD1, STANDATA_JSON_SUFFIX))
+  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+    perturb_file(build_path_from_model(mod, STANDATA_JSON_SUFFIX))
+    expect_message(
+      res <- check_up_to_date(STAN_MOD1, .build_data = FALSE),
+      regexp = "The following files have changed.+standata\\.json"
+    )
+    expect_equal(res, DATA_BAD)
+  }
+})
+
+test_that("stan gq: check_up_to_date() with change in gq_parent's bbi_config.json", {
+  perturb_file(file.path(get_output_dir(STAN_MOD3), "bbi_config.json"))
   expect_message(
-    res <- check_up_to_date(STAN_MOD1, .build_data = FALSE),
-    regexp = "The following files have changed.+standata\\.json"
+    res <- check_up_to_date(STAN_GQ_MOD),
+    regexp = "gq_parent models"
   )
   expect_equal(res, DATA_BAD)
 })

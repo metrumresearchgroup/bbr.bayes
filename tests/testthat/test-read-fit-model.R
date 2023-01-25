@@ -58,7 +58,7 @@ test_that("stan: read_fit_model() works correctly", {
 })
 
 test_that("stan: read_fit_model() adjusts output files to be in model directory", {
-  tdir <- withr::local_tempdir("bbr.bayes-read-model-test")
+  tdir <- local_test_dir()
   mdir <- file.path(tdir, STAN_MOD_ID)
   fs::dir_copy(STAN_MOD1_PATH, mdir)
   fs::file_copy(file.path(STAN_ABS_MODEL_DIR, paste0(STAN_MOD_ID, ".yaml")),
@@ -68,4 +68,16 @@ test_that("stan: read_fit_model() adjusts output files to be in model directory"
   expect_true(all(fs::path_has_parent(files, mdir)))
   expect_identical(basename(files),
                    basename(read_fit_model(STAN_MOD1)$output_files()))
+})
+
+test_that("stan gq: read_fit_model.character() works correctly", {
+  res <- read_fit_model(STAN_GQ_MOD_PATH)
+  expect_s3_class(res, STAN_GQ_FIT_CLASS)
+})
+
+test_that("stan gq: read_fit_model() works correctly", {
+  res <- read_fit_model(STAN_GQ_MOD)
+  expect_s3_class(res, STAN_GQ_FIT_CLASS)
+
+  expect_match(res$fitted_params_files(), "bern")
 })
