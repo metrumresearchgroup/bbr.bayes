@@ -1,6 +1,6 @@
 context("checking Stan model integrity")
 
-test_that("check_stan_object messages missing files", {
+test_that("check_stan_model messages missing files", {
   tdir <- local_test_dir()
   for (model_type in c("stan", "stan_gq")) {
     .m <- new_model(file.path(tdir, model_type),
@@ -29,7 +29,7 @@ test_that("check_stan_object messages missing files", {
   }
 })
 
-test_that("check_stan_object messages scaffold files", {
+test_that("check_stan_model messages scaffold files", {
   tdir <- local_test_dir()
   for (model_type in c("stan", "stan_gq")) {
     .m <- new_model(file.path(tdir, model_type),
