@@ -12,6 +12,10 @@ check_stan_model(.mod, .error = FALSE)
 \item{.error}{If \code{FALSE}, the default, will warn if any necessary files are
 missing. If \code{TRUE} will error instead.}
 }
+\value{
+Invisibly return \code{FALSE} if any problems are found (only relevant
+when \code{.error} is \code{FALSE}) and \code{TRUE} otherwise.
+}
 \description{
 Checks a \code{bbi_stan_model} object to make sure it can find all of the files
 necessary to submit the model. (See \verb{?}\link{bbr_stan} for details about these

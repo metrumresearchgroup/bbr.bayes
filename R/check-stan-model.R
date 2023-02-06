@@ -22,6 +22,8 @@
 #' @param .mod A [bbi_stan_model] object
 #' @param .error If `FALSE`, the default, will warn if any necessary files are
 #'   missing. If `TRUE` will error instead.
+#' @return Invisibly return `FALSE` if any problems are found (only relevant
+#'   when `.error` is `FALSE`) and `TRUE` otherwise.
 #' @export
 check_stan_model <- function(.mod, .error = FALSE) {
   UseMethod("check_stan_model")
