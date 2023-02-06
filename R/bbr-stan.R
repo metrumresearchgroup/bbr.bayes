@@ -118,7 +118,8 @@
 #' ## Some Helper Functions
 #'
 #' * **[check_stan_model()]** (mentioned above) - Checks for the necessary files
-#' before running or copying the model.
+#'   before running or copying the model. By default, it also checks the syntax
+#'   of the `<run>.stan` file.
 #'
 #' * **[bbr::build_path_from_model()]** - Builds the absolute path to a file in
 #'   the model folder from a model object and a suffix.

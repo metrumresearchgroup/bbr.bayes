@@ -211,7 +211,9 @@ submit_stan_model_cmdstanr <- function(.mod,
 
   # check against YAML
   check_yaml_in_sync(.mod)
-  check_stan_model(.mod, .error = TRUE)
+  # Use .syntax=FALSE because that's just feeding the model to stanc, and
+  # $compile() will trigger that first thing.
+  check_stan_model(.mod, .syntax = FALSE, .error = TRUE)
 
   # check for valid type arg
   .mode <- match.arg(.mode)

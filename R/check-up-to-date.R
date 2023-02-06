@@ -88,7 +88,7 @@ check_up_to_date.bbi_stan_gq_summary <- function(.bbi_object, .build_data = TRUE
 #' @noRd
 check_up_to_date_stan <- function(.mod, .build_data = FALSE, gq = FALSE) {
   # check model and load config
-  check_stan_model(.mod, .error = TRUE)
+  check_stan_model(.mod, .syntax = FALSE, .error = TRUE)
 
   config_path <- file.path(get_output_dir(.mod, .check_exists = FALSE), "bbi_config.json")
   if (!fs::file_exists(config_path)) {

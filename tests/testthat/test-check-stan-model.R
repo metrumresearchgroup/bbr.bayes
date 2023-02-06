@@ -57,3 +57,34 @@ test_that("check_stan_model messages scaffold files", {
     }
   }
 })
+
+test_that("check_stan_model supports checking .stan syntax", {
+  tdir <- local_test_dir()
+  mod <- copy_model_from(STAN_MOD1, file.path(tdir, "mod"))
+  expect_no_error(check_stan_model(mod, .error = TRUE))
+
+  writeLines(c("not ok {}"), get_model_path(mod))
+
+  expect_error(check_stan_model(mod, .error = TRUE),
+               "syntax", ignore.case = TRUE)
+  expect_no_error(check_stan_model(mod, .error = TRUE, .syntax = FALSE))
+
+  expect_message(res <- check_stan_model(mod, .error = FALSE),
+                 "syntax", ignore.case = TRUE)
+  expect_false(res)
+
+  res <- check_stan_model(mod, .error = FALSE, .syntax = FALSE)
+  expect_true(res)
+
+  fs::file_delete(build_path_from_model(mod, STANDATA_R_SUFFIX))
+  expect_error(check_stan_model(mod, .error = TRUE),
+               "missing", fixed = TRUE)
+
+  expect_message(check_stan_model(mod, .error = FALSE),
+                 "missing", fixed = TRUE)
+  # Even if missing file check fails, syntax check still happens as long as a
+  # .stan is available (and .error=FALSE, of course).
+  expect_message(res <- check_stan_model(mod, .error = FALSE),
+                 "syntax", ignore.case = TRUE)
+  expect_false(res)
+})
