@@ -42,10 +42,6 @@ check_stan_model.bbi_stan_gq_model <- function(.mod, .error = FALSE) {
 }
 
 check_stan_model_impl <- function(.mod, .error, req_files) {
-  # check if output dir exists and if not create an empty one
-  model_dir <- dirname(get_output_dir(.mod, .check_exists = FALSE))
-  if (!fs::dir_exists(model_dir)) fs::dir_create(model_dir)
-
   # check for files in output dir
   files_missing <- !fs::file_exists(build_path_from_model(.mod, req_files))
   problems <- NULL
