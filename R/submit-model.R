@@ -231,13 +231,14 @@ submit_stan_model_cmdstanr <- function(.mod,
     fs::dir_create(out_dir)
   }
 
-  stanmod <- compile_stanmod(.mod)
   stanargs <- get_stanargs(.mod)
   check_reserved_stanargs(stanargs, method = .method)
 
   if(is.null(stanargs$seed)) {
     stop("You must set a seed to run `submit_model()`. Use `set_stanargs(.mod, list(seed = <num>))` to set.", call. = FALSE)
   }
+
+  stanmod <- compile_stanmod(.mod)
 
   cli::cli_h1(glue("Calling ${.method} with the following specified arguments"))
   cli::cli_h3("(all other arguments will be cmdstan defaults)")
