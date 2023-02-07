@@ -70,7 +70,7 @@ copy_stan_model_impl <- function(files_to_copy,
                                  .inherit_tags = FALSE,
                                  .update_model_file = TRUE,
                                  .overwrite = FALSE) {
-  check_stan_model(.parent_mod, .error = TRUE)
+  check_stan_model(.parent_mod, .syntax = FALSE, .error = TRUE)
 
   .new_model <- build_new_model_path(.parent_mod, .new_model)
 

@@ -2,20 +2,27 @@
 % Please edit documentation in R/check-stan-model.R
 \name{check_stan_model}
 \alias{check_stan_model}
-\title{Checks a \code{bbi_stan_model} for necessary files}
+\title{Check Stan model for required files and syntax errors}
 \usage{
-check_stan_model(.mod, .error = FALSE)
+check_stan_model(.mod, .syntax = TRUE, .error = FALSE)
 }
 \arguments{
 \item{.mod}{A \link{bbi_stan_model} object}
 
-\item{.error}{If \code{FALSE}, the default, will warn if any necessary files are
-missing. If \code{TRUE} will error instead.}
+\item{.syntax}{Check the syntax of the model by calling
+\link[cmdstanr:model-method-check_syntax]{CmdStanModel$check_syntax()}.}
+
+\item{.error}{If \code{FALSE}, the default, display a message for any problems
+found. If \code{TRUE}, signal an error.}
+}
+\value{
+Invisibly return \code{FALSE} if any problems are found (only relevant
+when \code{.error} is \code{FALSE}) and \code{TRUE} otherwise.
 }
 \description{
-Checks a \code{bbi_stan_model} object to make sure it can find all of the files
-necessary to submit the model. (See \verb{?}\link{bbr_stan} for details about these
-files.)
+Ensure that a \code{bbi_stan_model} object has all the files necessary to submit
+the model (see \verb{?}\link{bbr_stan} for details). By default, also check the syntax
+of that the \code{.stan} file.
 }
 \details{
 Will look for the following:

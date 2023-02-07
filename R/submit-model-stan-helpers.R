@@ -53,7 +53,7 @@ import_stan_fitted_params <- function(.mod) {
 #' @keywords internal
 compile_stanmod <- function(.mod) {
   # compile model
-  stanmod <- cmdstanr::cmdstan_model(build_path_from_model(.mod, STANMOD_SUFFIX))
+  stanmod <- cmdstanr::cmdstan_model(get_model_path(.mod))
 
   # add to gitignore, if not already present
   gitignore <- file.path(.mod[[ABS_MOD_PATH]], ".gitignore")
