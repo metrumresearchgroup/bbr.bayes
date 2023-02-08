@@ -14,8 +14,8 @@ shrinkage_ref_impl <- function(mod, use_sd = TRUE) {
   iph <- read_chain_files(mod, "iph")
 
   numer <- dplyr::select(iph,
-                       "chain", "ITERATION", "ID",
-                       tidyselect::starts_with("ETA")) %>%
+                         "chain", "ITERATION", "ID",
+                         tidyselect::starts_with("ETA")) %>%
     dplyr::group_by(.data$ID) %>%
     dplyr::select("ID", tidyselect::starts_with("ETA")) %>%
     dplyr::summarise(dplyr::across(tidyselect::everything(), mean),
