@@ -92,7 +92,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
     }
 
     dplyr::select(shk, starts_with("ETA")) %>%
-      dplyr::summarise(dplyr::across(.fns = stats::median))  %>%
+      dplyr::summarise(dplyr::across(everything(), .fns = stats::median))  %>%
       as.numeric()
   }
 }
