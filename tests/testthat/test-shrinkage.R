@@ -28,8 +28,7 @@ shrinkage_ref_impl <- function(mod, use_sd = TRUE) {
   omegas <- purrr::map_chr(eta_idxs, ~ glue("OMEGA({.x},{.x})"))
   denom <- ext %>%
     dplyr::select(tidyr::all_of(omegas)) %>%
-    dplyr::summarise(dplyr::across(tidyselect::everything(),
-                                   ~ mean(.x)))
+    dplyr::summarise(dplyr::across(tidyselect::everything(), mean))
   if (isTRUE(use_sd)) {
     denom <- sqrt(denom)
   }
