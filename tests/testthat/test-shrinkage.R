@@ -15,20 +15,20 @@ shrinkage_ref_impl <- function(mod, use_sd = TRUE) {
 
   numer <- dplyr::select(iph,
                          "chain", "ITERATION", "ID",
-                         tidyselect::starts_with("ETA")) %>%
+                         starts_with("ETA")) %>%
     dplyr::group_by(.data$ID) %>%
-    dplyr::select("ID", tidyselect::starts_with("ETA")) %>%
-    dplyr::summarise(dplyr::across(tidyselect::everything(), mean),
+    dplyr::select("ID", starts_with("ETA")) %>%
+    dplyr::summarise(dplyr::across(everything(), mean),
                      .groups = "drop") %>%
-    dplyr::select(tidyselect::starts_with("ETA")) %>%
-    dplyr::summarise(dplyr::across(tidyselect::everything(),
+    dplyr::select(starts_with("ETA")) %>%
+    dplyr::summarise(dplyr::across(everything(),
                                    if (isTRUE(use_sd)) sd else var))
 
   eta_idxs <- stringr::str_extract(names(numer), "\\d+")
   omegas <- purrr::map_chr(eta_idxs, ~ glue("OMEGA({.x},{.x})"))
   denom <- ext %>%
-    dplyr::select(tidyr::all_of(omegas)) %>%
-    dplyr::summarise(dplyr::across(tidyselect::everything(), mean))
+    dplyr::select(all_of(omegas)) %>%
+    dplyr::summarise(dplyr::across(everything(), mean))
   if (isTRUE(use_sd)) {
     denom <- sqrt(denom)
   }

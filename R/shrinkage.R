@@ -91,7 +91,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
       stop("shrinkage() does not currently support more than one SUBPOP")
     }
 
-    dplyr::select(shk, tidyr::starts_with("ETA")) %>%
+    dplyr::select(shk, starts_with("ETA")) %>%
       dplyr::summarise(dplyr::across(.fns = stats::median))  %>%
       as.numeric()
   }

@@ -116,7 +116,6 @@ fread_draws <- function(file, select = NULL) {
 #'   * subpop_map: a data frame that maps the index in the parameter name
 #'     ("index" column) to the original `SUBPOP` value in `data`.
 #' @noRd
-#' @importFrom tidyr all_of
 reshape_iph <- function(data) {
   # Note: This function is expensive. Compare timings when changing.
   param_names <- setdiff(colnames(data), IPH_NONPARAM_NAMES)
