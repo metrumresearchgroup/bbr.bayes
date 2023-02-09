@@ -81,3 +81,9 @@ test_that("stan gq: read_fit_model() works correctly", {
 
   expect_match(res$fitted_params_files(), "bern")
 })
+
+test_that("stan: read_fit_model() signals custom error on missing RDS", {
+  tdir <- local_test_dir()
+  mod <- new_model(tdir, .model_type = "stan")
+  expect_error(read_fit_model(mod), class = "bbr.bayes_read_fit_error")
+})

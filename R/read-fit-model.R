@@ -47,6 +47,14 @@ read_fit_model.bbi_nmbayes_model <- function(.mod,
 #' @describeIn read_fit_model Returns a `cmdstanr::CmdStanMCMC` object.
 #' @export
 read_fit_model.bbi_stan_model <- function(.mod, ...) {
+  rds <- build_path_from_model(.mod, STAN_MODEL_FIT_RDS)
+  if (!isTRUE(fs::file_exists(rds))) {
+    rlang::abort(
+      c(paste("Fit does not exist:", rds),
+        "i" = "This is normal if the model hasn't been submitted yet."),
+      "bbr.bayes_read_fit_error")
+  }
+
   res <- readRDS(build_path_from_model(.mod, STAN_MODEL_FIT_RDS))
   # FIXME: This hopefully temporary kludge makes it possible to read the fit
   # from a different location than the one used for the original run (e.g.,
