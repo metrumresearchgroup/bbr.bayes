@@ -47,6 +47,9 @@ tags passed to \code{.add_tags} argument. If \code{TRUE} inherit any tags from
 file already exists at specified \code{.new_model} path. If \code{TRUE} any existing
 file at \code{.new_model} will be overwritten silently.}
 }
+\value{
+A \code{bbi_stan_gq_model} object for the new model.
+}
 \description{
 Like \code{\link[bbr:copy_model_from]{bbr::copy_model_from()}}, but switch the model type from "stan" to
 "stan_gq" begin defining a model for standalone generated quantities.
