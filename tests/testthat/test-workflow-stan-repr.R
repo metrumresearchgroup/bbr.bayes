@@ -41,3 +41,11 @@ test_that("stan: same results on rerun: init = fixed list", {
                        ~ list(theta = .x))))
   expect_same_result_across_runs(mod)
 })
+
+test_that("stan: same results on rerun: init = generated list", {
+  mod <- read_model(file.path("model", "stan", "bern"))
+  write_init_body(
+    mod,
+    "purrr::map(1:4, ~ list(theta = stats::runif(1)))")
+  expect_same_result_across_runs(mod)
+})

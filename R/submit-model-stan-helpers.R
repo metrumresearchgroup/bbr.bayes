@@ -15,16 +15,19 @@
 #'
 #' @keywords internal
 import_stan_init <- function(.mod, .standata, .stanargs) {
+  seed <- .stanargs$seed %||% stop("stanargs must have seed")
   # check for <run>-init.R file
   staninit_path <- build_path_from_model(.mod, STANINIT_SUFFIX)
 
   # source and call function
   make_init <- safe_source_function(staninit_path, "make_init")
-  init_res <- safe_call_sourced(
-    .func = make_init,
-    .args = list(.data = .standata, .args = .stanargs),
-    .file = staninit_path
-  )
+  withr::with_seed(seed, {
+    init_res <- safe_call_sourced(
+      .func = make_init,
+      .args = list(.data = .standata, .args = .stanargs),
+      .file = staninit_path
+    )
+  })
 
   # MAYBE FIRST DO SOME CHECKING?
   # that the returned value is actually something cmdstanr::sample() can take...
