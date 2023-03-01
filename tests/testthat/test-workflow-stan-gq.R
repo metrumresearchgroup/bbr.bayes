@@ -1,15 +1,7 @@
 
 skip_long_tests("skipping long-running Stan gq submit_model tests")
 
-local_model_tempdir <- function(clean = TRUE, .local_envir = parent.frame()) {
-  tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)
-  mdir <- file.path(tdir, "model", "stan")
-  fs::dir_create(mdir)
-  copy_model_from(STAN_MOD3, file.path(mdir, "bern"))
-  withr::local_dir(tdir, .local_envir = .local_envir)
-}
-
-local_model_tempdir()
+local_stan_bern_model()
 
 test_that("stan gq: submit_model() works with copied model", {
   mod1 <- read_model(file.path("model", "stan", "bern"))
