@@ -15,27 +15,43 @@
 #'
 #' @keywords internal
 import_stan_init <- function(.mod, .standata, .stanargs) {
+  seed <- .stanargs$seed %||% stop("stanargs must have seed")
   # check for <run>-init.R file
   staninit_path <- build_path_from_model(.mod, STANINIT_SUFFIX)
 
   # source and call function
   make_init <- safe_source_function(staninit_path, "make_init")
-  init_res <- safe_call_sourced(
-    .func = make_init,
-    .args = list(.data = .standata, .args = .stanargs),
-    .file = staninit_path
-  )
+  withr::with_seed(seed, {
+    init_res <- safe_call_sourced(
+      .func = make_init,
+      .args = list(.data = .standata, .args = .stanargs),
+      .file = staninit_path
+    )
+  })
 
   # MAYBE FIRST DO SOME CHECKING?
   # that the returned value is actually something cmdstanr::sample() can take...
   # either a function or a list of lists that all have the same keys, etc.?
 
-  # TODO: call the init function ourselves intead of passing it through
-  # # IF they've passed in a function
-  # withr::with_seed(stanargs$seed, {
-  #   # loop over chains and call the func we get from import_stan_init(.mod, .standata = standata_list)
-  #   # and then pass the resulting list to stanargs[["init"]]
-  # })
+  if (is.function(init_res)) {
+    # We can't expect reproducible results if we pass the user-specified through
+    # untouched.
+    fn_args <- formals(init_res)
+    if (is.null(fn_args)) {
+      fn <- function(chain_id) init_res()
+    } else if (identical(names(fn_args), "chain_id")) {
+      fn <- function(chain_id) init_res(chain_id)
+    } else {
+      stop("init function must take zero arguments or one, 'chain_id'")
+    }
+
+    # cmdstanr v0.1.0 deprecated num_chains. Check that too and then fall back
+    # to cmdstanr's default for `chain`.
+    nchains <- .stanargs$chains %||% .stanargs$num_chains %||% 4
+    withr::with_seed(seed, {
+      init_res <- purrr::map(seq_len(nchains), fn)
+    })
+  }
 
   return(init_res)
 }

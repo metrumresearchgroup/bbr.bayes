@@ -16,3 +16,16 @@ local_test_dir <- function(pattern = "bbr-bayes-tests-", clean = TRUE,
                                .local_envir = .local_envir)
   return(normalizePath(tdir))
 }
+
+#' Create temporary directory with Stan model
+#'
+#' Call `local_test_dir()` and copy "bern" test model to `model/stan/bern`.
+#'
+#' @param clean,.local_envir Arguments passed to `withr::local_tempdir()`.
+local_stan_bern_model <- function(clean = TRUE, .local_envir = parent.frame()) {
+  tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)
+  mdir <- file.path(tdir, "model", "stan")
+  fs::dir_create(mdir)
+  copy_model_from(STAN_MOD3, file.path(mdir, "bern"))
+  withr::local_dir(tdir, .local_envir = .local_envir)
+}
