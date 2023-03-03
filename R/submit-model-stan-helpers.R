@@ -45,7 +45,8 @@ import_stan_init <- function(.mod, .standata, .stanargs) {
       stop("init function must take zero arguments or one, 'chain_id'")
     }
 
-    # cmdstanr v0.1.0 deprecated num_chains.
+    # cmdstanr v0.1.0 deprecated num_chains. Check that too and then fall back
+    # to cmdstanr's default for `chain`.
     nchains <- .stanargs$chains %||% .stanargs$num_chains %||% 4
     withr::with_seed(seed, {
       init_res <- purrr::map(seq_len(nchains), fn)
