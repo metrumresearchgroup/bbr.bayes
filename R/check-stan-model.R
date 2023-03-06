@@ -54,7 +54,16 @@ check_stan_model_impl <- function(.mod, .syntax, .error, req_files) {
   # know about it.
   stanfile <- get_model_path(.mod, .check_exists = FALSE)
   if (isTRUE(.syntax) && isTRUE(fs::file_exists(stanfile))) {
-    stanmod <- cmdstanr::cmdstan_model(stanfile, compile = FALSE)
+    withCallingHandlers(
+      stanmod <- cmdstanr::cmdstan_model(stanfile, compile = FALSE),
+      # Make sure the check_stan_model() caller doesn't mistake the readLines()
+      # warning for an issue being reported by check_stan_model().
+      warning = function(w) {
+        if (isTRUE(grepl("incomplete final line", w$message, fixed = TRUE))) {
+          invokeRestart("muffleWarning")
+        }
+      }
+    )
 
     if (isTRUE(.error)) {
       check_syntax <- stanmod$check_syntax
