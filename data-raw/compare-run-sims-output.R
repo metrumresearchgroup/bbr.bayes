@@ -12,6 +12,7 @@
 devtools::load_all()
 library(bbr)
 library(mrgsolve)
+library(pmplots)
 #anything else we need to load?
 
 ################################
@@ -42,6 +43,7 @@ withr::with_seed(3012, {
 # I'm trying to treat this single chain as a regular NM bbr model...
 mod_nm_comp <- read_model(file.path(
   NMBAYES_ABS_MODEL_DIR,
+  NMBAYES_MOD_ID,
   paste0(NMBAYES_MOD_ID, "_1")
 ))
 
