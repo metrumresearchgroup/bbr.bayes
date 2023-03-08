@@ -68,24 +68,25 @@ get_chain_files <- function(.mod, extension, chain_dirs = NULL,
   return(files)
 }
 
-fread_chain_file <- function(file, select = NULL) {
+fread_chain_file <- function(file, select = NULL, skip = 1) {
   tibble::as_tibble(
     data.table::fread(file = file,
                       na.strings = ".",
                       data.table = FALSE,
                       verbose = FALSE,
-                      select = select))
+                      select = select,
+                      skip = skip))
 }
 
 #' Peek at beginning of file to determine column names.
 #'
-#' @param file,nrows Passed to `data.table::fread()`. Note that `nrows` must be
-#'   above the number of lines that `fread` automatically skips before getting
-#'   to the header.
+#' @param file,skip Passed to `data.table::fread()`. Only a single row is read,
+#'   so `skip` must point `fread()` to the header line.
 #' @noRd
-fread_peek_at_columns <- function(file, nrows = 5) {
+fread_peek_at_columns <- function(file, skip = 1) {
   colnames(data.table::fread(file = file,
-                             nrows = nrows,
+                             skip = skip,
+                             nrows = 1,
                              verbose = FALSE))
 }
 
