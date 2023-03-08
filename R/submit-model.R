@@ -117,6 +117,13 @@ run_chains <- function(.mod, ...) {
     ctl_i <- ctl
     ctl_i[row_chain] <- est_chain_i
     ctl_i[row_bayes] <- est_bayes_i
+    # NOTE: This .tab handling, just like the rest of this function, is
+    # temporary; this will likely be reworked to use an entirely differently
+    # approach (see discussion in gh-37).
+    ctl_i[row_table] <- stringr::str_replace(
+      ctl_i[row_table],
+      paste0("\\bFILE=\\Q", .run, "\\E\\.tab\\b"),
+      glue("FILE={.run}_{.chain}.tab"))
     readr::write_lines(ctl_i, file.path(
       outdir,
       glue("{.run}_{.chain}.ctl"))
