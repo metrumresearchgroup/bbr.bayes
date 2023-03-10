@@ -39,7 +39,7 @@ withr::with_seed(3012, {
 #   for comparison
 ################################
 
-# NOTE: will this even work?
+# This seems to work, but let's make sure it's doing what we expect.
 # I'm trying to treat this single chain as a regular NM bbr model...
 mod_nm_comp <- read_model(file.path(
   NMBAYES_ABS_MODEL_DIR,
