@@ -85,7 +85,7 @@ test_that("stan_add_summary(): variables=NULL uses all variables", {
   expect_true(all(paste0(fit$metadata()$variables, "_mean") %in% names(slog)))
 })
 
-test_that("stan_add_summary(): summary_fns=list() selects no variables", {
+test_that("stan_summary_log(): summary_fns=list() selects no variables", {
   slog <- stan_summary_log(file.path("model", "stan"), summary_fns = list())
   checkmate::expect_integer(slog$num_divergent, all.missing = FALSE)
   expect_no_match(names(slog), "lp__")
