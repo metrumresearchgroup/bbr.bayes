@@ -174,7 +174,9 @@ extract_param_summaries <- function(fit, variables, summary_fns) {
     # $summary().
     vars <- NULL
   } else if (!is.null(variables)) {
-    vars <- intersect(variables, fit$metadata()[["variables"]])
+    vars <- intersect(
+      variables,
+      union(fit$metadata()[["variables"]], fit$metadata()[["stan_variables"]]))
     if (!length(vars)) {
       return(NULL)
     }
