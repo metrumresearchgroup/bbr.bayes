@@ -85,8 +85,23 @@ test_that("stan_add_summary(): variables=NULL uses all variables", {
   expect_true(all(paste0(fit$metadata()$variables, "_mean") %in% names(slog)))
 })
 
-test_that("stan_add_summary(): summary_fns=list() selects no variables", {
+test_that("stan_summary_log(): summary_fns=list() selects no variables", {
   slog <- stan_summary_log(file.path("model", "stan"), summary_fns = list())
   checkmate::expect_integer(slog$num_divergent, all.missing = FALSE)
   expect_no_match(names(slog), "lp__")
+})
+
+test_that("stan_summary_log(): non-indexed name selects non-scalar values", {
+  fit <- read_fit_model(file.path("model", "stan", "bern-gq"))
+  bern_gq_vars <- paste0(fit$metadata()$variables, "_mean")
+
+  slog <- stan_summary_log(file.path("model", "stan"),
+                           summary_fns = "mean", variables = "y_rep")
+  expect_true(all(bern_gq_vars %in% names(slog)))
+
+  # Scalar can be pulled out with index.
+  slog <- stan_summary_log(file.path("model", "stan"),
+                           summary_fns = "mean", variables = "y_rep[1]")
+  expect_true("y_rep[1]_mean" %in% names(slog))
+  expect_false(any(setdiff(bern_gq_vars, "y_rep[1]_mean") %in% names(slog)))
 })
