@@ -88,3 +88,10 @@ test_that("check_stan_model supports checking .stan syntax", {
                  "syntax", ignore.case = TRUE)
   expect_false(res)
 })
+
+test_that("check_stan_model hides readLines() warning from cmdstan_model", {
+  tdir <- local_test_dir()
+  mod <- copy_model_from(STAN_MOD1, file.path(tdir, "mod"))
+  cat(" ", file = get_model_path(mod), append = TRUE)
+  expect_no_warning(check_stan_model(mod))
+})
