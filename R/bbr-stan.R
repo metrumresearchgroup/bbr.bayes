@@ -62,6 +62,16 @@
 #'     submission or to compare the resulting data to previously saved data on
 #'     disk.
 #'
+#'   * Note that `make_standata` will be evaluated in the parent environment of
+#'     your global session, giving it access to all other environments on your
+#'     search path. This means that you don't _need_ to prefix function calls
+#'     with the package name (e.g., `here::here()`), but doing so is recommended
+#'     so that `make_standata` doesn't depend on your search path state. As an
+#'     exception, you may be comfortable leaving base packages unqualified
+#'     (e.g., `rnorm()` rather than `stats::rnorm()`) because users are unlikely
+#'     to remove `package:stats` from their search path or to attach a package
+#'     that overrides `rnorm()`.
+#'
 #' ## Other Files and Directories
 #'
 #' There will be several other things created in the model directory, as the
@@ -83,6 +93,9 @@
 #'
 #'   * Will be called internally by `bbr` and the result passed as the `init`
 #'     argument to `$sample()`.
+#'
+#'   * See the `make_standata` entry above for details on the evaluation
+#'     environment.
 #'
 #'   * Note that `$sample()` supports passing
 #'     _"A function that returns a single list..."_. If you intend to use this
@@ -167,6 +180,9 @@
 #'    `make_fitted_params`, that takes a single argument, the model object. The
 #'    function can return any value accepted for the `fitted_params` argument of
 #'    [$generate_quantities()][cmdstanr::model-method-generate-quantities].
+#'
+#'    See the `make_standata` entry above for details on the evaluation
+#'    environment.
 #'
 #' "stan_gq" models can be created fresh with `new_model(..., .model_type =
 #' "stan_gq")`. However, for the more common case where the "stan_gq" model is

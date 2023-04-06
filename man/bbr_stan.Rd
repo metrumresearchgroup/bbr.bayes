@@ -63,6 +63,15 @@ used to find data files for loading, for example
 \item Can be called (by \code{\link[=build_data]{build_data()}}) to generate the data for model
 submission or to compare the resulting data to previously saved data on
 disk.
+\item Note that \code{make_standata} will be evaluated in the parent environment of
+your global session, giving it access to all other environments on your
+search path. This means that you don't \emph{need} to prefix function calls
+with the package name (e.g., \code{here::here()}), but doing so is recommended
+so that \code{make_standata} doesn't depend on your search path state. As an
+exception, you may be comfortable leaving base packages unqualified
+(e.g., \code{rnorm()} rather than \code{stats::rnorm()}) because users are unlikely
+to remove \code{package:stats} from their search path or to attach a package
+that overrides \code{rnorm()}.
 }
 }
 
@@ -85,6 +94,8 @@ argument of \verb{$sample()}. There are several options; see the
 argument of \code{make_init()}.
 \item Will be called internally by \code{bbr} and the result passed as the \code{init}
 argument to \verb{$sample()}.
+\item See the \code{make_standata} entry above for details on the evaluation
+environment.
 \item Note that \verb{$sample()} supports passing
 \emph{"A function that returns a single list..."}. If you intend to use this
 option, your \code{make_init()} function must return \emph{the function} described,
@@ -163,6 +174,9 @@ not have an \code{init} argument.
 \code{make_fitted_params}, that takes a single argument, the model object. The
 function can return any value accepted for the \code{fitted_params} argument of
 \link[cmdstanr:model-method-generate-quantities]{$generate_quantities()}.
+
+See the \code{make_standata} entry above for details on the evaluation
+environment.
 }
 
 "stan_gq" models can be created fresh with \code{new_model(..., .model_type = "stan_gq")}. However, for the more common case where the "stan_gq" model is
