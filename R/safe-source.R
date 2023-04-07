@@ -12,7 +12,11 @@ safe_source_function <- function(.file, .func_name) {
   checkmate::assert_string(.file)
   checkmate::assert_string(.func_name)
 
-  .env <- new.env()
+  # Use global environment's parent, as opposed to base environment, to increase
+  # isolation while not requiring the user to qualify names for packages on
+  # their search path (e.g., they can still use "rnorm" rather than
+  # "stats::rnorm").
+  .env <- new.env(parent = parent.env(globalenv()))
   tryCatch(
     source(.file, local = .env),
     error = function(.e) {
