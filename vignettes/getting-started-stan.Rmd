@@ -1,5 +1,5 @@
 ---
-title: "Getting Started with bbr and Stan"
+title: "Getting Started with bbr.bayes and Stan"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{getting-started-stan}
@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This "Getting Started with bbr" vignette takes you through some basic scenarios for modeling with Stan using `bbr`, introducing you to its standard workflow and functionality.
+This "Getting Started with bbr.bayes" vignette takes you through some basic scenarios for modeling with Stan using `bbr.bayes`, introducing you to its standard workflow and functionality.
 
 ```{r setup, include=FALSE}
 # NOTE: if running chunks interactively we need to load the package first
-#   because renv isolation prevents us from finding an bbr installation
+#   because renv isolation prevents us from finding an bbr.bayes installation
 if (interactive() || (isTRUE(getOption('knitr.in.progress') && Sys.getenv("DRONE") != "true"))) {
   devtools::load_all()
 }
@@ -32,12 +32,13 @@ library(dplyr)
 library(purrr)
 ```
 
-`bbr` is an R interface for running `bbi`. Together they provide a solution for managing projects involving modeling and simulation with a number of software solutions used in pharmaceutical sciences. Currently, only NONMEM and Stan are supported. For details on modeling in NONMEM, the ["Getting Started with bbr and NONMEM" vignette](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html).
+`bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr), which focuses on modeling using Bayesian methods. This vignette focuses on models defined in [Stan](https://mc-stan.org/). Note that you will also need to load `bbr` to use most `bbr.bayes` functionality.
+
+A future `bbr.bayes` vignette will focus on modeling in NONMEM using Bayesian estimation methods. For details on modeling in NONMEM with non-Bayesian estimation methods, see the ["Getting Started with bbr and NONMEM" vignette](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html).
 
 # Setup
 
 ```{r set paths and define cleanup, include = FALSE}
-#options('bbr.bbi_exe_path' = read_bbi_path())
 MODEL_DIR <- system.file("model", "stan", package = "bbr.bayes")
 # delete old files
 cleanup <- function() {
@@ -81,12 +82,14 @@ setup()
 
 
 ## Installing cmdstan
-When modeling with Stan, `bbr` does _not_ currently use `bbi`, so you will not need it installed. However, you _will_ need `cmdstan` installed. Please see [the `cmdstanr` docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions.
+
+When modeling with Stan, `bbr.bayes` does _not_ currently use [`bbi`](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi), so you will not need it installed. However, you _will_ need `cmdstan` installed. Please see [the `cmdstanr` docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions.
 
 # Initial modeling run
 
 ## Create model object
-To begin modeling, first create a model object using `new_model()`. This is an S3 object which you will pass to all of the other `bbr` functions that submit, summarize, or manipulate models.
+
+To begin modeling, first create a model object using `new_model()`. This is an S3 object which you will pass to all of the other `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.
 
 The first argument (`.path`) must be the path to the directory containing the necessary files. For Stan models, you will also have to add `.model_type = "stan"` to the the `new_model()` call.
 
@@ -94,11 +97,16 @@ The first argument (`.path`) must be the path to the directory containing the ne
 mod1 <- new_model(file.path(MODEL_DIR, "mod1"), .model_type = "stan")
 ```
 
-The call above will look for a directory called `{MODEL_DIR}/mod1`. _Inside_ this directory it will expect to find the files `mod1.stan` and `mod1-standata.R`. These "required files" will be discussed in more detail below. For now notice that, if either of them are _not_ found when you initialize the model, `new_model()` will create scaffolds (files with boilerplate non-working code) of the missing files, and print a message to the console telling you it has done so.
+The call above will look for a directory called `{MODEL_DIR}/mod1`. _Inside_ this directory it will expect to find the files `mod1.stan` and `mod1-standata.R`. These "required files" will be discussed below, but you can find even more detail in `?bbr_stan`. 
 
-You can use the `bbr::build_path_from_model()` function to take a look at any of these scaffolded files.
+For now notice that, if any of them are _not_ found when you initialize the model, `new_model()` will create scaffolds (files with boilerplate non-working code) of the missing files, and print a message to the console telling you it has done so.
 
-```{r, comment=""}
+You can use the helpers described in `?open_stan_file` to open any of these scaffolded files for editing.
+
+```{r, eval = FALSE}
+open_standata_file(mod1)
+```
+```{r, echo = FALSE, comment=""}
 mod1 %>%
   build_path_from_model("-standata.R") %>%
   readLines() %>%
@@ -152,7 +160,7 @@ In this (somewhat contrived) example, we see three different messages:
 * The second tells us that the `-init.R` file is only a scaffold and must be completed before the model can be submitted.
 * And finally we're told that a scaffold has been added for the missing file(s) mentioned in the first message.
 
-### Adding required files and using `check_stan_model()`
+### Using `check_stan_model()` and adding required files
 
 You can manually check whether all the required files are present at any time by calling the `check_stan_model()` function.
 
@@ -170,7 +178,7 @@ fxaInc <- fxaInc %>%
   add_standata_file(.source_file = build_path_from_model(fxa, "-standata.R"))   # copy from another model
 ```
 
-For Stan models, model submission (see next section) wraps the [cmdstanr::sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. You can use `set_stanargs` to control which arguments are passed to [sample()], and `get_stanargs()` to inspect the currently set arguments.
+For Stan models, model submission (see next section) wraps the [cmdstanr::sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. You can use `set_stanargs` to control which arguments are passed to `sample()`, and `get_stanargs()` to inspect the currently set arguments.
 
 ```{r}
 fxaInc <- fxaInc %>%
