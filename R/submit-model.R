@@ -37,7 +37,7 @@ submit_model.bbi_nmbayes_model <- function(
   }
 
   # Convert model to bbi_nonmem_model for initialization. Another option would
-  # be to call NextMethod(), but modifying arguments with that approach less
+  # be to call NextMethod(), but modifying arguments with that approach is less
   # straightforward.
   mod_init <- .mod
   class(mod_init) <- class(mod_init)[-1]
