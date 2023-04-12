@@ -72,11 +72,6 @@
 #'     to remove `package:stats` from their search path or to attach a package
 #'     that overrides `rnorm()`.
 #'
-#' ## Other Files and Directories
-#'
-#' There will be several other things created in the model directory, as the
-#' model is run or as it prepares to run.
-#'
 #' **`<run>-init.R`** - This file contains all necessary R code to create the
 #' initial values passed to the cmdstanr's
 #' [$sample()][cmdstanr::model-method-sample] method. This file is a lot like
@@ -105,6 +100,11 @@
 #'   * Note that this file will not be included when you're defining a model for
 #'     _standalone_ generated quantities. See "Standalone Generated Quantities"
 #'     section below for more information.
+#'
+#' ## Other Files and Directories
+#'
+#' There will be several other things created in the model directory, as the
+#' model is run or as it prepares to run.
 #'
 #' **`<run>`** - This is the binary file created when the `<run>.stan` file is
 #' compiled by `cmdstan`. We `.gitignore` this automatically.
