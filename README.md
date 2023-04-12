@@ -39,8 +39,8 @@ to provide isolation. To set up an environment with pkgr and renv:
 
 <!-- TODO: Publish cheatsheet to https://metrumresearchgroup.github.io/cheatsheets/ and add link. -->
 
-[bbr]: https://github.com/metrumresearchgroup/bbr
-[cmdstanr]: https://mc-stan.org/cmdstanr/index.html
+[bbr]: https://metrumresearchgroup.github.io/bbr
+[cmdstanr]: https://mc-stan.org/cmdstanr/
 [gss]: https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html
 [MPN]: https://mpn.metworx.com/docs/snapshots
 [pkgr]: https://github.com/metrumresearchgroup/pkgr
