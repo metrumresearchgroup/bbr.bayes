@@ -197,7 +197,7 @@ It is common to run a model, make some tweaks to it, and then run it again. Howe
 
 ## Summarize model
 
-The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call will return the fit model object from `cmdstanr`. You can read all about this object in the [`CmdStanMCMC` object docs](https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html). It has several methods for diagnostics and model summaries.
+The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call will return the fit model object from `cmdstanr`. You can read all about this object in the `?cmdstanr::CmdStanMCMC` object docs. It has several methods for diagnostics and model summaries.
 
 ### diagnostics from cmdstanr
 
@@ -229,7 +229,7 @@ fake_summary_df %>%
 
 ### `posterior::draws` methods
 
-Many `cmdstanr` users will also be familiar with the `posterior` package and its [`draws` objects and methods](https://mc-stan.org/posterior/articles/posterior.html#draws-formats). `bbr.bayes` has also implemented the [`as_draws()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html) method and its variants, which can be used on either a model object or the `CmdStanMCMC` object.
+Many `{cmdstanr}` users will also be familiar with the `{posterior}` package and its [`draws` objects and methods](https://mc-stan.org/posterior/articles/posterior.html#draws-formats). `bbr.bayes` has also implemented the [`as_draws()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html) method and its variants, which can be used on either a model object or the `?cmdstanr::CmdStanMCMC` object.
 
 ```{r, eval = FALSE}
 d_array <- as_draws(fxa)
@@ -249,7 +249,7 @@ cat("[1] 1200 7734")
 
 ### Using `read_fit_model()`
 
-The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call automatically saves this fit object to disk as well. You can pass either a path or model object to `read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
+The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call automatically saves this fit object to disk as well. You can pass either a path or model object to `read_fit_model()` and it will re-load the `?cmdstanr::CmdStanMCMC` object into memory.
 
 ```{r}
 new_res <- read_fit_model(file.path(MODEL_DIR, "fxa"))
