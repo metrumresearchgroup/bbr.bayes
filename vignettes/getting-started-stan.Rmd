@@ -227,6 +227,25 @@ fake_summary_df %>%
   knitr::kable()
 ```
 
+### `posterior::draws` methods
+
+Many `cmdstanr` users will also be familiar with the `posterior` package and its [`draws` objects and methods](https://mc-stan.org/posterior/articles/posterior.html#draws-formats). `bbr.bayes` has also implemented the [`as_draws()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html) method and its variants, which can be used on either a model object or the `CmdStanMCMC` object.
+
+```{r, eval = FALSE}
+d_array <- as_draws(fxa)
+print(dim(d_array))
+```
+```{r, echo = FALSE}
+cat("[1]  300   4   7731")
+```
+
+```{r, eval = FALSE}
+d_df <- as_draws_df(fxa)
+print(dim(d_df))
+```
+```{r, echo = FALSE}
+cat("[1] 1200 7734")
+```
 
 ### Using `read_fit_model()`
 
