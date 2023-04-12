@@ -297,73 +297,60 @@ model_diff(fxa, fxaNew, .file = "stanargs")
 model_diff(fxa, fxaNew, .file = "standata")
 ```
 
-## Adding tags and notes
+## Model annotation
 
-After looking at the results and diagnostics above, you can add tags, which can later be used to organize your modeling runs.
+Another useful feature of `bbr` is that it allows you to easily annotate and organize your models, for increased traceability and reproducibilty of your analysis. We demonstrate this a bit in this section, but it is described in more detail in both the ["Model Management" page of MeRGE Expo 1](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-management-demo.html#annotating-your-model) and the ["Getting Started with `bbr`"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#adding-tags-and-notes) vignette.
+
+### Tags
+
+Our first model already had two tags attached to it.
 
 ```{r add_tags 2}
-fxa <- fxa %>% add_tags(c("fxaInhibit1Ncp", "unif emax"))
-fxaNew <- fxaNew %>% add_tags(c("fxaInhibit1Ncp", "cauchy emax"))
+fxa$tags
 ```
 
-Note that **using free text for your tags is discouraged**, for reasons mentioned in the [`?modify_tags` help page](https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html). For simplicity's sake, we ignore that advice here, but please read it before using tags extensively in the wild. There is also a `tags_diff()` function for comparing 
+Note in the call above that we told `copy_model_from()` to inherit the tags from the parent model and automatically add them to the new model. You can use `replace_tag()` (or any of the other helpers in [`?modify_tags`](https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html)) to modify these at any time.
 
-In addition to tags, you can add notes that can be referenced later.
+```{r add_tags 3}
+fxaNew <- fxaNew %>%
+        replace_tag("unif emax", "cauchy emax")
+
+print(fxaNew$tags)
+```
+
+You can also use `tags_diff()` to quickly compare two models.
+
+```{r}
+tags_diff(fxa, fxaNew)
+```
+
+### Notes
+
+In addition to tags, you can add notes that can be referenced later. While tags are intended to be structured and consistent, such that you can filter or organize models based on them (shown below), notes can be more "free form" narrative comments.
 
 ```{r}
 fxaNew <- fxaNew %>%
   add_notes("Changed emax from uniform to cauchy distribution")
 ```
+While both annotations can be easily accessed from the model object with `fxaNew$tags` or `fxaNew$notes`, notice that they are also displayed, along with other information, when you print the model object in your console
+
+```{r, results = 'asis'}
+fxaNew
+```
+
+### Aside on reassignment
 
 Importantly, **you must reassign to the model object** when calling any of these functions that modify it (notice the `fxaNew <- fxaNew ...` above). You can see a list of similar functions in the "See Also" section of [?modify_tags](https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html) or [?modify_notes](https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html).
 
 
-### Inheriting tags
-
-Note in the call above that we told `copy_model_from()` to inherit the tags from the parent model and automatically add them to the new model. You can also manually add tags (and notes) to this model.
-
-```{r add_tags 3}
-fxaNew <- fxaNew %>%
-        add_tags("new gamma") %>%
-        add_notes("Experimenting with different gamma distributions")
-
-print(fxaNew$tags)
-```
-
-We can see that `fxaNew` contains the `"new gamma"` tag that we added manually _and_ the two tags that we inherited from its parent model. `copy_model_from()` also stores the model's "ancestry" which can be useful later in the project, as shown in the [Using the based_on field](https://metrumresearchgroup.github.io/bbr/articles/using-based-on.html) vignette.
-
 # Run log
 
-At any point, you can easily construct a "run log" tibble to summarize all models run up to this point.
+At any point, you can easily construct a "run log" tibble to summarize all models run up to this point. You can see much more detail about using run logs in both the ["Model Summary" page of MeRGE Expo 1](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#create-a-run-log) and the ["Getting Started with `bbr`"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#run-log) vignette. 
 
-Before we move on, note that you can get even more information about your models from the `config_log()` and `summary_log()` functions, as well as `add_config()` and `add_summary()` which automatically join the columns output from those functions against the tibble output from `run_log()`.  See the "Further Reading" section below for links to vignettes demonstrating those functions.
-
-```{r run_log}
-log_df <- run_log(MODEL_DIR)
-log_df
-```
-
-The `run_log()` returns a tibble which can be manipulated like any other tibble. However, several of the columns (`tags`, `notes`, and `based_on` for example) are list columns, which complicates how you can interact with them. We provide some helper functions to more seamlessly interact with these log tibbles, as well as some sample `tidyverse` code below.
-
-## Viewing tags example
-
-The `bbr::collapse_to_string()` function can collapse any list column into a string representation of its contents. It is specifically designed for collapsing columns like `tags`, `notes`, and `based_on` into a more human-readable format. (We also use `knitr::kable()` here to render a prettier table in HTML, though this is _not_ necessary.)
+The `run_log()` returns a tibble which can be manipulated like any other tibble. You can also use the `.include` argument to filter to only specific tags or run names, and use formatting functions like `bbr::collapse_to_string()`, `knitr::kable()`, or many of the [functions in `pmtables`](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table).
 
 ```{r viewing tags new, results = "asis"}
-log_df %>%
-  collapse_to_string(tags, notes) %>%
-  select(run, tags, notes) %>%
-  knitr::kable()
-```
-
-
-## Filtering tags example
-
-This code uses `purrr::map_lgl` to filter the run log to only rows containing a specific tag (`"unif_emax"`).
-
-```{r filtering, results = "asis"}
-log_df %>%
-  filter(map_lgl(tags, ~ "unif emax" %in% .x)) %>%
+run_log(MODEL_DIR, .include = c("fxa", "fxaNew")) %>%
   collapse_to_string(tags, notes) %>%
   select(run, tags, notes) %>%
   knitr::kable()
