@@ -51,6 +51,12 @@ cleanup <- function() {
   if (fs::file_exists(file.path(MODEL_DIR, "fxaNew.yaml"))) fs::file_delete(file.path(MODEL_DIR, "fxaNew.yaml"))
   if (fs::dir_exists(file.path(MODEL_DIR, "fxaNew"))) fs::dir_delete(file.path(MODEL_DIR, "fxaNew"))
 
+  # reset args that we change in vignette
+  try(
+    set_stanargs(fxa, list(iter_warmup = 100,
+                             iter_sampling = 100)), 
+    silent = TRUE
+  )
 }
 
 cleanup()
@@ -131,13 +137,23 @@ fxa %>%
 
 ## Submit model
 
-For Stan models, model submission wraps the [cmdstanr::sample](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. You can use `set_stanargs` to control which arguments are passed to `sample()`, and `get_stanargs()` to inspect the currently set arguments.
+For Stan models, model submission wraps the [cmdstanr::sample()](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. 
+
+### Passing arguments to `$sample()`
+
+You can use `set_stanargs` to control which arguments are passed to `cmdstanr::sample()`.
 
 ```{r}
 fxa <- fxa %>%
   set_stanargs(list(seed = 123456,
-                    iter_warmup = 100,
-                    iter_sampling = 100))
+                    iter_warmup = 300,
+                    iter_sampling = 300))
+```
+
+`bbr.bayes` stores these arguments with the model files, making it easy to reproduce your results later, by assuring that you can run your model with the same arguments that were previously used. You can use `get_stanargs()` at any time to inspect the currently set arguments. 
+
+```{r, results = 'asis'}
+get_stanargs(fxa)
 ```
 
 
