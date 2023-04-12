@@ -71,9 +71,9 @@ When modeling with Stan, `bbr.bayes` does _not_ use [`bbi`](https://metrumresear
 
 ## Create model object
 
-To begin modeling, first create a model object using [`new_model()`](https://metrumresearchgroup.github.io/bbr/reference/new_model.html). This is an S3 object which you will pass to all of the other `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.
+To begin modeling, first create a model object using [`new_model()`]. This is an S3 object which you will pass to all of the other `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.
 
-The first argument (`.path`) must be the path to the directory containing the necessary files. For Stan models, you will also have to add `.model_type = "stan"` to the the `new_model()` call.
+The first argument (`.path`) must be the path to the directory containing the necessary files. For Stan models, you will also have to add `.model_type = "stan"` to the the [`new_model()`] call.
 
 ```{r first model}
 mod1 <- new_model(file.path(MODEL_DIR, "mod1"), .model_type = "stan")
@@ -81,7 +81,7 @@ mod1 <- new_model(file.path(MODEL_DIR, "mod1"), .model_type = "stan")
 
 The call above will look for a directory called `{MODEL_DIR}/mod1`. _Inside_ this directory it will expect to find the files `mod1.stan` and `mod1-standata.R`. These "required files" will be discussed below, but you can find even more detail in `?bbr_stan`. 
 
-For now notice that, if any of them are _not_ found when you initialize the model, `new_model()` will create scaffolds (files with boilerplate non-working code) of the missing files, and print a message to the console telling you it has done so.
+For now notice that, if any of them are _not_ found when you initialize the model, [`new_model()`] will create scaffolds (files with boilerplate non-working code) of the missing files, and print a message to the console telling you it has done so.
 
 You can use the helpers described in `?open_stan_file` to open any of these scaffolded files for editing.
 
@@ -95,11 +95,11 @@ mod1 %>%
   cat(sep = "\n")
 ```
 
-The purpose of this scaffold is to provide some helpful framework to begin writing the necessary code for submitting a model with `bbr.bayes`. Below (in the `copy_model_from()` section) you will see how, once you have defined a model or two, you can use those models as your starting point for new models, instead of relying on writing new code from scaffolds.
+The purpose of this scaffold is to provide some helpful framework to begin writing the necessary code for submitting a model with `bbr.bayes`. Below (in the [`copy_model_from()`] section) you will see how, once you have defined a model or two, you can use those models as your starting point for new models, instead of relying on writing new code from scaffolds.
 
 ### Starting from existing code
 
-If you already have the relevant code for your new model, you can manually create these files in the output directory _before_ calling `new_model()`. In that case, you won't see any of the messages shown above and the `new_model()` call will simply create the `.yaml` file (described below) next to your directory. 
+If you already have the relevant code for your new model, you can manually create these files in the output directory _before_ calling [`new_model()`]. In that case, you won't see any of the messages shown above and the [`new_model()`] call will simply create the `.yaml` file (described below) next to your directory.
 
 Alternatively, you can create the model with the scaffolds and use helpers like `add_stanmod_file()` to add your files to the model directory.
 
@@ -112,11 +112,11 @@ fs::dir_delete(file.path(MODEL_DIR, "mod1"))
 
 ### The `bbr` YAML file
 
-This `new_model()` call will also create a `mod1.yaml` file that will sit next to this directory on disk. This YAML file  stores model metadata like the description and tags (discussed below). For now the YAML file will look very bare, but hopefully its purpose will become more clear later.
+This [`new_model()`] call will also create a `mod1.yaml` file that will sit next to this directory on disk. This YAML file  stores model metadata like the description and tags (discussed below). For now the YAML file will look very bare, but hopefully its purpose will become more clear later.
 
 ## Reading in an existing model
 
-Now assume that you have previously created a model and written all the necessary code. You can read this model into memory with `read_model()`.
+Now assume that you have previously created a model and written all the necessary code. You can read this model into memory with [`read_model()`].
 
 ```{r}
 fxa <- read_model(file.path(MODEL_DIR, "fxa"))
@@ -259,7 +259,7 @@ new_res$sampler_diagnostics() %>% str()
 
 ### `model_summary()` function
 
-We have **not yet implemented** `model_summary()` for `bbi_stan_model` objects. This is a work in progress, but until it is done, `model_summary()` currently returns the same fit object that was just discussed, and warns you to that effect.
+We have **not yet implemented** [`model_summary()`] for `bbi_stan_model` objects. This is a work in progress, but until it is done, [`model_summary()`] currently returns the same fit object that was just discussed, and warns you to that effect.
 
 ```{r model_summary}
 sum1 <- fxa %>% model_summary()
@@ -283,7 +283,7 @@ Much of the benefit of `bbr` is leveraged in the model iteration workflow, and t
 
 ## copy_model_from()
 
-The `copy_model_from()` function creates a new model object based on a parent model, copying and renaming the necessary files in the process. The `copy_model_from()` call below will create an `fxaNew` directory and fill it as described in the `new_model()` section above. _However,_ instead of filling it with scaffolds, it will copy (and rename) all of the necessary files _from the parent model's directory_ into the new directory.
+The [`copy_model_from()`] function creates a new model object based on a parent model, copying and renaming the necessary files in the process. The [`copy_model_from()`] call below will create an `fxaNew` directory and fill it as described in the [`new_model()`] section above. _However,_ instead of filling it with scaffolds, it will copy (and rename) all of the necessary files _from the parent model's directory_ into the new directory.
 
 ```{r copy_model 2}
 fxaNew <- copy_model_from(
@@ -293,7 +293,7 @@ fxaNew <- copy_model_from(
 )
 ```
 
-> Note that, while the `.path` argument in  `new_model()` and `read_model()` is relative to your working directory, the `.new_model` argument of `copy_model_from()` is _relative to the directory containing the parent model._ This means that, assuming you would like to create the new model in the same directory as its parent, you only have to pass a filename (without extension) for the new model.
+> Note that, while the `.path` argument in  [`new_model()`] and [`read_model()`] is relative to your working directory, the `.new_model` argument of [`copy_model_from()`] is _relative to the directory containing the parent model._ This means that, assuming you would like to create the new model in the same directory as its parent, you only have to pass a filename (without extension) for the new model.
 
 You can now open the relevant files and edit them with the desired changes, starting from where you left off with the parent model.
 
@@ -312,7 +312,7 @@ mod_lines %>%
 
 ### Comparing model files
 
-Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The [`model_diff()`](https://metrumresearchgroup.github.io/bbr/reference/model_diff.html) function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
+Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The [`model_diff()`] function makes it easy to compare models to each other. For Stan models, [`model_diff()`] defaults to comparing the `<run>.stan` files.
 
 ```{r, results = "asis"}
 model_diff(fxa, fxaNew)
@@ -343,7 +343,7 @@ Our first model already had two tags attached to it.
 fxa$tags
 ```
 
-Note in the call above that we told `copy_model_from()` to inherit the tags from the parent model and automatically add them to the new model. You can use `replace_tag()` (or any of the other helpers in [`?modify_tags`](https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html)) to modify these at any time.
+Note in the call above that we told [`copy_model_from()`] to inherit the tags from the parent model and automatically add them to the new model. You can use [`replace_tag()`] (or any of the other helpers in [`?modify_tags`]) to modify these at any time.
 
 ```{r add_tags 3}
 fxaNew <- fxaNew %>%
@@ -352,7 +352,7 @@ fxaNew <- fxaNew %>%
 print(fxaNew$tags)
 ```
 
-You can also use `tags_diff()` to quickly compare two models.
+You can also use [`tags_diff()`] to quickly compare two models.
 
 ```{r}
 tags_diff(fxa, fxaNew)
@@ -374,14 +374,14 @@ fxaNew
 
 ### Aside on reassignment
 
-Importantly, **you must reassign to the model object** when calling any of these functions that modify it (notice the `fxaNew <- fxaNew ...` above). You can see a list of similar functions in the "See Also" section of [?modify_tags](https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html) or [?modify_notes](https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html).
+Importantly, **you must reassign to the model object** when calling any of these functions that modify it (notice the `fxaNew <- fxaNew ...` above). You can see a list of similar functions in the "See Also" section of [`?modify_tags`] or [`?modify_notes`].
 
 
 # Run log
 
 At any point, you can easily construct a "run log" tibble to summarize all models run up to this point. You can see much more detail about using run logs in both the ["Model Summary" page of MeRGE Expo 1](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#create-a-run-log) and the ["Getting Started with `bbr`"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#run-log) vignette. 
 
-The `run_log()` returns a tibble which can be manipulated like any other tibble. You can also use the `.include` argument to filter to only specific tags or run names, and use formatting functions like `collapse_to_string()`, `knitr::kable()`, or many of the [functions in `pmtables`](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table).
+The [`run_log()`] returns a tibble which can be manipulated like any other tibble. You can also use the `.include` argument to filter to only specific tags or run names, and use formatting functions like [`collapse_to_string()`], `knitr::kable()`, or many of the [functions in `pmtables`](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table).
 
 ```{r viewing tags new, results = "asis"}
 log_df <- run_log(MODEL_DIR, .include = c("fxa", "fxaNew"))
@@ -425,3 +425,17 @@ cleanup()
 ```
 
 [`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
+
+<!-- TODO: Drop the bbr links once bbr DESCRIPTION is updated to support auto-linking. -->
+
+[`?modify_notes`]: https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html
+[`?modify_tags`]: https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html
+[`collapse_to_string()`]: https://metrumresearchgroup.github.io/bbr/reference/collapse_to_string.html
+[`copy_model_from()`]: https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html
+[`model_diff()`]: https://metrumresearchgroup.github.io/bbr/reference/model_diff.html
+[`model_summary()`]: https://metrumresearchgroup.github.io/bbr/reference/model_summary.html
+[`new_model()`]: https://metrumresearchgroup.github.io/bbr/reference/new_model.html
+[`read_model()`]: https://metrumresearchgroup.github.io/bbr/reference/read_model.html
+[`replace_tag()`]: https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html
+[`run_log()`]: https://metrumresearchgroup.github.io/bbr/reference/run_log.html
+[`tags_diff()`]: https://metrumresearchgroup.github.io/bbr/reference/tags_diff.html
