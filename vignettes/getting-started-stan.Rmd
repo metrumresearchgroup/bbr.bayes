@@ -259,7 +259,7 @@ new_res$sampler_diagnostics() %>% str()
 
 ### `model_summary()` function
 
-We have **not yet implemented** `bbr::model_summary()` for `bbi_stan_model` objects. This is a work in progress, but until it is done, `model_summary()` currently returns the same fit object that was just discussed, and warns you to that effect.
+We have **not yet implemented** `model_summary()` for `bbi_stan_model` objects. This is a work in progress, but until it is done, `model_summary()` currently returns the same fit object that was just discussed, and warns you to that effect.
 
 ```{r model_summary}
 sum1 <- fxa %>% model_summary()
@@ -381,7 +381,7 @@ Importantly, **you must reassign to the model object** when calling any of these
 
 At any point, you can easily construct a "run log" tibble to summarize all models run up to this point. You can see much more detail about using run logs in both the ["Model Summary" page of MeRGE Expo 1](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#create-a-run-log) and the ["Getting Started with `bbr`"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#run-log) vignette. 
 
-The `run_log()` returns a tibble which can be manipulated like any other tibble. You can also use the `.include` argument to filter to only specific tags or run names, and use formatting functions like `bbr::collapse_to_string()`, `knitr::kable()`, or many of the [functions in `pmtables`](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table).
+The `run_log()` returns a tibble which can be manipulated like any other tibble. You can also use the `.include` argument to filter to only specific tags or run names, and use formatting functions like `collapse_to_string()`, `knitr::kable()`, or many of the [functions in `pmtables`](https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table).
 
 ```{r viewing tags new, results = "asis"}
 log_df <- run_log(MODEL_DIR, .include = c("fxa", "fxaNew"))
