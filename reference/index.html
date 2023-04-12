@@ -57,21 +57,21 @@
     </div>
 
     <table class="ref-index"><colgroup><col class="alias"><col class="title"></colgroup><tbody><tr><th colspan="2">
-          <h2 id="all-functions">All functions <a href="#all-functions" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="stan">Stan <a href="#stan" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="bbr_stan.html">bbr_stan</a></code> <code><a href="bbr_stan.html">bbi_stan_model</a></code> <code><a href="bbr_stan.html">bbi_stan_gq_model</a></code> </p>
+        </td>
+        <td><p>Stan models in <code>bbr</code></p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="preparing-and-submitting-model">Preparing and submitting model <a href="#preparing-and-submitting-model" class="anchor" aria-hidden="true"></a></h3>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="add_file_to_model_dir.html">add_stanmod_file()</a></code> <code><a href="add_file_to_model_dir.html">add_standata_file()</a></code> <code><a href="add_file_to_model_dir.html">add_staninit_file()</a></code> <code><a href="add_file_to_model_dir.html">add_stan_fitted_params_file()</a></code> </p>
         </td>
         <td><p>Attaches a file to a model</p></td>
-      </tr><tr><td>
-          <p><code><a href="bbr_as_draws.html">as_draws(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> <code><a href="bbr_as_draws.html">as_draws(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Extract <span class="pkg">posterior</span> draws from a bbr.bayes model</p></td>
-      </tr><tr><td>
-          <p><code><a href="bbr_stan.html">bbr_stan</a></code> <code><a href="bbr_stan.html">bbi_stan_model</a></code> <code><a href="bbr_stan.html">bbi_stan_gq_model</a></code> </p>
-        </td>
-        <td><p>Stan models in <code>bbr</code></p></td>
       </tr><tr><td>
           <p><code><a href="build_data.html">build_data()</a></code> </p>
         </td>
@@ -81,10 +81,46 @@
         </td>
         <td><p>Check Stan model for required files and syntax errors</p></td>
       </tr><tr><td>
+          <p><code><a href="open_stan_file.html">open_stanmod_file()</a></code> <code><a href="open_stan_file.html">open_standata_file()</a></code> <code><a href="open_stan_file.html">open_staninit_file()</a></code> <code><a href="open_stan_file.html">open_stan_fitted_params_file()</a></code> </p>
+        </td>
+        <td><p>Open Stan model file in a text editor</p></td>
+      </tr><tr><td>
+          <p><code><a href="stan_submit_model.html">submit_model(<i>&lt;bbi_stan_model&gt;</i>)</a></code> <code><a href="stan_submit_model.html">submit_model(<i>&lt;bbi_stan_gq_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Submit model based on a <code>bbi_stan_model</code> object</p></td>
+      </tr><tr><td>
+          <p><code><a href="stanargs.html">set_stanargs()</a></code> <code><a href="stanargs.html">get_stanargs()</a></code> </p>
+        </td>
+        <td><p>Set or get arguments to pass when submitting Stan model</p></td>
+      </tr><tr><td>
+          <p><code><a href="stanargs_scaffold.html">stanargs_scaffold()</a></code> </p>
+        </td>
+        <td><p>Creates a starter -stanargs.R with empty list</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="model-inspection-and-comparison">Model inspection and comparison <a href="#model-inspection-and-comparison" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="check_up_to_date_stan_model.html">check_up_to_date(<i>&lt;bbi_stan_model&gt;</i>)</a></code> <code><a href="check_up_to_date_stan_model.html">check_up_to_date(<i>&lt;bbi_stan_gq_model&gt;</i>)</a></code> <code><a href="check_up_to_date_stan_model.html">check_up_to_date(<i>&lt;bbi_stan_summary&gt;</i>)</a></code> <code><a href="check_up_to_date_stan_model.html">check_up_to_date(<i>&lt;bbi_stan_gq_summary&gt;</i>)</a></code> </p>
         </td>
         <td><p>Check that Stan model is up to date</p></td>
       </tr><tr><td>
+          <p><code><a href="model_diff.bbi_stan_model.html">model_diff(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Compare Stan models</p></td>
+      </tr><tr><td>
+          <p><code><a href="model_summary.bbi_stan_model.html">model_summary(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summarize a <code>bbi_stan_model</code></p></td>
+      </tr><tr><td>
+          <p><code><a href="stan_summary_log.html">stan_summary_log()</a></code> <code><a href="stan_summary_log.html">stan_add_summary()</a></code> </p>
+        </td>
+        <td><p>Create a tibble summarizing results for a set of Stan models</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h3 id="generated-quantities">Generated quantities <a href="#generated-quantities" class="anchor" aria-hidden="true"></a></h3>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
           <p><code><a href="copy_model_as_stan_gq.html">copy_model_as_stan_gq()</a></code> </p>
         </td>
         <td><p>Copy a "regular" Stan model to a generated quantities model</p></td>
@@ -97,29 +133,33 @@
         </td>
         <td><p>Get gq_parent of a standalone generated quantities model</p></td>
       </tr><tr><td>
-          <p><code><a href="model_diff.bbi_stan_model.html">model_diff(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Compare Stan models</p></td>
-      </tr><tr><td>
-          <p><code><a href="model_summary.bbi_nmbayes_model.html">model_summary(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summarize a <code>bbi_nmbayes_model</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="model_summary.bbi_stan_model.html">model_summary(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Summarize a <code>bbi_stan_model</code></p></td>
-      </tr><tr><td>
           <p><code><a href="modify_stan_gq_parent.html">add_stan_gq_parent()</a></code> <code><a href="modify_stan_gq_parent.html">replace_all_stan_gq_parent()</a></code> <code><a href="modify_stan_gq_parent.html">remove_stan_gq_parent()</a></code> </p>
         </td>
         <td><p>Modify gq_parent of a standalone generated quantities model</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="nonmem-bayes">NONMEM Bayes <a href="#nonmem-bayes" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Warning: This initial version is incompleted expected to change in breaking ways. Please use only for experimentation and development.</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="model_summary.bbi_nmbayes_model.html">model_summary(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Summarize a <code>bbi_nmbayes_model</code> object</p></td>
       </tr><tr><td>
           <p><code><a href="nmbayes_convert.html">nmbayes_convert()</a></code> </p>
         </td>
         <td><p>Convert a non-Bayes NONMEM model into a nmbayes model</p></td>
       </tr><tr><td>
-          <p><code><a href="open_stan_file.html">open_stanmod_file()</a></code> <code><a href="open_stan_file.html">open_standata_file()</a></code> <code><a href="open_stan_file.html">open_staninit_file()</a></code> <code><a href="open_stan_file.html">open_stan_fitted_params_file()</a></code> </p>
+          <p><code><a href="submit_model.bbi_nmbayes_model.html">submit_model(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Open Stan model file in a text editor</p></td>
+        <td><p>Submit model based on a <code>bbi_nmbayes_model</code> object</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="shared-utilities">Shared utilities <a href="#shared-utilities" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="bbr_as_draws.html">as_draws(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> <code><a href="bbr_as_draws.html">as_draws(<i>&lt;bbi_stan_model&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Extract <span class="pkg">posterior</span> draws from a bbr.bayes model</p></td>
       </tr><tr><td>
           <p><code><a href="read_fit_model.html">read_fit_model()</a></code> </p>
         </td>
@@ -128,26 +168,6 @@
           <p><code><a href="shrinkage.html">shrinkage()</a></code> </p>
         </td>
         <td><p>Calculate shrinkage in variance of errors</p></td>
-      </tr><tr><td>
-          <p><code><a href="stan_submit_model.html">submit_model(<i>&lt;bbi_stan_model&gt;</i>)</a></code> <code><a href="stan_submit_model.html">submit_model(<i>&lt;bbi_stan_gq_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Submit model based on a <code>bbi_stan_model</code> object</p></td>
-      </tr><tr><td>
-          <p><code><a href="stan_summary_log.html">stan_summary_log()</a></code> <code><a href="stan_summary_log.html">stan_add_summary()</a></code> </p>
-        </td>
-        <td><p>Create a tibble summarizing results for a set of Stan models</p></td>
-      </tr><tr><td>
-          <p><code><a href="stanargs.html">set_stanargs()</a></code> <code><a href="stanargs.html">get_stanargs()</a></code> </p>
-        </td>
-        <td><p>Set or get arguments to pass when submitting Stan model</p></td>
-      </tr><tr><td>
-          <p><code><a href="stanargs_scaffold.html">stanargs_scaffold()</a></code> </p>
-        </td>
-        <td><p>Creates a starter -stanargs.R with empty list</p></td>
-      </tr><tr><td>
-          <p><code><a href="submit_model.bbi_nmbayes_model.html">submit_model(<i>&lt;bbi_nmbayes_model&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Submit model based on a <code>bbi_nmbayes_model</code> object</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
