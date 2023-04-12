@@ -22,7 +22,7 @@ License: MIT + file LICENSE
 Depends:
     R (>= 3.5)
 Imports: 
-    bbr,
+    bbr (>= 1.7.0),
     checkmate,
     cli,
     cmdstanr,
