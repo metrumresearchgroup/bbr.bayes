@@ -2,7 +2,7 @@
 title: "Getting Started with bbr.bayes and Stan"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{getting-started-stan}
+  %\VignetteIndexEntry{Getting Started with bbr.bayes and Stan}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
