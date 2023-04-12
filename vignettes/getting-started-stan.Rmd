@@ -392,3 +392,35 @@ log_df %>%
   knitr::kable()
 ```
 
+
+## Summary log
+
+It is often useful to add some basic diagnostic information to a run log table. For Stan models, this can be done with `stan_summary_log()` or `stan_add_summary()`. In addition to some sampling diagnostics and metadata, this function will summarize the specified variables. 
+
+```{r, eval = FALSE}
+log_df <- log_df %>%
+  stan_add_summary(variables = "emax")
+```
+```{r, echo = FALSE}
+# load the fake summary table, because we don't actually have model outputs on disk
+log_df <- readRDS(system.file("vignette-fakes", "stan-summary-tibble.RDS",
+                                       package = "bbr.bayes"))
+```
+```{r, comment = ""}
+names(log_df)
+```
+
+There are default functions used for the summarization, which are shown below. You can also pass your own summarization functions via the `summary_fns` argument. See `?stan_summary_log` for more details.
+
+```{r}
+log_df %>%
+  dplyr::select(run, num_divergent, dplyr::starts_with("emax")) %>% 
+  knitr::kable()
+```
+
+
+```{r cleanup bottom, include=FALSE}
+# delete old files
+cleanup()
+```
+
