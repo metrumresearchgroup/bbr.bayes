@@ -249,7 +249,7 @@ cat("[1] 1200 7734")
 
 ### Using `read_fit_model()`
 
-The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call automatically saves this fit object to disk as well. You can pass either a path or model object to `bbr.bayes::read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
+The [`submit_model()`](https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html) call automatically saves this fit object to disk as well. You can pass either a path or model object to `read_fit_model()` and it will re-load the `CmdStanMCMC` object into memory.
 
 ```{r}
 new_res <- read_fit_model(file.path(MODEL_DIR, "fxa"))
