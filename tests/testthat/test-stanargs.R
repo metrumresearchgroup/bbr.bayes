@@ -47,6 +47,13 @@ test_that("set_stanargs checks for unknown args", {
   }
 })
 
+test_that("set_stanargs does not write custom class", {
+  mod <- new_model(local_test_dir(), .model_type = "stan")
+  set_stanargs(mod, list(seed = 39))
+  res <- dget(build_path_from_model(mod, STANARGS_SUFFIX))
+  expect_identical(class(res), "list")
+})
+
 test_that("get_stanargs returns expected list", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()
