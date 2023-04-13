@@ -60,14 +60,14 @@
     </div>
 
     <div class="ref-description">
-    <p>Like <code><a href="https://rdrr.io/pkg/bbr/man/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code>, but switch the model type from "stan" to
+    <p>Like <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code>, but switch the model type from "stan" to
 "stan_gq" begin defining a model for standalone generated quantities.</p>
     </div>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">copy_model_as_stan_gq</span><span class="op">(</span></span>
 <span>  <span class="va">.parent_mod</span>,</span>
-<span>  .new_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">bbr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/bbr/man/get_model_id.html" class="external-link">get_model_id</a></span><span class="op">(</span><span class="va">.parent_mod</span><span class="op">)</span>, <span class="st">"_gq"</span><span class="op">)</span>,</span>
+<span>  .new_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu">bbr</span><span class="fu">::</span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/get_model_id.html" class="external-link">get_model_id</a></span><span class="op">(</span><span class="va">.parent_mod</span><span class="op">)</span>, <span class="st">"_gq"</span><span class="op">)</span>,</span>
 <span>  .description <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  .based_on_additional <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  .add_tags <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -81,7 +81,7 @@
     <h2>Arguments</h2>
     <dl><dt>.parent_mod</dt>
 <dd><p>A <code>bbi_stan_model</code> object to copy. This should <em>not</em> be a
-<code>bbi_stan_gq_model</code> subclass; in that case, use <code><a href="https://rdrr.io/pkg/bbr/man/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code> to
+<code>bbi_stan_gq_model</code> subclass; in that case, use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code> to
 copy the model in the standard way.</p></dd>
 
 
@@ -89,7 +89,7 @@ copy the model in the standard way.</p></dd>
 <dd><p>Path to the new model, either absolute or relative to the
 path to <code>.parent_mod</code>. By default, this is the parent's model name with
 "_gq" appended. Aside from the default value, this is handled in the same
-way as the <code>.new_model</code> argument of <code><a href="https://rdrr.io/pkg/bbr/man/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code>.</p></dd>
+way as the <code>.new_model</code> argument of <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">bbr::copy_model_from()</a></code>.</p></dd>
 
 
 <dt>.description</dt>

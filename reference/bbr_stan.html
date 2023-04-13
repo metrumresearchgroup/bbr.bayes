@@ -85,7 +85,7 @@ any <code>bbi_stan_model</code>.</p>
 <p><strong><code>&lt;run&gt;</code></strong> - The "run" is, in some sense, the "name" of a given model.
 Practically, it will correspond to the model directory name, the base name of
 the bbr-created YAML (<code>&lt;run&gt;.yaml</code>), as well as the base name for some files
-in that directory. Calling <code><a href="https://rdrr.io/pkg/bbr/man/get_model_id.html" class="external-link">bbr::get_model_id()</a></code> on a model object will
+in that directory. Calling <code><a href="https://metrumresearchgroup.github.io/bbr/reference/get_model_id.html" class="external-link">bbr::get_model_id()</a></code> on a model object will
 return <code>&lt;run&gt;</code> as a string. The <code>bbi_log_df</code> tibbles also all contain a run
 column which is populated by calling <code>basename(.mod$absolute_model_path)</code> for
 each model. Note: this is <em>not</em> actually stored in the model object because
@@ -95,8 +95,8 @@ it can be unequivocally extracted as just described.</p>
 directory. This will point to the model directory (named <code>&lt;run&gt;</code>) containing
 all of the files described below, as well as a <code>&lt;run&gt;.yaml</code> file that <code>bbr</code>
 uses to persist model metadata. A model is loaded or created by passing a
-relative path to this directory to either <code><a href="https://rdrr.io/pkg/bbr/man/read_model.html" class="external-link">bbr::read_model()</a></code> or
-<code><a href="https://rdrr.io/pkg/bbr/man/new_model.html" class="external-link">bbr::new_model()</a></code>, both of which return the <code>bbi_stan_model</code> object. When
+relative path to this directory to either <code><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">bbr::read_model()</a></code> or
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">bbr::new_model()</a></code>, both of which return the <code>bbi_stan_model</code> object. When
 this object is created, it checks the model directory for the relevant files
 and populates <code>absolute_model_path</code>.</p>
 </div>
@@ -176,7 +176,7 @@ involving exactly this scenario.</p></li>
 </ul><p><code>&lt;run&gt;-output/bbi_config.json</code> - This file is created by <code>bbr</code> when a model
 run finishes successfully. It stores some configuration information about the
 run, as well as the md5 hashes of the necessary files. These hashes are later
-used (by <code><a href="https://rdrr.io/pkg/bbr/man/check_up_to_date.html" class="external-link">bbr::check_up_to_date()</a></code> to check whether the files have changed
+used (by <code><a href="https://metrumresearchgroup.github.io/bbr/reference/check_up_to_date.html" class="external-link">bbr::check_up_to_date()</a></code> to check whether the files have changed
 since the model was run, primarily for reproducibility purposes.</p>
 </div>
 
@@ -186,7 +186,7 @@ since the model was run, primarily for reproducibility purposes.</p>
 <ul><li><p><strong><code><a href="check_stan_model.html">check_stan_model()</a></code></strong> (mentioned above) - Checks for the necessary files
 before running or copying the model. By default, it also checks the syntax
 of the <code>&lt;run&gt;.stan</code> file.</p></li>
-<li><p><strong><code><a href="https://rdrr.io/pkg/bbr/man/build_path_from_model.html" class="external-link">bbr::build_path_from_model()</a></code></strong> - Builds the absolute path to a file in
+<li><p><strong><code><a href="https://metrumresearchgroup.github.io/bbr/reference/build_path_from_model.html" class="external-link">bbr::build_path_from_model()</a></code></strong> - Builds the absolute path to a file in
 the model folder from a model object and a suffix.</p></li>
 <li><p><strong><code><a href="add_file_to_model_dir.html">add_stanmod_file()</a></code>, <code><a href="add_file_to_model_dir.html">add_standata_file()</a></code>, <code><a href="add_file_to_model_dir.html">add_staninit_file()</a></code>,
 <code><a href="add_file_to_model_dir.html">add_stan_fitted_params_file()</a></code></strong> - Helpers for adding one of the necessary
@@ -194,11 +194,11 @@ files to the model folder.</p></li>
 <li><p><strong><code><a href="open_stan_file.html">open_stanmod_file()</a></code>, <code><a href="open_stan_file.html">open_standata_file()</a></code>, <code><a href="open_stan_file.html">open_staninit_file()</a></code>,
 <code><a href="open_stan_file.html">open_stan_fitted_params_file()</a></code></strong> - Helpers for opening files within the
 model directory.</p></li>
-<li><p><strong><code><a href="https://rdrr.io/pkg/bbr/man/model_diff.html" class="external-link">bbr::model_diff()</a></code></strong> - Compare necessary files between two models.
+<li><p><strong><code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">bbr::model_diff()</a></code></strong> - Compare necessary files between two models.
 Defaults to comparing <code>&lt;run&gt;.stan</code> files.</p></li>
 <li><p>Also has many of the same helpers as <code>bbi_nonmem_model</code> objects:
-<code><a href="https://rdrr.io/pkg/bbr/man/tags_diff.html" class="external-link">bbr::tags_diff()</a></code>, <code><a href="https://rdrr.io/pkg/bbr/man/modify_tags.html" class="external-link">bbr::add_tags()</a></code>, <code><a href="https://rdrr.io/pkg/bbr/man/modify_notes.html" class="external-link">bbr::add_notes()</a></code>,
-<code><a href="https://rdrr.io/pkg/bbr/man/get_path_from_object.html" class="external-link">bbr::get_model_path()</a></code>, <code><a href="https://rdrr.io/pkg/bbr/man/get_path_from_object.html" class="external-link">bbr::get_output_dir()</a></code>, <code><a href="https://rdrr.io/pkg/bbr/man/get_model_id.html" class="external-link">bbr::get_model_id()</a></code></p></li>
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/tags_diff.html" class="external-link">bbr::tags_diff()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">bbr::add_tags()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html" class="external-link">bbr::add_notes()</a></code>,
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">bbr::get_model_path()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">bbr::get_output_dir()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/get_model_id.html" class="external-link">bbr::get_model_id()</a></code></p></li>
 </ul></div>
 
 <div class="section">
