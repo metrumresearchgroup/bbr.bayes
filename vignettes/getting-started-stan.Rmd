@@ -29,7 +29,6 @@ if (interactive() || (isTRUE(getOption('knitr.in.progress') && Sys.getenv("DRONE
 library(bbr)
 library(bbr.bayes)
 library(dplyr)
-library(purrr)
 ```
 
 `bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr), which focuses on modeling using Bayesian methods. This vignette focuses on models defined in [Stan](https://mc-stan.org/). Note that you will also need to load `bbr` to use most `bbr.bayes` functionality.
