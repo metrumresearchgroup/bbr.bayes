@@ -34,6 +34,6 @@ specified values
 }
 }
 \seealso{
-\link{modify_stan_gq_parent} for getting the "gq_parent" value,
-\link{bbr_stan} for more information about standalone generated quantities
+\link{get_stan_gq_parent} for getting the "gq_parent" value, \link{bbr_stan}
+for more information about standalone generated quantities
 }

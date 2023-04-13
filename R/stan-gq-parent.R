@@ -51,8 +51,8 @@ get_stan_gq_parent_no_check <- function(.mod) {
 #' @param .parent Character vector of paths to parent model. If relative, the
 #'   paths are taken as relative to the directory containing `.mod`.
 #' @return The modified model objects (after writing changes to disk).
-#' @seealso [modify_stan_gq_parent] for getting the "gq_parent" value,
-#'   [bbr_stan] for more information about standalone generated quantities
+#' @seealso [get_stan_gq_parent] for getting the "gq_parent" value, [bbr_stan]
+#'   for more information about standalone generated quantities
 #' @name modify_stan_gq_parent
 NULL
 
