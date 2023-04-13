@@ -12,6 +12,7 @@
 #'   is returned as is.
 #' @export
 nmbayes_convert <- function(.mod) {
+  nmbayes_warn()
   checkmate::assert_class(.mod, NM_MOD_CLASS)
   if (inherits(.mod, NMBAYES_MOD_CLASS)) {
     return(.mod)
