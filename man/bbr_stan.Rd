@@ -73,12 +73,6 @@ exception, you may be comfortable leaving base packages unqualified
 to remove \code{package:stats} from their search path or to attach a package
 that overrides \code{rnorm()}.
 }
-}
-
-\subsection{Other Files and Directories}{
-
-There will be several other things created in the model directory, as the
-model is run or as it prepares to run.
 
 \strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
 initial values passed to the cmdstanr's
@@ -104,6 +98,12 @@ option, your \code{make_init()} function must return \emph{the function} describ
 \emph{standalone} generated quantities. See "Standalone Generated Quantities"
 section below for more information.
 }
+}
+
+\subsection{Other Files and Directories}{
+
+There will be several other things created in the model directory, as the
+model is run or as it prepares to run.
 
 \strong{\verb{<run>}} - This is the binary file created when the \verb{<run>.stan} file is
 compiled by \code{cmdstan}. We \code{.gitignore} this automatically.
