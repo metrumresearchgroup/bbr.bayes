@@ -413,7 +413,7 @@ There are default functions used for the summarization, which are shown below. Y
 
 ```{r}
 log_df %>%
-  dplyr::select(run, num_divergent, dplyr::starts_with("emax")) %>% 
+  select(run, num_divergent, starts_with("emax")) %>%
   knitr::kable()
 ```
 
