@@ -133,15 +133,7 @@ exception, you may be comfortable leaving base packages unqualified
 (e.g., <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm()</a></code> rather than <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">stats::rnorm()</a></code>) because users are unlikely
 to remove <code>package:stats</code> from their search path or to attach a package
 that overrides <code><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm()</a></code>.</p></li>
-</ul></div>
-
-<div class="section">
-<h3 id="other-files-and-directories">Other Files and Directories<a class="anchor" aria-label="anchor" href="#other-files-and-directories"></a></h3>
-
-
-<p>There will be several other things created in the model directory, as the
-model is run or as it prepares to run.</p>
-<p><strong><code>&lt;run&gt;-init.R</code></strong> - This file contains all necessary R code to create the
+</ul><p><strong><code>&lt;run&gt;-init.R</code></strong> - This file contains all necessary R code to create the
 initial values passed to the cmdstanr's
 <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">$sample()</a> method. This file is a lot like
 <code>&lt;run&gt;-standata.R</code> (discussed above) and a scaffold can be created with
@@ -162,7 +154,15 @@ option, your <code>make_init()</code> function must return <em>the function</em>
 <li><p>Note that this file will not be included when you're defining a model for
 <em>standalone</em> generated quantities. See "Standalone Generated Quantities"
 section below for more information.</p></li>
-</ul><p><strong><code>&lt;run&gt;</code></strong> - This is the binary file created when the <code>&lt;run&gt;.stan</code> file is
+</ul></div>
+
+<div class="section">
+<h3 id="other-files-and-directories">Other Files and Directories<a class="anchor" aria-label="anchor" href="#other-files-and-directories"></a></h3>
+
+
+<p>There will be several other things created in the model directory, as the
+model is run or as it prepares to run.</p>
+<p><strong><code>&lt;run&gt;</code></strong> - This is the binary file created when the <code>&lt;run&gt;.stan</code> file is
 compiled by <code>cmdstan</code>. We <code>.gitignore</code> this automatically.</p>
 <p><strong><code>&lt;run&gt;-output</code></strong> - This directory is created by <code>bbr</code>. It is where the
 posteriors will be saved (currently as CSV’s) and also where the
