@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   getting-started-stan: getting-started-stan.html
-last_built: 2023-04-12T23:24Z
+last_built: 2023-04-13T03:38Z
 urls:
   reference: https://metrumresearchgroup.github.io/bbr.bayes/reference
   article: https://metrumresearchgroup.github.io/bbr.bayes/articles
