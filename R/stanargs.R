@@ -41,7 +41,7 @@ set_stanargs_impl <- function(method, .mod, .stanargs, .clear) {
   .args <- if (isTRUE(.clear)) {
     list()
   } else {
-    get_stanargs(.mod)
+    unclass(get_stanargs(.mod))
   }
 
   # check passed args
