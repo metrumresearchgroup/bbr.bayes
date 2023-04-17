@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 
 # Introduction
 
+Hello, Kyle
+
 This vignette takes you through some basic scenarios for modeling with Stan using `bbr.bayes`, introducing you to its standard workflow and functionality.
 
 ```{r setup, include=FALSE}
