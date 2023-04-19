@@ -19,7 +19,7 @@ get_chain_dirs <- function(.mod) {
   outdir <- get_output_dir(.mod)
   mid <- get_model_id(.mod)
   chaindirs <- list.files(outdir,
-                          pattern = paste0("^\\Q", mid, "\\E_[0-9]+$"),
+                          pattern = paste0("^\\Q", mid, "\\E-[0-9]+$"),
                           full.names = TRUE)
 
   nchains <- length(chaindirs)

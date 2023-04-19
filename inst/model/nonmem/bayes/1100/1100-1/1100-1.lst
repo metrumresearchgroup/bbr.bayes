@@ -1,4 +1,4 @@
-Wed Apr 19 08:05:53 EDT 2023
+Wed Apr 19 08:07:30 EDT 2023
 $PROBLEM From bbr: see 1100.yaml for details
 
 $INPUT C NUM ID TIME SEQ CMT EVID AMT DV AGE WT HT EGFR ALB BMI SEX AAG
@@ -367,7 +367,7 @@ Days until program expires :  85
  EXCLUDE NON-INFLUENTIAL (NON-INFL.) ETAS
        IN SHRINKAGE (ETASTYPE):             NO
  NON-INFL. ETA CORRECTION (NONINFETA):      0
- RAW OUTPUT FILE (FILE): 1100_1.ext
+ RAW OUTPUT FILE (FILE): 1100-1.ext
  EXCLUDE TITLE (NOTITLE):                   NO
  EXCLUDE COLUMN LABELS (NOLABEL):           NO
  FORMAT FOR ADDITIONAL FILES (FORMAT):      S1PE12.5
@@ -1002,8 +1002,8 @@ Days until program expires :  85
 +       -1.23E+03  4.98E+03  2.79E+03 -4.23E+03 -3.25E+03 -2.38E+03 -1.69E+03 -1.95E+03 -7.03E+03 -4.48E+03  3.21E+04  0.00E+00
           0.00E+00  1.32E+04 -1.03E+04  0.00E+00  0.00E+00 -2.78E+03  0.00E+00  0.00E+00  0.00E+00  0.00E+00  0.00E+00  8.61E+05
  
- Elapsed postprocess time in seconds:     2.78
- Elapsed finaloutput time in seconds:     0.14
- #CPUT: Total CPU Time in Seconds,        8.082
+ Elapsed postprocess time in seconds:     2.79
+ Elapsed finaloutput time in seconds:     0.13
+ #CPUT: Total CPU Time in Seconds,        8.090
 Stop Time:
-Wed Apr 19 08:06:06 EDT 2023
+Wed Apr 19 08:07:43 EDT 2023

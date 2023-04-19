@@ -1,4 +1,4 @@
-Wed Apr 19 08:05:53 EDT 2023
+Wed Apr 19 08:07:30 EDT 2023
 $PROBLEM From bbr: see 1100.yaml for details
 
 $INPUT C NUM ID TIME SEQ CMT EVID AMT DV AGE WT HT EGFR ALB BMI SEX AAG
@@ -367,7 +367,7 @@ Days until program expires :  85
  EXCLUDE NON-INFLUENTIAL (NON-INFL.) ETAS
        IN SHRINKAGE (ETASTYPE):             NO
  NON-INFL. ETA CORRECTION (NONINFETA):      0
- RAW OUTPUT FILE (FILE): 1100_2.ext
+ RAW OUTPUT FILE (FILE): 1100-2.ext
  EXCLUDE TITLE (NOTITLE):                   NO
  EXCLUDE COLUMN LABELS (NOLABEL):           NO
  FORMAT FOR ADDITIONAL FILES (FORMAT):      S1PE12.5
@@ -492,7 +492,7 @@ Days until program expires :  85
  REPORTED OBJECTIVE FUNCTION DOES NOT CONTAIN CONSTANT
   
  #TERE:
- Elapsed estimation  time in seconds:     4.44
+ Elapsed estimation  time in seconds:     4.60
  Elapsed covariance  time in seconds:     0.00
 1
  
@@ -1002,8 +1002,8 @@ Days until program expires :  85
 +        7.36E+02  1.60E+04 -7.36E+03 -5.45E+03  5.82E+03  1.53E+03 -3.89E+02  2.35E+03 -2.87E+04  7.63E+04  2.19E+04  0.00E+00
           0.00E+00 -5.17E+04 -1.71E+04  0.00E+00  0.00E+00 -1.06E+04  0.00E+00  0.00E+00  0.00E+00  0.00E+00  0.00E+00  1.04E+06
  
- Elapsed postprocess time in seconds:     2.78
+ Elapsed postprocess time in seconds:     2.84
  Elapsed finaloutput time in seconds:     0.13
- #CPUT: Total CPU Time in Seconds,        8.076
+ #CPUT: Total CPU Time in Seconds,        8.308
 Stop Time:
-Wed Apr 19 08:06:06 EDT 2023
+Wed Apr 19 08:07:43 EDT 2023

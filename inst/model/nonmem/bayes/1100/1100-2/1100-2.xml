@@ -5,7 +5,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://namespaces.oreilly.com/xmlnut/address output.xsd"
 xmlns:nm="http://namespaces.oreilly.com/xmlnut/address"
 >
-<nm:start_datetime>2023-04-19T08:05:58.221</nm:start_datetime>
+<nm:start_datetime>2023-04-19T08:07:35.661</nm:start_datetime>
 <nm:control_stream><![CDATA[
 $PROBLEM From bbr: see 1100.yaml for details
 
@@ -429,7 +429,7 @@ Days until program expires :  85
  EXCLUDE NON-INFLUENTIAL (NON-INFL.) ETAS
        IN SHRINKAGE (ETASTYPE):             NO
  NON-INFL. ETA CORRECTION (NONINFETA):      0
- RAW OUTPUT FILE (FILE): 1100_2.ext
+ RAW OUTPUT FILE (FILE): 1100-2.ext
  EXCLUDE TITLE (NOTITLE):                   NO
  EXCLUDE COLUMN LABELS (NOLABEL):           NO
  FORMAT FOR ADDITIONAL FILES (FORMAT):      S1PE12.5
@@ -485,7 +485,7 @@ Days until program expires :  85
  nm:estim_omitted='no' nm:analysis_type='pop' nm:saddle_reset='0' nm:saddle_hess='0' nm:slow_gradient='noslow'
  nm:cond_estim='yes' nm:centered_eta='no' nm:epseta_interaction='yes' nm:laplace='no' nm:predflag='0' nm:maxfn='5928'
  nm:nsig='3' nm:msfo='yes' nm:objsort='no' nm:numder='0' nm:optmap='0' nm:etader='0' nm:mceta='0' nm:siglo='100' nm:sigl='100'
- nm:noprior='0' nm:nocov='0' nm:dercont='0' nm:atol='0' nm:fnleta='1' nm:etastype='0' nm:noninfeta='0' nm:file='1100_2.ext'
+ nm:noprior='0' nm:nocov='0' nm:dercont='0' nm:atol='0' nm:fnleta='1' nm:etastype='0' nm:noninfeta='0' nm:file='1100-2.ext'
  nm:notitle='0' nm:nolabel='0' nm:format='s1pe12.5' nm:order='tsol' nm:knuthsumoff='0' nm:lntwopi='0' nm:priorc='0'
  nm:olntwopi='0' nm:estimation_method='bayes' nm:nuts_type='none' nm:bionly='0' nm:mum='BLANK' nm:grd='BLANK' nm:auto='0'
  nm:ctype='0' nm:thin='1' nm:nburn='10' nm:mapiters='0' nm:niter='50' nm:constrain='1' nm:anneal='BLANK' nm:seed='2'
@@ -602,7 +602,7 @@ Days until program expires :  85
 <nm:col nm:cname='EPS1'>14.797021517194530</nm:col>
 </nm:row>
 </nm:epsshrinkvr>
-<nm:estimation_elapsed_time>4.44</nm:estimation_elapsed_time>
+<nm:estimation_elapsed_time>4.60</nm:estimation_elapsed_time>
 <nm:covariance_status nm:error='0' nm:numnegeigenvalues='-1' nm:mineigenvalue='0.0000000000000000' nm:maxeigenvalue='0.0000000000000000' nm:rms='0.0000000000000000'/>
 <nm:covariance_elapsed_time>0.00</nm:covariance_elapsed_time>
 <nm:final_objective_function_text>AVERAGE VALUE OF LIKELIHOOD FUNCTION</nm:final_objective_function_text>
@@ -1808,11 +1808,11 @@ Days until program expires :  85
 </nm:invcovariance>
 </nm:estimation>
 <nm:post_process_times>
-<nm:post_elapsed_time>2.78</nm:post_elapsed_time>
+<nm:post_elapsed_time>2.84</nm:post_elapsed_time>
 <nm:finaloutput_elapsed_time>0.13</nm:finaloutput_elapsed_time>
 </nm:post_process_times>
 </nm:problem>
 </nm:nonmem>
-<nm:stop_datetime>2023-04-19T08:06:06.297</nm:stop_datetime>
-<nm:total_cputime>8.076</nm:total_cputime>
+<nm:stop_datetime>2023-04-19T08:07:43.969</nm:stop_datetime>
+<nm:total_cputime>8.308</nm:total_cputime>
 </nm:output>

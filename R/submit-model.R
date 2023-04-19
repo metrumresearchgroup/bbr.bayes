@@ -120,11 +120,11 @@ run_chains <- function(.mod, ...) {
     ctl_i[row_bayes] <- est_bayes_i
     readr::write_lines(ctl_i, file.path(
       outdir,
-      glue("{.run}_{.chain}.ctl"))
+      glue("{.run}-{.chain}.ctl"))
     )
 
     new_model(
-      file.path(outdir, glue("{.run}_{.chain}")),
+      file.path(outdir, glue("{.run}-{.chain}")),
       .description = glue("Chain {.chain}"),
     )
   })
