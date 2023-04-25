@@ -26,6 +26,10 @@ Documentation, including a ["Getting Started with bbr.bayes and
 Stan"][gss] vignette, is available at
 <https://metrumresearchgroup.github.io/bbr.bayes/>.
 
+### Cheat Sheet
+
+<a href="https://metrumresearchgroup.github.io/cheatsheets/bbr_bayes_stan_cheat_sheet.pdf"><img src="https://metrumresearchgroup.github.io/cheatsheets/thumbnails/bbr_bayes_stan_cheat_sheet_thumbnail.png" width="700" height="395"/></a>
+
 ## Development
 
 `bbr.bayes` uses [pkgr] to manage development dependencies and [renv]
