@@ -16,8 +16,6 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-Hello, Kyle
-
 This vignette takes you through some basic scenarios for modeling with Stan using `bbr.bayes`, introducing you to its standard workflow and functionality.
 
 ```{r setup, include=FALSE}
@@ -33,11 +31,13 @@ library(bbr.bayes)
 library(dplyr)
 ```
 
-`bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr), which focuses on modeling using Bayesian methods. This vignette focuses on models defined in [Stan](https://mc-stan.org/). Note that you will also need to load `bbr` to use most `bbr.bayes` functionality.
+`bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr) which focuses on traceable and reproducible modeling using Bayesian methods. 
+
+This vignette focuses on models defined in [Stan](https://mc-stan.org/). 
 
 A future `bbr.bayes` vignette will focus on modeling in NONMEM using Bayesian estimation methods. For details on modeling in NONMEM with non-Bayesian estimation methods, see the ["Getting Started with bbr and NONMEM"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html) vignette.
 
-# Setup
+# Installation and setup
 
 ```{r set paths and define cleanup, include = FALSE}
 MODEL_DIR <- system.file("model", "stan", package = "bbr.bayes")
@@ -63,32 +63,77 @@ cleanup <- function() {
 cleanup()
 ```
 
+## Installing bbr and bbr.bayes
+
+In order to use most `bbr.bayes` functionality, you will need to install both `bbr.bayes` and `bbr`.  These can be installed from GitHub with, e.g.,
+[remotes::install_git()][rig].
+
+```R
+> remotes::install_git("git@github.com:metrumresearchgroup/bbr.git")
+> remotes::install_git("git@github.com:metrumresearchgroup/bbr.bayes.git")
+```
 
 ## Installing cmdstan
 
-When modeling with Stan, `bbr.bayes` does _not_ use [`bbi`](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi), so you will not need it installed. However, you _will_ need `cmdstan` installed. Please see [the cmdstanr docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions.
+`bbr.bayes` uses cmdstan and the the R package `cmdstanr` to run Stan models.  Please see [the cmdstanr docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions on installing cmdstan.
 
-# Initial modeling run
+`cmdstanr` can be installed from GitHub with, e.g., 
+[remotes::install_git()][rig].
 
-## Create model object
+```R
+> remotes::install_git("git@github.com:stan-dev/cmdstanr.git")
+```
 
-To begin modeling, first create a model object using `new_model()`. This is an S3 object which you will pass to all of the other `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.
+`cmdstanr` is also available from the CRAN-like repositories at
+<https://mc-stan.org/r-packages/> and [MPN].
 
-The first argument (`.path`) must be the path to the directory containing the necessary files. For Stan models, you will also have to add `.model_type = "stan"` to the the `new_model()` call.
+
+# Creating a model object
+
+The `bbr.bayes` workflow is organized around the concept of **model objects**.  These are S3 objects which you will pass to `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.  The model object contains pointers (?) to the key files necessary for running a Stan model using `bbr.bayes`.  The basic files are:
+
+\strong{\verb{<run>.yml}} - The `bbr` YAML file which stores model metadata like a description and tags.
+
+\strong{\verb{<run>.stan}} - The Stan file.
+
+\strong{\verb{<run>-stanargs.R}} - Contains a named list with all of the arguments that
+will be passed through to the \link[cmdstanr:model-method-sample]{$sample()}
+method of \link[cmdstanr:CmdStanModel]{cmdstanr::CmdStanModel}.
+
+\strong{\verb{<run>-standata.R}} - Contains all necessary R code to read in
+any source data and transform them to a Stan-ready data object (list).
+
+\strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
+initial values passed to the cmdstanr's
+\link[cmdstanr:model-method-sample]{$sample()} method. 
+
+
+The [Stan models in `bbr` ](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html) reference page provides detailed information about the files necessary for running a Stan model using `bbr`.
+
+
+`bbr` model objects can either be created *de novo* or copied from an existing model object.  We outline the differences between these two approaches below.
+
+
+## Creating a model object *de novo* 
+
+To create a model object *de novo*, you use the `new_model()` function.
+
+The `new_model()` function will look for (and, if not found, create) the files necessary to run a Stan model.  The first argument (`.path`) must be the path to the directory where you want to write these files.  For Stan models, you will also have to add `.model_type = "stan"` to the the `new_model()` call.
 
 ```{r first model}
 mod1 <- new_model(file.path(MODEL_DIR, "mod1"), .model_type = "stan")
 ```
 
-The call above will look for a directory called `{MODEL_DIR}/mod1`. _Inside_ this directory it will expect to find the files `mod1.stan` and `mod1-standata.R`. These "required files" will be discussed below, but you can find even more detail in `?bbr_stan`. 
+The call above will look for a directory called `{MODEL_DIR}/mod1`. _Inside_ this directory it will expect to find the files `mod1.stan` and `mod1-standata.R`. These "required files" will be discussed below, and you can find even more detail in `?bbr_stan`. 
 
-For now notice that, if any of them are _not_ found when you initialize the model, `new_model()` will create scaffolds (files with boilerplate non-working code) of the missing files, and print a message to the console telling you it has done so.
+For now notice that, if any of them are _not_ found when you initialize the model, `new_model()` will create scaffolds (files with boilerplate, non-working code) of the missing files, and print a message to the console telling you it has done so.
 
 You can use the helpers described in `?open_stan_file` to open any of these scaffolded files for editing.
 
 ```{r, eval = FALSE}
 open_standata_file(mod1)
 ```
+
 ```{r, echo = FALSE, comment=""}
 mod1 %>%
   build_path_from_model("-standata.R") %>%
@@ -96,13 +141,12 @@ mod1 %>%
   cat(sep = "\n")
 ```
 
-The purpose of this scaffold is to provide some helpful framework to begin writing the necessary code for submitting a model with `bbr.bayes`. Below (in the `copy_model_from()` section) you will see how, once you have defined a model or two, you can use those models as your starting point for new models, instead of relying on writing new code from scaffolds.
+The purpose of this scaffold is to provide a helpful framework to begin writing the necessary code for submitting a model with `bbr.bayes`. Below (in the `copy_model_from()` section) you will see how, once you have defined a model, you can use that model as your starting point for new models, instead of relying on writing new code from scaffolds.
 
-### Starting from existing code
 
 If you already have the relevant code for your new model, you can manually create these files in the output directory _before_ calling `new_model()`. In that case, you won't see any of the messages shown above and the `new_model()` call will simply create the `.yaml` file (described below) next to your directory.
 
-Alternatively, you can create the model with the scaffolds and use helpers like `add_stanmod_file()` to add your files to the model directory.
+Alternatively, you can create the model with the scaffolds and use helpers like `add_stanmod_file()` to add your files to the model directory. 
 
 ```{r, include = FALSE}
 # clean up blank mod1 object and files
@@ -111,9 +155,6 @@ fs::file_delete(file.path(MODEL_DIR, "mod1.yaml"))
 fs::dir_delete(file.path(MODEL_DIR, "mod1"))
 ```
 
-### The `bbr` YAML file
-
-This `new_model()` call will also create a `mod1.yaml` file that will sit next to this directory on disk. This YAML file  stores model metadata like the description and tags (discussed below). For now the YAML file will look very bare, but hopefully its purpose will become more clear later.
 
 ## Reading in an existing model
 
@@ -128,6 +169,7 @@ If you take a look at _this model's_ `-standata.R` file, you can see an example 
 ```{r, eval = FALSE}
 open_standata_file(fxa)
 ```
+
 ```{r, echo = FALSE, comment=""}
 fxa %>%
   build_path_from_model("-standata.R") %>%
@@ -135,8 +177,44 @@ fxa %>%
   cat(sep = "\n")
 ```
 
+## Creating a model by copy_model_from()
 
-## Submit model
+Much of the benefit of `bbr` is leveraged in the model iteration workflow, and the run log summaries that can be created afterwards.
+
+The `copy_model_from()` function creates a new model object based on a parent model, copying and renaming the necessary files in the process. The `copy_model_from()` call below will create an `fxaNew` directory and fill it as described in the `new_model()` section above. _However,_ instead of filling it with scaffolds, it will copy (and rename) all of the necessary files _from the parent model's directory_ into the new directory.
+
+```{r copy_model 2}
+fxaNew <- copy_model_from(
+  .parent_mod = fxa,
+  .new_model = "fxaNew",
+  .inherit_tags = TRUE
+)
+```
+
+> Note that, while the `.path` argument in  `new_model()` and `read_model()` is relative to your working directory, the `.new_model` argument of `copy_model_from()` is _relative to the directory containing the parent model._ This means that, assuming you would like to create the new model in the same directory as its parent, you only have to pass a filename (without extension) for the new model.
+
+You can now open the relevant files and edit them with the desired changes, starting from where you left off with the parent model.
+
+```{r, eval = FALSE}
+open_stanmod_file(fxaNew)
+```
+
+```{r, echo = FALSE, message = FALSE}
+# replace uniform with cauchy, for showing model_diff() below
+mod_path <- build_path_from_model(fxaNew, ".stan")
+mod_lines <- readLines(mod_path)
+mod_lines %>%
+  stringr::str_replace("uniform", "cauchy") %>%
+  writeLines(mod_path)
+```
+
+
+## The `bbr` YAML file
+
+This `new_model()` and `copy_model_from()` calls will create the YANML file associated with the model object (e.g., `mod1.yaml`).  This YAML file  stores model metadata like the  description, notes, and tags (discussed below). The YAML file from a model created using `new_model()` will be very bare, while the `copy_model_from()` call will copy the YAML file from the parent model.  The purpose of the YAML file will become more clear when we begin comparing models and generating model run logs.
+
+
+# Submitting a model
 
 For Stan models, model submission wraps the [cmdstanr::sample()](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. 
 
@@ -172,7 +250,7 @@ To submit a model to be run, you simply pass the model object to [`submit_model(
 
 ```{r, eval = FALSE}
 fxa_res <- fxa %>%
-  submit_model()
+  submit_model(.overwrite = TRUE)
 ```
 
 ```{r, echo = FALSE}
@@ -196,7 +274,7 @@ As you can see, this also prints all of the diagnostic output from `$sample()` a
 It is common to run a model, make some tweaks to it, and then run it again. However, to avoid accidentally deleting model outputs, `bbr` will error by default if it sees existing output when trying to submit a model. To automatically overwrite any previous model output, just pass `.overwrite = TRUE` to [`submit_model()`].
 
 
-## Summarize model
+# Summarizing model output
 
 The [`submit_model()`] call will return the fit model object from `cmdstanr`. You can read all about this object in the `?cmdstanr::CmdStanMCMC` object docs. It has several methods for diagnostics and model summaries.
 
@@ -219,7 +297,7 @@ cat("[1] 7731   10")
 
 ```{r, eval = FALSE}
 .s %>%
-  slice_head(n = 15) %>%
+  slice_head(n = 5) %>%
   knitr::kable()
 ```
 ```{r, echo = FALSE, results = "asis"}
@@ -278,59 +356,6 @@ fake_summary_df %>%
   knitr::kable()
 ```
 
-# Iteration
-
-Much of the benefit of `bbr` is leveraged in the model iteration workflow, and the run log summaries that can be created afterwards.
-
-## copy_model_from()
-
-The `copy_model_from()` function creates a new model object based on a parent model, copying and renaming the necessary files in the process. The `copy_model_from()` call below will create an `fxaNew` directory and fill it as described in the `new_model()` section above. _However,_ instead of filling it with scaffolds, it will copy (and rename) all of the necessary files _from the parent model's directory_ into the new directory.
-
-```{r copy_model 2}
-fxaNew <- copy_model_from(
-  .parent_mod = fxa,
-  .new_model = "fxaNew",
-  .inherit_tags = TRUE
-)
-```
-
-> Note that, while the `.path` argument in  `new_model()` and `read_model()` is relative to your working directory, the `.new_model` argument of `copy_model_from()` is _relative to the directory containing the parent model._ This means that, assuming you would like to create the new model in the same directory as its parent, you only have to pass a filename (without extension) for the new model.
-
-You can now open the relevant files and edit them with the desired changes, starting from where you left off with the parent model.
-
-```{r, eval = FALSE}
-open_stanmod_file(fxaNew)
-```
-```{r, echo = FALSE, message = FALSE}
-# replace uniform with cauchy, for showing model_diff() below
-mod_path <- build_path_from_model(fxaNew, ".stan")
-mod_lines <- readLines(mod_path)
-mod_lines %>%
-  stringr::str_replace("uniform", "cauchy") %>%
-  writeLines(mod_path)
-```
-
-
-### Comparing model files
-
-Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The `model_diff()` function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
-
-```{r, results = "asis"}
-model_diff(fxa, fxaNew)
-```
-
-You can also pass any of `c("standata", "init", "stanargs")` to have it compare the specified file instead.
-
-```{r, results = "asis"}
-# modify the iter_sampling arg and see the difference
-set_stanargs(fxaNew, list(iter_sampling = 500))
-model_diff(fxa, fxaNew, .file = "stanargs")
-```
-
-```{r}
-# compare the data files and see that they are identical
-model_diff(fxa, fxaNew, .file = "standata")
-```
 
 ## Model annotation
 
@@ -420,9 +445,34 @@ log_df %>%
 ```
 
 
+[`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
+
+## Comparing model files
+
+Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The `model_diff()` function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
+
+```{r, results = "asis"}
+model_diff(fxa, fxaNew)
+```
+
+You can also pass any of `c("standata", "init", "stanargs")` to have it compare the specified file instead.
+
+```{r, results = "asis"}
+# modify the iter_sampling arg and see the difference
+set_stanargs(fxaNew, list(iter_sampling = 500))
+model_diff(fxa, fxaNew, .file = "stanargs")
+```
+
+```{r}
+# compare the data files and see that they are identical
+model_diff(fxa, fxaNew, .file = "standata")
+```
+
+
+
 ```{r cleanup bottom, include=FALSE}
 # delete old files
 cleanup()
 ```
 
-[`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
+
