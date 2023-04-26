@@ -90,7 +90,12 @@ In order to use most `bbr.bayes` functionality, you will need to install both `b
 
 # Creating a model object
 
-The `bbr.bayes` workflow is organized around the concept of **model objects**.  These are S3 objects which you will pass to `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.  The model object contains pointers (?) to the key files necessary for running a Stan model using `bbr.bayes`.  The basic files are:
+The `bbr.bayes` workflow is organized around the concept of **model
+objects**.  These are S3 objects which you will pass to `bbr` and
+`bbr.bayes` functions that submit, summarize, or manipulate models.  A
+model object points to a path on disk; the set of files that define a
+model is derived from this path.  For a Stan model, the basic files
+are:
 
  * `<run>.yml` - The `bbr` YAML file which stores model metadata like
    a description and tags.
