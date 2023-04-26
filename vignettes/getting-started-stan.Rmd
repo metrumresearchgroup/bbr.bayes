@@ -95,18 +95,19 @@ The `bbr.bayes` workflow is organized around the concept of **model objects**.  
  * `<run>.yml` - The `bbr` YAML file which stores model metadata like
    a description and tags.
 
- * `<run>.stan` - The Stan file.
+ * `<run>/<run>.stan` - The Stan file.
 
- * `<run>-stanargs.R` - Contains a named list with all of the
+ * `<run>/<run>-stanargs.R` - Contains a named list with all of the
    arguments that will be passed through to the [`$sample()`][sample]
    method of `?cmdstanr::CmdStanModel`.
 
- * `<run>-standata.R` - Contains all necessary R code to read in any
-   source data and transform them to a Stan-ready data object (list).
+ * `<run>/<run>-standata.R` - Contains all necessary R code to read in
+   any source data and transform them to a Stan-ready data object
+   (list).
 
- * `<run>-init.R` - This file contains all necessary R code to create
-   the initial values passed to the cmdstanr's [`$sample()`][sample]
-   method.
+ * `<run>/<run>-init.R` - This file contains all necessary R code to
+   create the initial values passed to the cmdstanr's
+   [`$sample()`][sample] method.
 
 The [Stan models in `bbr` ](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html) reference page provides detailed information about the files necessary for running a Stan model using `bbr`.
 
