@@ -395,7 +395,7 @@ fxaNew <- fxaNew %>%
 ```
 While both annotations can be easily accessed from the model object with `fxaNew$tags` or `fxaNew$notes`, notice that they are also displayed, along with other information, when you print the model object in your console
 
-```{r, comment = ""}
+```{r}
 fxaNew
 ```
 
