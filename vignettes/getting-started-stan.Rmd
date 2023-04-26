@@ -75,7 +75,7 @@ In order to use most `bbr.bayes` functionality, you will need to install both `b
 
 ## Installing cmdstan
 
-`bbr.bayes` uses cmdstan and the the R package `cmdstanr` to run Stan models.  Please see [the cmdstanr docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions on installing cmdstan.
+`bbr.bayes` uses cmdstan and the R package `cmdstanr` to run Stan models.  Please see [the cmdstanr docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions on installing cmdstan.
 
 `cmdstanr` can be installed from GitHub with, e.g., 
 [remotes::install_git()][rig].
@@ -118,7 +118,7 @@ The [Stan models in `bbr` ](https://metrumresearchgroup.github.io/bbr.bayes/refe
 
 To create a model object *de novo*, you use the `new_model()` function.
 
-The `new_model()` function will look for (and, if not found, create) the files necessary to run a Stan model.  The first argument (`.path`) must be the path to the directory where you want to write these files.  For Stan models, you will also have to add `.model_type = "stan"` to the the `new_model()` call.
+The `new_model()` function will look for (and, if not found, create) the files necessary to run a Stan model.  The first argument (`.path`) must be the path to the directory where you want to write these files.  For Stan models, you will also have to add `.model_type = "stan"` to the `new_model()` call.
 
 ```{r first model}
 mod1 <- new_model(file.path(MODEL_DIR, "mod1"), .model_type = "stan")
@@ -211,7 +211,7 @@ mod_lines %>%
 
 ## The `bbr` YAML file
 
-This `new_model()` and `copy_model_from()` calls will create the YANML file associated with the model object (e.g., `mod1.yaml`).  This YAML file  stores model metadata like the  description, notes, and tags (discussed below). The YAML file from a model created using `new_model()` will be very bare, while the `copy_model_from()` call will copy the YAML file from the parent model.  The purpose of the YAML file will become more clear when we begin comparing models and generating model run logs.
+This `new_model()` and `copy_model_from()` calls will create the YAML file associated with the model object (e.g., `mod1.yaml`).  This YAML file  stores model metadata like the  description, notes, and tags (discussed below). The YAML file from a model created using `new_model()` will be very bare, while the `copy_model_from()` call will copy the YAML file from the parent model.  The purpose of the YAML file will become more clear when we begin comparing models and generating model run logs.
 
 
 # Submitting a model
@@ -287,7 +287,7 @@ fxa_res$sampler_diagnostics() %>% str()
 
 
 ```{r, eval = FALSE}
-# this pulls in the the actual posteriors
+# this pulls in the actual posteriors
 .s <- fxa_res$summary()
 print(dim(.s))
 ```
