@@ -444,9 +444,6 @@ log_df %>%
   knitr::kable()
 ```
 
-
-[`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
-
 ## Comparing model files
 
 Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The `model_diff()` function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
@@ -475,4 +472,4 @@ model_diff(fxa, fxaNew, .file = "standata")
 cleanup()
 ```
 
-
+[`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
