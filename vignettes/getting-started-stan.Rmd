@@ -216,7 +216,7 @@ This `new_model()` and `copy_model_from()` calls will create the YAML file assoc
 
 # Submitting a model
 
-For Stan models, model submission wraps the [cmdstanr::sample()](https://mc-stan.org/cmdstanr/reference/model-method-sample.html) method. 
+For Stan models, model submission wraps the [cmdstanr::sample()][sample] method.
 
 ### Passing arguments to `$sample()`
 
@@ -473,3 +473,4 @@ cleanup()
 ```
 
 [`submit_model()`]: https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html
+[sample]: https://mc-stan.org/cmdstanr/reference/model-method-sample.html
