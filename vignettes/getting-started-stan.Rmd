@@ -92,21 +92,21 @@ In order to use most `bbr.bayes` functionality, you will need to install both `b
 
 The `bbr.bayes` workflow is organized around the concept of **model objects**.  These are S3 objects which you will pass to `bbr` and `bbr.bayes` functions that submit, summarize, or manipulate models.  The model object contains pointers (?) to the key files necessary for running a Stan model using `bbr.bayes`.  The basic files are:
 
-\strong{\verb{<run>.yml}} - The `bbr` YAML file which stores model metadata like a description and tags.
+ * `<run>.yml` - The `bbr` YAML file which stores model metadata like
+   a description and tags.
 
-\strong{\verb{<run>.stan}} - The Stan file.
+ * `<run>.stan` - The Stan file.
 
-\strong{\verb{<run>-stanargs.R}} - Contains a named list with all of the arguments that
-will be passed through to the \link[cmdstanr:model-method-sample]{$sample()}
-method of \link[cmdstanr:CmdStanModel]{cmdstanr::CmdStanModel}.
+ * `<run>-stanargs.R` - Contains a named list with all of the
+   arguments that will be passed through to the [`$sample()`][sample]
+   method of `?cmdstanr::CmdStanModel`.
 
-\strong{\verb{<run>-standata.R}} - Contains all necessary R code to read in
-any source data and transform them to a Stan-ready data object (list).
+ * `<run>-standata.R` - Contains all necessary R code to read in any
+   source data and transform them to a Stan-ready data object (list).
 
-\strong{\verb{<run>-init.R}} - This file contains all necessary R code to create the
-initial values passed to the cmdstanr's
-\link[cmdstanr:model-method-sample]{$sample()} method. 
-
+ * `<run>-init.R` - This file contains all necessary R code to create
+   the initial values passed to the cmdstanr's [`$sample()`][sample]
+   method.
 
 The [Stan models in `bbr` ](https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html) reference page provides detailed information about the files necessary for running a Stan model using `bbr`.
 
