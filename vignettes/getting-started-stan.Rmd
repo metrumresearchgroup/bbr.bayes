@@ -31,7 +31,7 @@ library(bbr.bayes)
 library(dplyr)
 ```
 
-`bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr) which focuses on traceable and reproducible modeling using Bayesian methods. 
+`bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr) which focuses on traceable and reproducible modeling using Bayesian methods. Note that you will also need to load `bbr` to use most `bbr.bayes` functionality.
 
 This vignette focuses on models defined in [Stan](https://mc-stan.org/). 
 
