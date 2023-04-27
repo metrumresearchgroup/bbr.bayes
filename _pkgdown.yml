@@ -20,7 +20,6 @@ reference:
   - open_stan_file
   - stan_submit_model
   - stanargs
-  - stanargs_scaffold
 - subtitle: Model inspection and comparison
   contents:
   - check_up_to_date_stan_model
