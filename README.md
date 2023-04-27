@@ -41,8 +41,6 @@ to provide isolation. To set up an environment with pkgr and renv:
  4. run `pkgr install` in terminal within package directory
  5. restart session
 
-<!-- TODO: Publish cheatsheet to https://metrumresearchgroup.github.io/cheatsheets/ and add link. -->
-
 [bbr]: https://metrumresearchgroup.github.io/bbr
 [cmdstanr]: https://mc-stan.org/cmdstanr/
 [gss]: https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html
