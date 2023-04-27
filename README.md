@@ -8,7 +8,7 @@ Bayes models.
 ## Installation
 
 `bbr.bayes` and two of its dependencies, `bbr` and `cmdstanr`, are not
-on CRAN.  The can be installed from GitHub with, e.g.,
+on CRAN.  They can be installed from GitHub with, e.g.,
 [remotes::install_git()][rig].
 
 ```R
