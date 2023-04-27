@@ -37,7 +37,7 @@ This vignette focuses on models defined in [Stan](https://mc-stan.org/).
 
 A future `bbr.bayes` vignette will focus on modeling in NONMEM using Bayesian estimation methods. For details on modeling in NONMEM with non-Bayesian estimation methods, see the ["Getting Started with bbr and NONMEM"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html) vignette.
 
-# Installation and setup
+# Setup
 
 ```{r set paths and define cleanup, include = FALSE}
 MODEL_DIR <- system.file("model", "stan", package = "bbr.bayes")
@@ -63,30 +63,13 @@ cleanup <- function() {
 cleanup()
 ```
 
-## Installing bbr and bbr.bayes
-
-In order to use most `bbr.bayes` functionality, you will need to install both `bbr.bayes` and `bbr`.  These can be installed from GitHub with, e.g.,
-[remotes::install_git()][rig].
-
-```R
-> remotes::install_git("git@github.com:metrumresearchgroup/bbr.git")
-> remotes::install_git("git@github.com:metrumresearchgroup/bbr.bayes.git")
-```
 
 ## Installing cmdstan
 
 `bbr.bayes` uses cmdstan and the R package `cmdstanr` to run Stan models.  Please see [the cmdstanr docs](http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan) for instructions on installing cmdstan.
-
-`cmdstanr` can be installed from GitHub with, e.g., 
-[remotes::install_git()][rig].
-
-```R
-> remotes::install_git("git@github.com:stan-dev/cmdstanr.git")
-```
-
-`cmdstanr` is also available from the CRAN-like repositories at
-<https://mc-stan.org/r-packages/> and [MPN].
-
+(Note that, when modeling with Stan rather than NONMEM,
+[`bbi`](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi)
+is not required.)
 
 # Creating a model object
 
