@@ -24,6 +24,7 @@ submit_model.bbi_nmbayes_model <- function(
   .wait = TRUE,
   .dry_run = FALSE
   ) {
+  nmbayes_warn()
   .config_path <- if (is.null(.config_path)) {
     # Explicitly pass the default value because it's needed for the
     # METHOD={BAYES,NUTS} runs, which happen one level deeper.

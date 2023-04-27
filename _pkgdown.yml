@@ -1,0 +1,50 @@
+url: https://metrumresearchgroup.github.io/bbr.bayes
+template:
+  params:
+    bootswatch: flatly
+navbar:
+  type: inverse
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/metrumresearchgroup/bbr.bayes
+
+reference:
+- title: Stan
+  contents:
+  - bbr_stan
+- subtitle: Preparing and submitting models
+  contents:
+  - add_file_to_model_dir
+  - build_data
+  - check_stan_model
+  - open_stan_file
+  - stan_submit_model
+  - stanargs
+- subtitle: Model inspection and comparison
+  contents:
+  - check_up_to_date_stan_model
+  - model_diff.bbi_stan_model
+  - model_summary.bbi_stan_model
+  - stan_summary_log
+- subtitle: Generated quantities
+  contents:
+  - copy_model_as_stan_gq
+  - find_stan_gq_children
+  - get_stan_gq_parent
+  - modify_stan_gq_parent
+
+- title: NONMEM Bayes
+  desc: >
+    Warning: NONMEM Bayes support is incomplete, and backward
+    incompatible changes are planned.  Please use only for
+    experimentation and development.
+  contents:
+  - model_summary.bbi_nmbayes_model
+  - nmbayes_convert
+  - submit_model.bbi_nmbayes_model
+
+- title: Shared utilities
+  contents:
+  - bbr_as_draws
+  - read_fit_model
+  - shrinkage
