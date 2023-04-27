@@ -239,7 +239,7 @@ To submit a model to be run, you simply pass the model object to [`submit_model(
 
 ```{r, eval = FALSE}
 fxa_res <- fxa %>%
-  submit_model(.overwrite = TRUE)
+  submit_model()
 ```
 
 ```{r, echo = FALSE}
