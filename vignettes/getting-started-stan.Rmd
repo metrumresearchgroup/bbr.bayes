@@ -197,6 +197,26 @@ mod_lines %>%
   writeLines(mod_path)
 ```
 
+## Comparing model files
+
+Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The `model_diff()` function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
+
+```{r, results = "asis"}
+model_diff(fxa, fxaNew)
+```
+
+You can also pass any of `c("standata", "init", "stanargs")` to have it compare the specified file instead.
+
+```{r, results = "asis"}
+# modify the iter_sampling arg and see the difference
+set_stanargs(fxaNew, list(iter_sampling = 500))
+model_diff(fxa, fxaNew, .file = "stanargs")
+```
+
+```{r}
+# compare the data files and see that they are identical
+model_diff(fxa, fxaNew, .file = "standata")
+```
 
 ## The `bbr` YAML file
 
@@ -432,29 +452,6 @@ log_df %>%
   select(run, num_divergent, starts_with("emax")) %>%
   knitr::kable()
 ```
-
-## Comparing model files
-
-Imagine that, after opening the `fxaNew.stan` file above, you decided to change the `emax` parameter from a uniform to a Cauchy distribution. The `model_diff()` function makes it easy to compare models to each other. For Stan models, `model_diff()` defaults to comparing the `<run>.stan` files.
-
-```{r, results = "asis"}
-model_diff(fxa, fxaNew)
-```
-
-You can also pass any of `c("standata", "init", "stanargs")` to have it compare the specified file instead.
-
-```{r, results = "asis"}
-# modify the iter_sampling arg and see the difference
-set_stanargs(fxaNew, list(iter_sampling = 500))
-model_diff(fxa, fxaNew, .file = "stanargs")
-```
-
-```{r}
-# compare the data files and see that they are identical
-model_diff(fxa, fxaNew, .file = "standata")
-```
-
-
 
 ```{r cleanup bottom, include=FALSE}
 # delete old files
