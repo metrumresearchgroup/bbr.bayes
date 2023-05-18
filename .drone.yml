@@ -39,8 +39,6 @@ steps:
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   commands:
   - R -s -e 'devtools::install_deps(upgrade = "never")'
-  - git clone -b 1.7.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
-  - R -s -e 'devtools::install("/tmp/bbr")'
   - R -s -e 'devtools::check()'
   environment:
     NOT_CRAN: true
@@ -98,8 +96,6 @@ steps:
   - git config --global user.name Drony
   - git fetch --tags
   - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
-  - git clone -b 1.7.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
-  - R -s -e 'devtools::install("/tmp/bbr")'
   - R -s -e 'pkgpub::create_tagged_repo(.dir = '"'"'/ephemeral'"'"')'
   environment:
     NOT_CRAN: true
