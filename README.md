@@ -17,8 +17,15 @@ on CRAN.  They can be installed from GitHub with, e.g.,
 > remotes::install_git("git@github.com:metrumresearchgroup/bbr.bayes.git")
 ```
 
-`cmdstanr` is also available from the CRAN-like repositories at
-<https://mc-stan.org/r-packages/> and [MPN].
+The `bbr` and `cmdstanr` dependencies are also available from
+CRAN-like repositories:
+
+ * `bbr` is available on [MPN].  Use snapshot 2023-05-14 or later to
+   get the minimum version required by `bbr.bayes`.
+
+ * `cmdstanr` is available from [MPN] and
+   <https://mc-stan.org/r-packages/>.
+
 
 ## Documentation
 

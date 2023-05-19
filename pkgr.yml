@@ -8,7 +8,7 @@ Packages:
 
 Repos:
   - CRAN: https://cran.rstudio.com
-  - MPN: https://mpn.metworx.com/snapshots/stable/2022-06-15 # cmdstanr
+  - MPN: https://mpn.metworx.com/snapshots/stable/2023-05-14 # bbr and cmdstanr
 
 Lockfile:
   Type: renv
