@@ -38,7 +38,7 @@ test_that("stan: check_up_to_date() with mismatched model", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     perturb_file(build_path_from_model(mod, STANMOD_SUFFIX))
     expect_message(
-      res <- check_up_to_date(STAN_MOD1),
+      res <- check_up_to_date(mod),
       regexp = "The following files have changed.+\\.stan"
     )
     expect_equal(res, MODEL_BAD)
@@ -62,7 +62,7 @@ test_that("stan: check_up_to_date() with mismatched data .build_data=F", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     perturb_file(build_path_from_model(mod, STANDATA_JSON_SUFFIX))
     expect_message(
-      res <- check_up_to_date(STAN_MOD1, .build_data = FALSE),
+      res <- check_up_to_date(mod, .build_data = FALSE),
       regexp = "The following files have changed.+standata\\.json"
     )
     expect_equal(res, DATA_BAD)
