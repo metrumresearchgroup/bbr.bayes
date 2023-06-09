@@ -1,13 +1,13 @@
 {
-  "output_dir": "/data/home/sethg/metrumresearchgroup/bbr.bayes/inst/model/stan/fxa/fxa-output",
+  "output_dir": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/stan/fxa/fxa-output",
   "data_path": "../fxa-standata.json",
-  "model_md5": "5bbcd2ebfce97ac444a69d58fb8efda3",
-  "data_md5": "9624005a9870a0e38484fff0586a394d",
+  "model_md5": "6ccfc3f466e988fa8042a99a68ba4ed8",
+  "data_md5": "fc21917b40385ee33c94dbee8612122a",
   "standata_script_md5": "563b5363c65a633b3c6294b50d43319e",
   "stanargs_md5": "6540104c1cb2a214fad3ca50b4a05fe7",
   "init_script_md5": "474df717df57f204ef28c7f44175995e",
   "configuration": {
-    "cmdstan_version": "2.27.0",
-    "cmdstanr_version": "0.5.2"
+    "cmdstan_version": "2.32.1",
+    "cmdstanr_version": "0.5.3"
   }
 }
