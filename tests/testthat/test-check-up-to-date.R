@@ -13,7 +13,7 @@ test_that("nmbayes: check_up_to_date with mismatched model", {
   perturb_file(get_model_path(NMBAYES_MOD1))
   expect_message(
     res <- check_up_to_date(NMBAYES_MOD1),
-    regexp = "The following files have changed.+ctl")
+    regexp = "model changed")
   expect_equal(res, MODEL_BAD)
 })
 

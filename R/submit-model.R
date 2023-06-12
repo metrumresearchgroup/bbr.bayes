@@ -53,6 +53,12 @@ submit_model.bbi_nmbayes_model <- function(
     .mode = "local",
     .dry_run = FALSE)
 
+  if (!isTRUE(.dry_run)) {
+    jsonlite::write_json(
+      list("model_md5" = jsonlite::unbox(tools::md5sum(get_model_path(.mod)))),
+      path = file.path(get_output_dir(.mod), "nmbayes.json"))
+  }
+
   run_chains(.mod,
              .bbi_args = .bbi_args,
              .mode = .mode,
