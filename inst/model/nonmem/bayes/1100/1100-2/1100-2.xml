@@ -5,7 +5,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://namespaces.oreilly.com/xmlnut/address output.xsd"
 xmlns:nm="http://namespaces.oreilly.com/xmlnut/address"
 >
-<nm:start_datetime>2023-04-19T08:07:35.661</nm:start_datetime>
+<nm:start_datetime>2023-04-19T10:36:27.559</nm:start_datetime>
 <nm:control_stream><![CDATA[
 $PROBLEM From bbr: see 1100.yaml for details
 
@@ -92,21 +92,10 @@ $SIGMAP
 
 $SIGMAPD (1 FIX)
 
-;;; ---------- nmbayes start ----------
-; CHAIN options:
-;   CTYPE=0: initial estimates for THETA are sampled from a uniform
-;     distribution between (1-IACCEPT)*THETA and (1+IACCEPT)*THETA)
-;   CTYPE=2: initial estimates for THETA are from a normal distribution with
-;     mean from the initial estimate in $THETA and variance from $THETAPV
-;   DF=0: initial estimates for OMEGA come from Wishart distribution using
-;     values in $OMEGA and degrees of freedom equal to dimensions of OMEGA
-;   DFS=0: initial estimates for SIGMA come from Wishart distribution using
-;     values in $SIGMA and degrees of freedom equal to dimensions of SIGMA
-$EST METHOD=CHAIN FILE=../1100.chn NSAMPLE=0 ISAMPLE=2 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
-$EST METHOD=BAYES CTYPE=0 SEED=2 NBURN=10 NITER=50 PRINT=10 MSFO=./1100.msf RANMETHOD=P PARAFPRINT=10000 BAYES_PHI_STORE=1
+$EST METHOD=CHAIN FILE=../init.chn NSAMPLE=0 ISAMPLE=2 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
+$EST METHOD=BAYES CTYPE=0 SEED=2 NBURN=10 NITER=50 PRINT=10 MSFO1100-2.msf RANMETHOD=P PARAFPRINT=10000 BAYES_PHI_STORE=1
 
 $TABLE NUM CL V2 Q V3 KA ETAS(1:LAST) EPRED IPRED NPDE EWRES NOPRINT ONEHEADER FILE=1100.tab RANMETHOD=P
-;;; ---------- nmbayes end ------------
 ]]></nm:control_stream>
 <nm:nmtran><![CDATA[
 
@@ -383,7 +372,7 @@ Days until program expires :  85
  RANDOM SELECTION TYPE (SELECT):     0
  DEG. FR. TO GENERATE OMEGAS (DF):   10
  DEG. FR. TO GENERATE SIGMAS (DFS):  0
- CHAIN FILE (FILE):                  ../1100.chn
+ CHAIN FILE (FILE):                  ../init.chn
  EXCL. TITLE IN CHAIN FILE (NOTITLE):NO
  EX. COL. LBS. IN CHAIN FL.(NOLABEL):NO
  FORMAT FOR CHAIN FILE (FORMAT):     S1PE12.5
@@ -392,7 +381,7 @@ Days until program expires :  85
 ]]></nm:estimation_information>
 <nm:estimation_options
  nm:estimation_method='chain' nm:ctype='0' nm:seed='1' nm:clockseed='0' nm:isample='2' nm:isampend='-2147483647'
- nm:nsample='0' nm:iaccept='0.300000000000000' nm:select='0' nm:df='10' nm:dfs='0' nm:file='../1100.chn' nm:notitle='0'
+ nm:nsample='0' nm:iaccept='0.300000000000000' nm:select='0' nm:df='10' nm:dfs='0' nm:file='../init.chn' nm:notitle='0'
  nm:nolabel='0' nm:format='s1pe12.5' nm:order='tsol' nm:ranmethod='3u'
 />
 </nm:estimation>
@@ -602,7 +591,7 @@ Days until program expires :  85
 <nm:col nm:cname='EPS1'>14.797021517194530</nm:col>
 </nm:row>
 </nm:epsshrinkvr>
-<nm:estimation_elapsed_time>4.60</nm:estimation_elapsed_time>
+<nm:estimation_elapsed_time>4.43</nm:estimation_elapsed_time>
 <nm:covariance_status nm:error='0' nm:numnegeigenvalues='-1' nm:mineigenvalue='0.0000000000000000' nm:maxeigenvalue='0.0000000000000000' nm:rms='0.0000000000000000'/>
 <nm:covariance_elapsed_time>0.00</nm:covariance_elapsed_time>
 <nm:final_objective_function_text>AVERAGE VALUE OF LIKELIHOOD FUNCTION</nm:final_objective_function_text>
@@ -1808,11 +1797,11 @@ Days until program expires :  85
 </nm:invcovariance>
 </nm:estimation>
 <nm:post_process_times>
-<nm:post_elapsed_time>2.84</nm:post_elapsed_time>
+<nm:post_elapsed_time>2.80</nm:post_elapsed_time>
 <nm:finaloutput_elapsed_time>0.13</nm:finaloutput_elapsed_time>
 </nm:post_process_times>
 </nm:problem>
 </nm:nonmem>
-<nm:stop_datetime>2023-04-19T08:07:43.969</nm:stop_datetime>
-<nm:total_cputime>8.308</nm:total_cputime>
+<nm:stop_datetime>2023-04-19T10:36:35.654</nm:stop_datetime>
+<nm:total_cputime>8.095</nm:total_cputime>
 </nm:output>

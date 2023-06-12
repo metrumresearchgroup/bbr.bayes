@@ -21,7 +21,7 @@ check_up_to_date.bbi_nmbayes_model <- function(.bbi_object, ...) {
   }
 
   data_same <- TRUE
-  for (sub in get_chain_dirs(.bbi_object)) {
+  for (sub in c(file.path(outdir, "init"), get_chain_dirs(.bbi_object))) {
     res <- check_up_to_date(read_model(sub), ...)
     model_same <- model_same && res["model"]
     data_same <- data_same && res["data"]

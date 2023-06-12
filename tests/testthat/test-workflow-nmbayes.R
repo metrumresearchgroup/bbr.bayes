@@ -1,3 +1,4 @@
+testthat::skip_if_not_installed("nmrec")
 skip_long_tests("skipping long-running nmbayes submit_model tests")
 
 if (identical(Sys.getenv("METWORX_VERSION"), "")) {

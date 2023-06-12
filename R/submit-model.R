@@ -24,6 +24,10 @@ submit_model.bbi_nmbayes_model <- function(
   .wait = TRUE,
   .dry_run = FALSE
   ) {
+  if (!requireNamespace("nmrec", quietly = TRUE)) {
+    stop("nmrec package is required to submit nmbayes model.")
+  }
+
   nmbayes_warn()
   .config_path <- if (is.null(.config_path)) {
     # Explicitly pass the default value because it's needed for the
@@ -36,12 +40,7 @@ submit_model.bbi_nmbayes_model <- function(
     fs::path_abs(.config_path)
   }
 
-  # Convert model to bbi_nonmem_model for initialization. Another option would
-  # be to call NextMethod(), but modifying arguments with that approach is less
-  # straightforward.
-  mod_init <- .mod
-  class(mod_init) <- class(mod_init)[-1]
-
+  mod_init <- nmbayes_init(.mod, .overwrite)
   submit_model(
     mod_init,
     .bbi_args = .bbi_args,
@@ -54,6 +53,8 @@ submit_model.bbi_nmbayes_model <- function(
     .dry_run = FALSE)
 
   if (!isTRUE(.dry_run)) {
+    # Write top-level md5sum for check_up_to_date() because bbi_config.json
+    # files will be present only for the submodels.
     jsonlite::write_json(
       list("model_md5" = jsonlite::unbox(tools::md5sum(get_model_path(.mod)))),
       path = file.path(get_output_dir(.mod), "nmbayes.json"))

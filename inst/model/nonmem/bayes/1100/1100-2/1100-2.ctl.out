@@ -40,11 +40,11 @@ Days until program expires :  85
  iteration           30 MCMCOBJ=    28344.527855340057     
  iteration           40 MCMCOBJ=    28398.676171345749     
  iteration           50 MCMCOBJ=    28370.402549548784     
- Elapsed estimation  time in seconds:     4.60
+ Elapsed estimation  time in seconds:     4.43
  BURN-IN WAS NOT TESTED FOR CONVERGENCE
  STATISTICAL PORTION WAS COMPLETED
 
  Elapsed covariance  time in seconds:     0.00
- Elapsed postprocess time in seconds:     2.84
+ Elapsed postprocess time in seconds:     2.80
  Elapsed finaloutput time in seconds:     0.13
 Done with nonmem execution

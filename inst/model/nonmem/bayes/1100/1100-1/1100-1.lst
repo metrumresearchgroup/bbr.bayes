@@ -1,4 +1,4 @@
-Wed Apr 19 08:07:30 EDT 2023
+Wed Apr 19 10:36:22 EDT 2023
 $PROBLEM From bbr: see 1100.yaml for details
 
 $INPUT C NUM ID TIME SEQ CMT EVID AMT DV AGE WT HT EGFR ALB BMI SEX AAG
@@ -84,21 +84,10 @@ $SIGMAP
 
 $SIGMAPD (1 FIX)
 
-;;; ---------- nmbayes start ----------
-; CHAIN options:
-;   CTYPE=0: initial estimates for THETA are sampled from a uniform
-;     distribution between (1-IACCEPT)*THETA and (1+IACCEPT)*THETA)
-;   CTYPE=2: initial estimates for THETA are from a normal distribution with
-;     mean from the initial estimate in $THETA and variance from $THETAPV
-;   DF=0: initial estimates for OMEGA come from Wishart distribution using
-;     values in $OMEGA and degrees of freedom equal to dimensions of OMEGA
-;   DFS=0: initial estimates for SIGMA come from Wishart distribution using
-;     values in $SIGMA and degrees of freedom equal to dimensions of SIGMA
-$EST METHOD=CHAIN FILE=../1100.chn NSAMPLE=0 ISAMPLE=1 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
-$EST METHOD=BAYES CTYPE=0 SEED=1 NBURN=10 NITER=50 PRINT=10 MSFO=./1100.msf RANMETHOD=P PARAFPRINT=10000 BAYES_PHI_STORE=1
+$EST METHOD=CHAIN FILE=../init.chn NSAMPLE=0 ISAMPLE=1 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
+$EST METHOD=BAYES CTYPE=0 SEED=1 NBURN=10 NITER=50 PRINT=10 MSFO1100-1.msf RANMETHOD=P PARAFPRINT=10000 BAYES_PHI_STORE=1
 
 $TABLE NUM CL V2 Q V3 KA ETAS(1:LAST) EPRED IPRED NPDE EWRES NOPRINT ONEHEADER FILE=1100.tab RANMETHOD=P
-;;; ---------- nmbayes end ------------
 
 NM-TRAN MESSAGES
   
@@ -298,7 +287,7 @@ Days until program expires :  85
  RANDOM SELECTION TYPE (SELECT):     0
  DEG. FR. TO GENERATE OMEGAS (DF):   10
  DEG. FR. TO GENERATE SIGMAS (DFS):  0
- CHAIN FILE (FILE):                  ../1100.chn
+ CHAIN FILE (FILE):                  ../init.chn
  EXCL. TITLE IN CHAIN FILE (NOTITLE):NO
  EX. COL. LBS. IN CHAIN FL.(NOLABEL):NO
  FORMAT FOR CHAIN FILE (FORMAT):     S1PE12.5
@@ -315,7 +304,7 @@ Days until program expires :  85
 
 
 
- FROM SAMPLE 1 OF CHAIN FILE ../1100.chn
+ FROM SAMPLE 1 OF CHAIN FILE ../init.chn
  NEW INITIAL ESTIMATES OF THETA
   0.4395E+00
   0.3952E+01
@@ -492,7 +481,7 @@ Days until program expires :  85
  REPORTED OBJECTIVE FUNCTION DOES NOT CONTAIN CONSTANT
   
  #TERE:
- Elapsed estimation  time in seconds:     4.43
+ Elapsed estimation  time in seconds:     4.44
  Elapsed covariance  time in seconds:     0.00
 1
  
@@ -1002,8 +991,8 @@ Days until program expires :  85
 +       -1.23E+03  4.98E+03  2.79E+03 -4.23E+03 -3.25E+03 -2.38E+03 -1.69E+03 -1.95E+03 -7.03E+03 -4.48E+03  3.21E+04  0.00E+00
           0.00E+00  1.32E+04 -1.03E+04  0.00E+00  0.00E+00 -2.78E+03  0.00E+00  0.00E+00  0.00E+00  0.00E+00  0.00E+00  8.61E+05
  
- Elapsed postprocess time in seconds:     2.79
+ Elapsed postprocess time in seconds:     2.78
  Elapsed finaloutput time in seconds:     0.13
- #CPUT: Total CPU Time in Seconds,        8.090
+ #CPUT: Total CPU Time in Seconds,        8.086
 Stop Time:
-Wed Apr 19 08:07:43 EDT 2023
+Wed Apr 19 10:36:35 EDT 2023

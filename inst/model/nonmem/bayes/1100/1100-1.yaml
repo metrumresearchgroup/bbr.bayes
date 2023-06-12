@@ -1,2 +1,4 @@
 model_type: nonmem
 description: Chain 1
+based_on:
+- ../1100

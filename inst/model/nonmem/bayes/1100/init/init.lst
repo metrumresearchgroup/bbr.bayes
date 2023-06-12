@@ -1,18 +1,10 @@
-<?xml version="1.0" encoding="ASCII"?>
-<!DOCTYPE nm:output SYSTEM "output.dtd">
-<nm:output
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://namespaces.oreilly.com/xmlnut/address output.xsd"
-xmlns:nm="http://namespaces.oreilly.com/xmlnut/address"
->
-<nm:start_datetime>2023-04-19T08:07:29.446</nm:start_datetime>
-<nm:control_stream><![CDATA[
+Wed Apr 19 10:36:17 EDT 2023
 $PROBLEM From bbr: see 1100.yaml for details
 
 $INPUT C NUM ID TIME SEQ CMT EVID AMT DV AGE WT HT EGFR ALB BMI SEX AAG
   SCR AST ALT CP TAFD TAD LDOS MDV BLQ PHASE
 
-$DATA ../../../../extdata/analysis3.csv IGNORE=(C='C', BLQ=1)
+$DATA ../../../../../extdata/analysis3.csv IGNORE=(C='C', BLQ=1)
 
 $SUBROUTINE ADVAN4 TRANS4
 
@@ -92,54 +84,32 @@ $SIGMAP
 
 $SIGMAPD (1 FIX)
 
-;;; ---------- nmbayes start ----------
-; CHAIN options:
-;   CTYPE=0: initial estimates for THETA are sampled from a uniform
-;     distribution between (1-IACCEPT)*THETA and (1+IACCEPT)*THETA)
-;   CTYPE=2: initial estimates for THETA are from a normal distribution with
-;     mean from the initial estimate in $THETA and variance from $THETAPV
-;   DF=0: initial estimates for OMEGA come from Wishart distribution using
-;     values in $OMEGA and degrees of freedom equal to dimensions of OMEGA
-;   DFS=0: initial estimates for SIGMA come from Wishart distribution using
-;     values in $SIGMA and degrees of freedom equal to dimensions of SIGMA
-$EST METHOD=CHAIN FILE=1100.chn NSAMPLE=2 ISAMPLE=0 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
-;$EST METHOD=BAYES CTYPE=0 SEED=1 NBURN=10 NITER=50 PRINT=10 MSFO=./1100.msf RANMETHOD=P PARAFPRINT=10000 BAYES_PHI_STORE=1
+$EST METHOD=CHAIN FILE=../init.chn NSAMPLE=2 ISAMPLE=0 SEED=1 CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
 
-;$TABLE NUM CL V2 Q V3 KA ETAS(1:LAST) EPRED IPRED NPDE EWRES NOPRINT ONEHEADER FILE=1100.tab RANMETHOD=P
-;;; ---------- nmbayes end ------------
-]]></nm:control_stream>
-<nm:nmtran><![CDATA[
-
+NM-TRAN MESSAGES
+  
  WARNINGS AND ERRORS (IF ANY) FOR PROBLEM    1
-
+             
  (WARNING  2) NM-TRAN INFERS THAT THE DATA ARE POPULATION.
 
  (MU_WARNING 26) DATA ITEM(S) USED IN DEFINITION OF MU_(S) SHOULD BE CONSTANT FOR INDIV. REC.:
   WT EGFR AGE ALB
 
- LIM VALUES MAXLIM ASSESSED BY NMTRAN: 1,2,3,4,5,6,7,8,10,11,13,15,16
-
+ LIM VALUES MAXLIM ASSESSED BY NMTRAN: 1,2,3,4,5,6,7,8,10,11,13,15,16        
+  
 Note: Analytical 2nd Derivatives are constructed in FSUBS but are never used.
       You may insert $ABBR DERIV2=NO after the first $PROB to save FSUBS construction and compilation time
+  
 
-]]></nm:nmtran>
-<nm:nonmem nm:version='7.5.1'>
-<nm:license_information><![CDATA[
 License Registered to: Metrum Research Group (with RADAR5NM)
 Expiration Date:    14 JUL 2023
 Current Date:       19 APR 2023
 Days until program expires :  85
-]]></nm:license_information>
-<nm:program_information><![CDATA[
 1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM) VERSION 7.5.1
  ORIGINALLY DEVELOPED BY STUART BEAL, LEWIS SHEINER, AND ALISON BOECKMANN
  CURRENT DEVELOPERS ARE ROBERT BAUER, ICON DEVELOPMENT SOLUTIONS,
  AND ALISON BOECKMANN. IMPLEMENTATION, EFFICIENCY, AND STANDARDIZATION
  PERFORMED BY NOUS INFOSYSTEMS.
-]]></nm:program_information>
-<nm:problem nm:number='1' nm:subproblem='0' nm:superproblem1='0' nm:iteration1='0' nm:superproblem2='0' nm:iteration2='0'>
-<nm:problem_title>From bbr: see 1100.yaml for details</nm:problem_title>
-<nm:problem_information><![CDATA[
 
  PROBLEM NO.:         1
  From bbr: see 1100.yaml for details
@@ -274,79 +244,12 @@ Days until program expires :  85
 0PK SUBROUTINE CALLED WITH EVERY EVENT RECORD.
  PK SUBROUTINE NOT CALLED AT NONEVENT (ADDITIONAL OR LAGGED) DOSE TIMES.
 0ERROR SUBROUTINE CALLED WITH EVERY EVENT RECORD.
-]]></nm:problem_information>
-<nm:problem_options
- nm:data_checkout_run='no' nm:data_unit='2' nm:data_rewind='no' nm:data_nrec='4292' nm:data_nitems='27' nm:data_id='3'
- nm:data_l2='0' nm:data_dv='9' nm:data_mdv='25' nm:data_mrg='0' nm:data_raw='0' nm:data_rpt='0' nm:data_sub_array1='0'
- nm:data_sub_array2='0' nm:data_sub_array3='0' nm:data_pred_indices='7,4,8,0,0,0,6,0,0,0,0'
- nm:data_format='(2(10e7.0/),7e7.0)' nm:data_nobs='3142' nm:data_nind='160' nm:data_mdv100='0' nm:nthetat='18'
- nm:theta_bound_test_omitted='no' nm:omega_blockdim='16' nm:omega_bound_test_omitted='no' nm:sigma_blockdim='2'
- nm:sigma_bound_test_omitted='no' nm:pred_advan='4' nm:pred_evid='7' nm:pred_time='4' nm:pred_amt='8' nm:pred_cmt='6'
-/>
-<nm:theta_lb>
-<nm:val nm:name='1'>-1000000.0000000000</nm:val>
-<nm:val nm:name='2'>-1000000.0000000000</nm:val>
-<nm:val nm:name='3'>-1000000.0000000000</nm:val>
-<nm:val nm:name='4'>-1000000.0000000000</nm:val>
-<nm:val nm:name='5'>-1000000.0000000000</nm:val>
-<nm:val nm:name='6'>-1000000.0000000000</nm:val>
-<nm:val nm:name='7'>-1000000.0000000000</nm:val>
-<nm:val nm:name='8'>-1000000.0000000000</nm:val>
-<nm:val nm:name='9'>0.50000000000000000</nm:val>
-<nm:val nm:name='10'>3.5000000000000000</nm:val>
-<nm:val nm:name='11'>1.0000000000000000</nm:val>
-<nm:val nm:name='12'>4.0000000000000000</nm:val>
-<nm:val nm:name='13'>2.0000000000000000</nm:val>
-<nm:val nm:name='14'>1.0000000000000000</nm:val>
-<nm:val nm:name='15'>1.0000000000000000</nm:val>
-<nm:val nm:name='16'>0.50000000000000000</nm:val>
-<nm:val nm:name='17'>3.0000000000000000</nm:val>
-<nm:val nm:name='18'>1.0000000000000000</nm:val>
-</nm:theta_lb>
-<nm:theta_in>
-<nm:val nm:name='1'>0.50000000000000000</nm:val>
-<nm:val nm:name='2'>3.5000000000000000</nm:val>
-<nm:val nm:name='3'>1.0000000000000000</nm:val>
-<nm:val nm:name='4'>4.0000000000000000</nm:val>
-<nm:val nm:name='5'>2.0000000000000000</nm:val>
-<nm:val nm:name='6'>1.0000000000000000</nm:val>
-<nm:val nm:name='7'>1.0000000000000000</nm:val>
-<nm:val nm:name='8'>0.50000000000000000</nm:val>
-<nm:val nm:name='9'>0.50000000000000000</nm:val>
-<nm:val nm:name='10'>3.5000000000000000</nm:val>
-<nm:val nm:name='11'>1.0000000000000000</nm:val>
-<nm:val nm:name='12'>4.0000000000000000</nm:val>
-<nm:val nm:name='13'>2.0000000000000000</nm:val>
-<nm:val nm:name='14'>1.0000000000000000</nm:val>
-<nm:val nm:name='15'>1.0000000000000000</nm:val>
-<nm:val nm:name='16'>0.50000000000000000</nm:val>
-<nm:val nm:name='17'>3.0000000000000000</nm:val>
-<nm:val nm:name='18'>1.0000000000000000</nm:val>
-</nm:theta_in>
-<nm:theta_ub>
-<nm:val nm:name='1'>1000000.0000000000</nm:val>
-<nm:val nm:name='2'>1000000.0000000000</nm:val>
-<nm:val nm:name='3'>1000000.0000000000</nm:val>
-<nm:val nm:name='4'>1000000.0000000000</nm:val>
-<nm:val nm:name='5'>1000000.0000000000</nm:val>
-<nm:val nm:name='6'>1000000.0000000000</nm:val>
-<nm:val nm:name='7'>1000000.0000000000</nm:val>
-<nm:val nm:name='8'>1000000.0000000000</nm:val>
-<nm:val nm:name='9'>0.50000000000000000</nm:val>
-<nm:val nm:name='10'>3.5000000000000000</nm:val>
-<nm:val nm:name='11'>1.0000000000000000</nm:val>
-<nm:val nm:name='12'>4.0000000000000000</nm:val>
-<nm:val nm:name='13'>2.0000000000000000</nm:val>
-<nm:val nm:name='14'>1.0000000000000000</nm:val>
-<nm:val nm:name='15'>1.0000000000000000</nm:val>
-<nm:val nm:name='16'>0.50000000000000000</nm:val>
-<nm:val nm:name='17'>3.0000000000000000</nm:val>
-<nm:val nm:name='18'>1.0000000000000000</nm:val>
-</nm:theta_ub>
-<nm:estimation nm:number='1' nm:type='0'>
-<nm:estimation_method>chain</nm:estimation_method>
-<nm:estimation_title>Chain Method Processing</nm:estimation_title>
-<nm:estimation_information><![CDATA[
+1
+
+
+ #TBLN:      1
+ #METH: Chain Method Processing
+
  RANDOM GENERATION TYPE (CTYPE):     0
  RANDOM GENERATION SEED (SEED):      1
  RANDOM SAMPLE SELECTION (ISAMPLE):  0
@@ -356,25 +259,43 @@ Days until program expires :  85
  RANDOM SELECTION TYPE (SELECT):     0
  DEG. FR. TO GENERATE OMEGAS (DF):   10
  DEG. FR. TO GENERATE SIGMAS (DFS):  0
- CHAIN FILE (FILE):                  1100.chn
+ CHAIN FILE (FILE):                  ../init.chn
  EXCL. TITLE IN CHAIN FILE (NOTITLE):NO
  EX. COL. LBS. IN CHAIN FL.(NOLABEL):NO
  FORMAT FOR CHAIN FILE (FORMAT):     S1PE12.5
  PAR. ORDER in CHAIN FILE (ORDER):   TSOL
  RANDOM SAMPLING METHOD (RANMETHOD):3U
-]]></nm:estimation_information>
-<nm:estimation_options
- nm:estimation_method='chain' nm:ctype='0' nm:seed='1' nm:clockseed='0' nm:isample='0' nm:isampend='-2147483647'
- nm:nsample='2' nm:iaccept='0.300000000000000' nm:select='0' nm:df='10' nm:dfs='0' nm:file='1100.chn' nm:notitle='0'
- nm:nolabel='0' nm:format='s1pe12.5' nm:order='tsol' nm:ranmethod='3u'
-/>
-</nm:estimation>
-<nm:post_process_times>
-<nm:post_elapsed_time>0.00</nm:post_elapsed_time>
-<nm:finaloutput_elapsed_time>0.00</nm:finaloutput_elapsed_time>
-</nm:post_process_times>
-</nm:problem>
-</nm:nonmem>
-<nm:stop_datetime>2023-04-19T08:07:30.155</nm:stop_datetime>
-<nm:total_cputime>0.709</nm:total_cputime>
-</nm:output>
+
+ THE FOLLOWING LABELS ARE EQUIVALENT
+ PRED=NPRED
+ RES=NRES
+ WRES=NWRES
+ IWRS=NIWRES
+ IPRD=NIPRED
+ IRS=NIRES
+
+
+
+ FROM SAMPLE 0 OF CHAIN FILE ../init.chn
+ NEW INITIAL ESTIMATES OF THETA
+  0.5000E+00
+  0.3500E+01
+  0.1000E+01
+  0.4000E+01
+  0.2000E+01
+  0.1000E+01
+  0.1000E+01
+  0.5000E+00
+ NEW INITIAL ESTIMATES OF OMEGA
+  0.2000E+00
+  0.1000E-01  0.2000E+00
+  0.1000E-01  0.1000E-01  0.2000E+00
+  0.0000E+00  0.0000E+00  0.0000E+00  0.2500E-01
+  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00  0.2500E-01
+ NEW INITIAL ESTIMATES OF SIGMA
+  0.5000E-01
+ Elapsed postprocess time in seconds:     0.00
+ Elapsed finaloutput time in seconds:     0.00
+ #CPUT: Total CPU Time in Seconds,        0.712
+Stop Time:
+Wed Apr 19 10:36:22 EDT 2023
