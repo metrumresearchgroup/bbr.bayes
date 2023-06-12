@@ -1,4 +1,18 @@
 
+#' @export
+check_up_to_date.bbi_nmbayes_model <- function(.bbi_object, ...) {
+  res <- NextMethod()
+  model_same <- res["model"]
+  data_same <- res["data"]
+  for (sub in get_chain_dirs(.bbi_object)) {
+    res <- check_up_to_date(read_model(sub), ...)
+    model_same <- model_same && res["model"]
+    data_same <- data_same && res["data"]
+  }
+
+  return(invisible(c(model = model_same, data = data_same)))
+}
+
 #' Check that Stan model is up to date
 #'
 #' The details of which files are "model files" and which are "data files" are
