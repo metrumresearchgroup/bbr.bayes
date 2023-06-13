@@ -35,12 +35,6 @@ run_chains <- function(.mod, ...) {
     "\\$DATA\\s+",
     "$DATA ../")
 
-  row_extrasend <- stringr::str_detect(ctl, "extrasend")
-  ctl[row_extrasend] <- stringr::str_replace(
-    ctl[row_extrasend],
-    "extrasend",
-    "../extrasend")
-
   .run <- get_model_id(.mod)
   outdir <- get_output_dir(.mod)
   # Use same extension for chain submodels so that bbi treats the data path the
