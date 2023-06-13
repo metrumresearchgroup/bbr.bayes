@@ -7,12 +7,16 @@
 #' (`METHOD=CHAIN` run) and sampling for each chain (`METHOD=BAYES` or
 #' `METHOD=NUTS` runs).
 #'
-#' TODO: Provide details about expected ctl lines.
-#'
+#' @name nmbayes_submit_model
 #' @param .dry_run Do not submit the sampling runs; just report what command
 #'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
 #'   is executed to generate the initialization values regardless of this value.
 #' @inheritParams bbr::submit_model
+#' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
+#'   models are structured
+NULL
+
+#' @rdname nmbayes_submit_model
 #' @export
 submit_model.bbi_nmbayes_model <- function(
   .mod,

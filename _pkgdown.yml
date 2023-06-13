@@ -39,9 +39,10 @@ reference:
     incompatible changes are planned.  Please use only for
     experimentation and development.
   contents:
+  - bbr_nmbayes
   - model_summary.bbi_nmbayes_model
   - copy_model_as_nmbayes
-  - submit_model.bbi_nmbayes_model
+  - nmbayes_submit_model
 
 - title: Shared utilities
   contents:
