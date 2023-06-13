@@ -9,7 +9,8 @@
 run_chains <- function(.mod, ...) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
 
-  ctl <- readr::read_lines(get_model_path(.mod))
+  ctl_file <- get_model_path(.mod)
+  ctl <- readr::read_lines(ctl_file)
 
   row_bayes <- stringr::str_detect(ctl, "METHOD=BAYES|METHOD=NUTS")
   est_bayes <- ctl[row_bayes]
@@ -42,6 +43,9 @@ run_chains <- function(.mod, ...) {
 
   .run <- get_model_id(.mod)
   outdir <- get_output_dir(.mod)
+  # Use same extension for chain submodels so that bbi treats the data path the
+  # same way.
+  ext <- fs::path_ext(ctl_file)
   mods <- purrr::map(seq_len(n_chain), function(.chain) {
     est_chain_i <- stringr::str_replace(
       est_chain,
@@ -56,7 +60,7 @@ run_chains <- function(.mod, ...) {
     ctl_i[row_bayes] <- est_bayes_i
     readr::write_lines(ctl_i, file.path(
       outdir,
-      glue("{.run}-{.chain}.ctl"))
+      glue("{.run}-{.chain}.{ext}"))
     )
 
     new_model(
