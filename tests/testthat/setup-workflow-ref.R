@@ -1,4 +1,13 @@
 
+### NONMEM
+
+NM_ABS_MODEL_DIR <- system.file("model", "nonmem", "basic",
+                                package = "bbr.bayes", mustWork = TRUE)
+NM_MOD_ID <- "1"
+NM_MODEL_DIR <- as.character(fs::path_rel(NM_ABS_MODEL_DIR))
+NM_MOD1_PATH <- file.path(NM_MODEL_DIR, NM_MOD_ID)
+NM_MOD1 <- read_model(NM_MOD1_PATH)
+
 ### NONMEM Bayes
 
 NMBAYES_ABS_MODEL_DIR <- system.file("model", "nonmem", "bayes",

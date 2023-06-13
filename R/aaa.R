@@ -9,9 +9,6 @@ NULL
 NMBAYES_MOD_CLASS <- "bbi_nmbayes_model"
 NMBAYES_SUM_CLASS <- "bbi_nmbayes_summary"
 
-NMBAYES_CTL_START <- ";;; ---------- nmbayes start ----------"
-NMBAYES_CTL_END <- ";;; ---------- nmbayes end ------------"
-
 IPH_ID_NAMES <- c("SUBJECT_NO", "ID", "SUBPOP")
 IPH_NONPARAM_NAMES <- c("ITERATION", IPH_ID_NAMES)
 

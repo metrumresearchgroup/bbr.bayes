@@ -1,4 +1,55 @@
 
+### NONMEM Bayes
+
+#' Copy a "regular" NONMEM model to NONMEM Bayes model
+#'
+#' Like [bbr::copy_model_from()], but switch the model type from "nonmem" to
+#' "nmbayes" to begin defining a [NONMEM Bayes model][bbr_nmbayes].
+#'
+#' @inheritParams bbr::copy_model_from
+#' @param .parent_mod A `bbi_nonmem_model` object to copy. This should _not_ be
+#'   a `bbi_nmbayes_model` subclass; in that case, use [bbr::copy_model_from()]
+#'   to copy the model in the standard way.
+#' @return A `bbi_nmbayes_model` object for the new model.
+#' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
+#'   models are structured in bbr
+#' @export
+copy_model_as_nmbayes <- function(.parent_mod,
+                                  .new_model = NULL,
+                                  .description = NULL,
+                                  .based_on_additional = NULL,
+                                  .add_tags = NULL,
+                                  .star = NULL,
+                                  .inherit_tags = FALSE,
+                                  .update_model_file = TRUE,
+                                  .overwrite = FALSE) {
+  checkmate::assert_class(.parent_mod, NM_MOD_CLASS)
+  if (inherits(.parent_mod, NMBAYES_MOD_CLASS)) {
+    stop(".parent_mod (", get_model_id(.parent_mod),
+         ") is already an nmbayes model.\n",
+         "Use copy_model_from() instead.")
+  }
+
+  mod <- copy_model_from(
+    .parent_mod = .parent_mod,
+    .new_model = .new_model,
+    .description = .description,
+    .based_on_additional = .based_on_additional,
+    .add_tags = .add_tags,
+    .star = .star,
+    .inherit_tags = .inherit_tags,
+    .update_model_file = .update_model_file,
+    .overwrite = .overwrite
+  )
+
+  mod[[YAML_MOD_TYPE]] <- "nmbayes"
+  save_model_yaml(mod)
+
+  return(read_model(mod[[ABS_MOD_PATH]]))
+}
+
+### Stan
+
 #' @export
 copy_model_from.bbi_stan_model <- function(
   .parent_mod,

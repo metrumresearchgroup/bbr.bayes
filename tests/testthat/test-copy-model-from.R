@@ -32,6 +32,30 @@ test_that("copy_from_model() creates accurate copy", {
   }
 })
 
+### NONMEM Bayes
+
+test_that("copy_model_as_nmbayes() creates nmbayes model", {
+  tdir <- local_test_dir()
+  mod <- copy_model_as_nmbayes(
+    NM_MOD1, file.path(tdir, "1-bayes"),
+    .inherit_tags = TRUE, .add_tags = "bayes")
+  expect_s3_class(mod, NMBAYES_MOD_CLASS)
+  expect_identical(bbr::get_based_on(mod), normalizePath(NM_MOD1_PATH))
+  expect_identical(mod[[YAML_TAGS]], c(NM_MOD1$tags, "bayes"))
+})
+
+test_that("copy_model_as_nmbayes() aborts if parent is nmbayes model", {
+  expect_error(copy_model_as_nmbayes(NMBAYES_MOD1),
+               "already an nmbayes")
+})
+
+test_that("copy_model_as_nmbayes() aborts on non-NONMEM models", {
+  expect_error(copy_model_as_nmbayes(STAN_MOD1),
+               "bbi_nonmem_model")
+})
+
+### Stan
+
 test_that("stan: copy_model_from() handles .new_model=NULL", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()

@@ -40,7 +40,7 @@ reference:
     experimentation and development.
   contents:
   - model_summary.bbi_nmbayes_model
-  - nmbayes_convert
+  - copy_model_as_nmbayes
   - submit_model.bbi_nmbayes_model
 
 - title: Shared utilities
