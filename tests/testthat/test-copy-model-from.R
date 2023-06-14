@@ -35,6 +35,7 @@ test_that("copy_from_model() creates accurate copy", {
 ### NONMEM Bayes
 
 test_that("copy_model_as_nmbayes() creates nmbayes model", {
+  testthat::skip_if_not_installed("nmrec")
   tdir <- local_test_dir()
   mod <- copy_model_as_nmbayes(
     NM_MOD1, file.path(tdir, "1-bayes"),
@@ -42,14 +43,19 @@ test_that("copy_model_as_nmbayes() creates nmbayes model", {
   expect_s3_class(mod, NMBAYES_MOD_CLASS)
   expect_identical(bbr::get_based_on(mod), normalizePath(NM_MOD1_PATH))
   expect_identical(mod[[YAML_TAGS]], c(NM_MOD1$tags, "bayes"))
+  expect_match(readLines(get_model_path(mod)),
+               "nmbayes models require",
+               all = FALSE)
 })
 
 test_that("copy_model_as_nmbayes() aborts if parent is nmbayes model", {
+  testthat::skip_if_not_installed("nmrec")
   expect_error(copy_model_as_nmbayes(NMBAYES_MOD1),
                "already an nmbayes")
 })
 
 test_that("copy_model_as_nmbayes() aborts on non-NONMEM models", {
+  testthat::skip_if_not_installed("nmrec")
   expect_error(copy_model_as_nmbayes(STAN_MOD1),
                "bbi_nonmem_model")
 })

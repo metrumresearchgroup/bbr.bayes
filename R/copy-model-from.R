@@ -23,6 +23,10 @@ copy_model_as_nmbayes <- function(.parent_mod,
                                   .inherit_tags = FALSE,
                                   .update_model_file = TRUE,
                                   .overwrite = FALSE) {
+  if (!requireNamespace("nmrec", quietly = TRUE)) {
+    stop("nmbayes functionality requires nmrec package.")
+  }
+
   checkmate::assert_class(.parent_mod, NM_MOD_CLASS)
   if (inherits(.parent_mod, NMBAYES_MOD_CLASS)) {
     stop(".parent_mod (", get_model_id(.parent_mod),
@@ -44,6 +48,23 @@ copy_model_as_nmbayes <- function(.parent_mod,
 
   mod[[YAML_MOD_TYPE]] <- "nmbayes"
   save_model_yaml(mod)
+
+  ctl_file <- get_model_path(mod)
+  ctl <- nmrec::read_ctl(ctl_file)
+  est <- purrr::detect(ctl$records, function(r) identical(r$name, "estimation"))
+  if (!is.null(est)) {
+    # If it's NULL, this isn't a complete control stream. Don't bother injecting
+    # any info.
+    est$parse()
+    est$values <- c(
+      "; TODO: This model was copied by bbr.bayes::copy_model_as_nmbayes().\n",
+      ";       nmbayes models require a METHOD=CHAIN estimation record\n",
+      ";       and a METHOD=BAYES or METHOD=NUTS estimation record.\n",
+      ";       See ?bbr.bayes::bbr_nmbayes for details.\n",
+      est$values
+    )
+    nmrec::write_ctl(ctl, ctl_file)
+  }
 
   return(read_model(mod[[ABS_MOD_PATH]]))
 }
