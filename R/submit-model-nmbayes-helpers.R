@@ -113,6 +113,8 @@ run_chains <- function(.mod, ...) {
            format(est_bayes))
     }
 
+    # TODO: Should we consider the user-specified seed and just increment it to
+    # be chain specific, like cmdstan does?
     seed_opt$value <- .chain
     nmrec::write_ctl(
       ctl,
