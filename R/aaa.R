@@ -17,8 +17,9 @@ NMBAYES_HELP <- "
 ;       nmbayes models require a METHOD=CHAIN estimation record and a
 ;       METHOD=BAYES or METHOD=NUTS estimation record. The records
 ;       below are meant as a starting point.  At the very least, you
-;       need to adjust the number of iterations, but please review all
-;       options carefully.
+;       need to adjust the number of iterations (see NITER option in
+;       the second $EST block), but please review all options
+;       carefully.
 ;
 ;       See ?bbr.bayes::bbr_nmbayes and the NONMEM docs for details.
 $EST METHOD=CHAIN FILE={model_id}.chn NSAMPLE=4 ISAMPLE=0 SEED=1
