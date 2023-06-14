@@ -51,7 +51,7 @@ copy_model_as_nmbayes <- function(.parent_mod,
 
 
   msg <- glue::glue_data_safe(list(model_id = get_model_id(mod)),
-                              NMBAYES_HELP)
+                              NMBAYES_HELP, .trim = FALSE)
   ctl_file <- get_model_path(mod)
   ctl <- nmrec::read_ctl(ctl_file)
   is_est <- purrr::map_lgl(ctl$records,
