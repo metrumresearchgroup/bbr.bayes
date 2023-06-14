@@ -49,22 +49,23 @@ copy_model_as_nmbayes <- function(.parent_mod,
   mod[[YAML_MOD_TYPE]] <- "nmbayes"
   save_model_yaml(mod)
 
+
+  msg <- glue::glue_data_safe(list(model_id = get_model_id(mod)),
+                              NMBAYES_HELP)
   ctl_file <- get_model_path(mod)
   ctl <- nmrec::read_ctl(ctl_file)
-  est <- purrr::detect(ctl$records, function(r) identical(r$name, "estimation"))
-  if (!is.null(est)) {
-    # If it's NULL, this isn't a complete control stream. Don't bother injecting
-    # any info.
-    est$parse()
-    est$values <- c(
-      "; TODO: This model was copied by bbr.bayes::copy_model_as_nmbayes().\n",
-      ";       nmbayes models require a METHOD=CHAIN estimation record\n",
-      ";       and a METHOD=BAYES or METHOD=NUTS estimation record.\n",
-      ";       See ?bbr.bayes::bbr_nmbayes for details.\n",
-      est$values
-    )
-    nmrec::write_ctl(ctl, ctl_file)
+  is_est <- purrr::map_lgl(ctl$records,
+                           function(r) identical(r$name, "estimation"))
+  if (any(is_est)) {
+    idxs <- which(is_est)
+    ctl$records[idxs[1]] <- msg
+    if (length(idxs) > 1) {
+      ctl$records[idxs[2:length(idxs)]] <- NULL
+    }
+  } else {
+    ctl$records <- c(ctl$records, msg)
   }
+  nmrec::write_ctl(ctl, ctl_file)
 
   return(read_model(mod[[ABS_MOD_PATH]]))
 }

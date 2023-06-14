@@ -12,6 +12,25 @@ NMBAYES_SUM_CLASS <- "bbi_nmbayes_summary"
 IPH_ID_NAMES <- c("SUBJECT_NO", "ID", "SUBPOP")
 IPH_NONPARAM_NAMES <- c("ITERATION", IPH_ID_NAMES)
 
+NMBAYES_HELP <- "
+; TODO: This model was copied by bbr.bayes::copy_model_as_nmbayes().
+;       nmbayes models require a METHOD=CHAIN estimation record and a
+;       METHOD=BAYES or METHOD=NUTS estimation record. The records
+;       below are meant as a starting point.  At the very least, you
+;       need to adjust the number of iterations, but please review all
+;       options carefully.
+;
+;       See ?bbr.bayes::bbr_nmbayes and the NONMEM docs for details.
+$EST METHOD=CHAIN FILE={model_id}.chn NSAMPLE=4 ISAMPLE=0 SEED=1
+     CTYPE=0 IACCEPT=0.3 DF=10 DFS=0
+
+$EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
+     AUTO=2 CTYPE=0 OLKJDF=2 OVARF=1
+     NUTS_DELTA=0.95 PRINT=10 MSFO={model_id}.msf RANMETHOD=P PARAFPRINT=10000
+     BAYES_PHI_STORE=1
+
+"
+
 ### Stan
 
 STAN_MOD_CLASS <- "bbi_stan_model"
