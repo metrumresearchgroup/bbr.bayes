@@ -20,6 +20,9 @@ check_up_to_date.bbi_nmbayes_model <- function(.bbi_object, ...) {
     }
   }
 
+  # Note: For a simpler implementation, this pays the price of hashing the same
+  # data set for each submodel. Revisit this spot if this method ends up being
+  # too slow.
   data_same <- TRUE
   for (sub in c(file.path(outdir, "init"), get_chain_dirs(.bbi_object))) {
     res <- check_up_to_date(read_model(sub), ...)
