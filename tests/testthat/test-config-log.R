@@ -13,6 +13,7 @@ test_that("nmbayes: config_log() works", {
 ### Stan
 
 test_that("stan: config_log() works", {
+  testthat::skip_if_not_installed("jsonlite", "1.8.5")
   log_df <- config_log(STAN_ABS_MODEL_DIR)
   expect_identical(log_df[[RUN_ID_COL]],
                    c(STAN_GQ_MOD_ID, STAN_MOD_ID3, STAN_MOD_ID))

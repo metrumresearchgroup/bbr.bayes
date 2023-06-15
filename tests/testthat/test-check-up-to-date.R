@@ -28,17 +28,25 @@ test_that("nmbayes: check_up_to_date() with mismatched data", {
 
 ### Stan
 
+# TODO: Once new jsonlite hits MPN, remove special handling for jsonlite < 1.8.5
+# (this code and all skip_if_not_installed() calls).
+if (packageVersion("jsonlite") < "1.8.5") {
+  cases <- list(STAN_GQ_MOD)
+} else {
+  cases <- list(STAN_MOD1, STAN_GQ_MOD)
+}
+
 test_that("stan: check_up_to_date() happy path", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+  for (mod in cases) {
     expect_equal(check_up_to_date(mod), ALL_GOOD)
   }
 })
 
 test_that("stan: check_up_to_date() with mismatched model", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+  for (mod in cases) {
     perturb_file(build_path_from_model(mod, STANMOD_SUFFIX))
     expect_message(
-      res <- check_up_to_date(STAN_MOD1),
+      res <- check_up_to_date(mod),
       regexp = "The following files have changed.+\\.stan"
     )
     expect_equal(res, MODEL_BAD)
@@ -46,6 +54,8 @@ test_that("stan: check_up_to_date() with mismatched model", {
 })
 
 test_that("stan: check_up_to_date() with mismatched data .build_data=TRUE", {
+  testthat::skip_if_not_installed("jsonlite", "1.8.5")
+
   perturb_file(
     system.file("extdata", "fxa.data.csv", package = "bbr.bayes"),
     txt = paste(rep(99, 8), collapse = ",")
@@ -59,10 +69,10 @@ test_that("stan: check_up_to_date() with mismatched data .build_data=TRUE", {
 })
 
 test_that("stan: check_up_to_date() with mismatched data .build_data=F", {
-  for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
+  for (mod in cases) {
     perturb_file(build_path_from_model(mod, STANDATA_JSON_SUFFIX))
     expect_message(
-      res <- check_up_to_date(STAN_MOD1, .build_data = FALSE),
+      res <- check_up_to_date(mod, .build_data = FALSE),
       regexp = "The following files have changed.+standata\\.json"
     )
     expect_equal(res, DATA_BAD)

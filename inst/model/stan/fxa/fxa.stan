@@ -1,8 +1,8 @@
 data{
   int<lower = 1> nSubjects;
   int<lower = 1> nObs;
-  int<lower = 1> subject[nObs];
-  real<lower = 0> cObs[nObs];
+  array[nObs] int<lower = 1> subject;
+  array[nObs] real<lower = 0> cObs;
   vector[nObs] fxa;
 
   int<lower = 1> nsim;
@@ -45,15 +45,15 @@ model{
 generated quantities{
   vector[nSubjects] logEc50Pred;
   vector<lower = 0>[nSubjects] ec50Pred;
-  real fxaCond[nObs];
-  real<lower = 0> fxaHatPred[nObs];
-  real fxaPred[nObs];
+  array[nObs] real fxaCond;
+  array[nObs] real<lower = 0> fxaHatPred;
+  array[nObs] real fxaPred;
   vector[nsim] logEc50Pred2;
   vector<lower = 0>[nsim] ec50Pred2;
-  real<lower = 0> fxaHatPred2[nsim];
-  real fxaPred2[nsim];
-  real csim[nsim];
-  real log_lik[nObs];
+  array[nsim] real<lower = 0> fxaHatPred2;
+  array[nsim] real fxaPred2;
+  array[nsim] real csim;
+  array[nObs] real log_lik;
 
   // Individual predictions
   for(i in 1:nObs){
