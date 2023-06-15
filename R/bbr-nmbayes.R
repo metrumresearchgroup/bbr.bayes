@@ -40,8 +40,8 @@
 #'    initial estimates for each chain. `ISAMPLE` should be set to 0. The
 #'    `NITER` option controls the number of chains.
 #'
-#'  * a `METHOD=BAYES` or `METHOD=NUTS` estimation record that defines how to
-#'    generate the initial estimates for each chain.
+#'  * a `METHOD=BAYES` or `METHOD=NUTS` estimation record to generate posterior
+#'    samples.
 #'
 #' Here's an example that defines four chains of 500 samples:
 #'

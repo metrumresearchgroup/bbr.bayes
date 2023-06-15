@@ -42,8 +42,8 @@ The control stream must define the following two records:
 \item a \code{METHOD=CHAIN} estimation record that defines how to generate the
 initial estimates for each chain. \code{ISAMPLE} should be set to 0. The
 \code{NITER} option controls the number of chains.
-\item a \code{METHOD=BAYES} or \code{METHOD=NUTS} estimation record that defines how to
-generate the initial estimates for each chain.
+\item a \code{METHOD=BAYES} or \code{METHOD=NUTS} estimation record to generate posterior
+samples.
 }
 
 Here's an example that defines four chains of 500 samples:
