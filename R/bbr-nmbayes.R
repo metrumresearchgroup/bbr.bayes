@@ -30,9 +30,9 @@
 #' The first step to defining a NONMEM Bayes model will often be to call
 #' [copy_model_as_nmbayes()] on an existing non-Bayes NONMEM model. This creates
 #' the new model with [bbr::copy_model_from()] and then sets the model type to
-#' by "nmbayes". Alternatively you can also create a fresh NONMEM Bayes model
-#' with `new_model(..., .model_type = "nmbayes")`. (As with regular NONMEM
-#' models, a control stream must already exist.)
+#' "nmbayes". Alternatively you can also create a fresh NONMEM Bayes model with
+#' `new_model(..., .model_type = "nmbayes")`. (As with regular NONMEM models, a
+#' control stream must already exist.)
 #'
 #' The control stream must define the following two records:
 #'

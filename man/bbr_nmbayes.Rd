@@ -33,9 +33,9 @@ using \code{BAYES} or \code{NUTS} estimation methods.
 The first step to defining a NONMEM Bayes model will often be to call
 \code{\link[=copy_model_as_nmbayes]{copy_model_as_nmbayes()}} on an existing non-Bayes NONMEM model. This creates
 the new model with \code{\link[bbr:copy_model_from]{bbr::copy_model_from()}} and then sets the model type to
-by "nmbayes". Alternatively you can also create a fresh NONMEM Bayes model
-with \code{new_model(..., .model_type = "nmbayes")}. (As with regular NONMEM
-models, a control stream must already exist.)
+"nmbayes". Alternatively you can also create a fresh NONMEM Bayes model with
+\code{new_model(..., .model_type = "nmbayes")}. (As with regular NONMEM models, a
+control stream must already exist.)
 
 The control stream must define the following two records:
 \itemize{
