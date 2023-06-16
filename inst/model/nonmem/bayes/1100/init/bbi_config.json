@@ -1,0 +1,56 @@
+{
+    "bbi_version": "v3.2.2",
+    "model_name": "init.ctl",
+    "original_model": "init.ctl",
+    "model_path": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/nonmem/bayes/1100/init.ctl",
+    "data_path": "../../../../../extdata/analysis3.csv",
+    "data_md5": "84a596d0fd81c2d187a64bc62d96b433",
+    "model_md5": "d8159e836ea1e099cab911c3186b7af0",
+    "model_filename": "init",
+    "model_extension": "ctl",
+    "original_path": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/nonmem/bayes/1100",
+    "output_dir": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/nonmem/bayes/1100/init",
+    "configuration": {
+        "overwrite": true,
+        "clean_lvl": 1,
+        "git": true,
+        "save_config": true,
+        "output_dir": "{{ .Name }}",
+        "threads": 8,
+        "local": {
+            "create_child_dirs": true
+        },
+        "nonmem": {
+            "nm73gf": {
+                "home": "/opt/NONMEM/nm73gf",
+                "executable": "nmfe73",
+                "nmqual": true
+            },
+            "nm73gf_nmfe": {
+                "home": "/opt/NONMEM/nm73gf_nmfe",
+                "executable": "nmfe73"
+            },
+            "nm74gf": {
+                "home": "/opt/NONMEM/nm74gf",
+                "executable": "nmfe74",
+                "nmqual": true
+            },
+            "nm74gf_nmfe": {
+                "home": "/opt/NONMEM/nm74gf_nmfe",
+                "executable": "nmfe74"
+            },
+            "nm75": {
+                "home": "/opt/NONMEM/nm75",
+                "executable": "nmfe75",
+                "default": true
+            }
+        },
+        "parallel": false,
+        "nmfe_options": {
+            "maxlim": 2
+        },
+        "mpi_exec_path": "/usr/local/mpich3/bin/mpiexec",
+        "parallel_timeout": 2147483647
+    },
+    "error": null
+}

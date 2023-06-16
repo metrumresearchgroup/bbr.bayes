@@ -32,6 +32,102 @@ test_that("copy_from_model() creates accurate copy", {
   }
 })
 
+### NONMEM Bayes
+
+test_that("copy_model_as_nmbayes() creates nmbayes model", {
+  testthat::skip_if_not_installed("nmrec")
+  tdir <- local_test_dir()
+  fs::file_copy(fs::path_ext_set(NM_MOD1_PATH, ".ctl"), tdir)
+  fs::file_copy(fs::path_ext_set(NM_MOD1_PATH, ".yaml"), tdir)
+
+  check <- function(mod) {
+    expect_s3_class(mod, NMBAYES_MOD_CLASS)
+    expect_identical(bbr::get_based_on(mod), file.path(tdir, NM_MOD_ID))
+    expect_identical(mod[[YAML_TAGS]], c(NM_MOD1$tags, "bayes"))
+    ctl_file <- get_model_path(mod)
+    expect_match(readLines(ctl_file), "nmbayes models require", all = FALSE)
+
+    ctl <- nmrec::read_ctl(ctl_file)
+    ests <- nmrec::select_records(ctl, "estimation")
+    expect_identical(
+      purrr::map_chr(ests, function(r) {
+        opt <- nmrec::get_record_option(r, "method")
+        if (!is.null(opt)) {
+          return(opt$value)
+        }
+      }),
+      c("CHAIN", "NUTS")
+    )
+  }
+
+  parent <- read_model(file.path(tdir, NM_MOD_ID))
+  parent_file <- get_model_path(parent)
+
+  # copy_model_as_nmbayes() add message and removes existing estimation records.
+  # It can handle parent control stream with one estimation record...
+  m1 <- copy_model_as_nmbayes(parent, .inherit_tags = TRUE, .add_tags = "bayes")
+  check(m1)
+  # ... or more than one estimation record...
+  cat("\n$EST METHOD=SAEM\n$EST METHOD=ITS\n",
+      file = parent_file, append = TRUE)
+  m2 <- copy_model_as_nmbayes(parent, .inherit_tags = TRUE, .add_tags = "bayes")
+  check(m2)
+  # ... or no estimation records.
+  ctl_parent <- nmrec::read_ctl(parent_file)
+  is_est <- purrr::map_lgl(ctl_parent$records,
+                           function(r) identical(r$name, "estimation"))
+  if (sum(is_est) != 3) {
+    stop("Test setup is incorrect")
+  }
+  ctl_parent$records[is_est] <- NULL
+  nmrec::write_ctl(ctl_parent, parent_file)
+  m3 <- copy_model_as_nmbayes(parent, .inherit_tags = TRUE, .add_tags = "bayes")
+  check(m3)
+})
+
+test_that("copy_model_as_nmbayes(): .update_model_file=FALSE disables model updates", {
+  tdir <- local_test_dir()
+  mod <- copy_model_as_nmbayes(NM_MOD1, file.path(tdir, "foo"),
+                               .update_model_file = FALSE)
+  expect_identical(readLines(get_model_path(NM_MOD1)),
+                   readLines(get_model_path(mod)))
+})
+
+test_that("copy_model_as_nmbayes() keeps trailing comments", {
+  tdir <- local_test_dir()
+  file_parent <- file.path(tdir, "1.ctl")
+  lines_parent <- c("$prob one",
+                    "$EST METHOD=SAEM",
+                    "  abort",
+                    "; comment1",
+                    "$EST METHOD=ITS",
+                    "  ; comment 2")
+  writeLines(lines_parent, file_parent)
+  mod_parent <- new_model(file.path(tdir, "1"))
+  mod <- copy_model_as_nmbayes(mod_parent)
+
+  mod_lines <- readLines(get_model_path(mod))
+  expect_identical(
+    setdiff(lines_parent, mod_lines),
+    c("$EST METHOD=SAEM", "  abort", "$EST METHOD=ITS")
+  )
+  expect_match(mod_lines, "nmbayes models require", all = FALSE)
+})
+
+test_that("copy_model_as_nmbayes() aborts if parent is nmbayes model", {
+  testthat::skip_if_not_installed("nmrec")
+  expect_error(copy_model_as_nmbayes(NMBAYES_MOD1),
+               "already an nmbayes")
+})
+
+test_that("copy_model_as_nmbayes() aborts on non-NONMEM models", {
+  testthat::skip_if_not_installed("nmrec")
+  expect_error(copy_model_as_nmbayes(STAN_MOD1),
+               "bbi_nonmem_model")
+})
+
+### Stan
+
 test_that("stan: copy_model_from() handles .new_model=NULL", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()

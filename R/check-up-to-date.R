@@ -1,4 +1,38 @@
 
+#' @export
+check_up_to_date.bbi_nmbayes_model <- function(.bbi_object, ...) {
+  outdir <- get_output_dir(.bbi_object)
+  config_file <- file.path(outdir, "nmbayes.json")
+  if (!fs::file_exists(config_file)) {
+    stop("Cannot check if up to date because model has not been run yet.")
+  }
+  config <- jsonlite::read_json(config_file)
+
+  mpath <- get_model_path(.bbi_object)
+  mhash <- unname(tools::md5sum(mpath))
+  model_same <- identical(mhash, config[["model_md5"]])
+  if (!model_same) {
+    if (is.na(mhash)) {
+      message("The top-level model in ", get_model_id(.bbi_object),
+              " is no longer present")
+    } else {
+      message("The top-level model changed in ", get_model_id(.bbi_object))
+    }
+  }
+
+  # Note: For a simpler implementation, this pays the price of hashing the same
+  # data set for each submodel. Revisit this spot if this method ends up being
+  # too slow.
+  data_same <- TRUE
+  for (sub in c(file.path(outdir, "init"), get_chain_dirs(.bbi_object))) {
+    res <- check_up_to_date(read_model(sub), ...)
+    model_same <- model_same && res["model"]
+    data_same <- data_same && res["data"]
+  }
+
+  return(invisible(c(model = model_same, data = data_same)))
+}
+
 #' Check that Stan model is up to date
 #'
 #' The details of which files are "model files" and which are "data files" are

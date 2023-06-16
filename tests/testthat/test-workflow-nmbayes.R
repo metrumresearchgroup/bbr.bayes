@@ -1,3 +1,4 @@
+testthat::skip_if_not_installed("nmrec")
 skip_long_tests("skipping long-running nmbayes submit_model tests")
 
 if (identical(Sys.getenv("METWORX_VERSION"), "")) {
@@ -53,13 +54,40 @@ test_that("nmbayes: submit_model() works", {
   expect_s3_class(iph$subpop_map, "data.frame")
 })
 
+test_that("nmbayes: submit_model() checks for existing model", {
+  mod_parent <- read_model(file.path("model", "nonmem", "bayes", "1101"))
+  mod <- copy_model_from(mod_parent)
+
+  submit_model(mod, .mode = "local", .dry_run = TRUE)
+
+  expect_identical(
+    list.dirs(get_output_dir(mod), recursive = FALSE, full.names = FALSE),
+    "init")
+
+  submit_model(mod, .mode = "local")
+
+  expect_setequal(
+    list.dirs(get_output_dir(mod), recursive = FALSE, full.names = FALSE),
+    c("init", "1102-1", "1102-2"))
+
+  expect_error(submit_model(mod, .mode = "local", .dry_run = TRUE),
+               "already exists")
+  expect_error(submit_model(mod, .mode = "local"),
+               "already exists")
+
+  submit_model(mod, .mode = "local", .overwrite = TRUE)
+  expect_setequal(
+    list.dirs(get_output_dir(mod), recursive = FALSE, full.names = FALSE),
+    c("init", "1102-1", "1102-2"))
+})
+
 test_that("nmbayes: run_log() captures runs correctly", {
   skip("FIXME: submodels confuse run_log()")
   log_df <- run_log(".")
-  expect_identical(nrow(log_df), 2L)
+  expect_identical(nrow(log_df), 3L)
   expect_identical(ncol(log_df), 10L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
-                  c("1100", "1101"))
+                  c("1100", "1101", "1102"))
 })
 
 test_that("nmbayes: summary_log() captures runs correctly", {
@@ -67,7 +95,7 @@ test_that("nmbayes: summary_log() captures runs correctly", {
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
     log_df <- summary_log(".")
   })
-  expect_identical(nrow(log_df), 2L)
+  expect_identical(nrow(log_df), 3L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
-                  c("1100", "1101"))
+                  c("1100", "1101", "1102"))
 })

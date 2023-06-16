@@ -1,5 +1,29 @@
 
 #' @export
+get_config_path.bbi_nmbayes_model <- function(.bbi_object, .check_exists = TRUE) {
+  .path <- file.path(
+    get_output_dir(.bbi_object, .check_exists = .check_exists),
+    "init", "bbi_config.json")
+
+  if (isTRUE(.check_exists)) {
+    checkmate::assert_file_exists(.path)
+  }
+
+  return(.path)
+}
+
+#' @export
+get_data_path.bbi_nmbayes_model <- function(.mod, ...) {
+  mod_init_path <- file.path(get_output_dir(.mod), "init")
+  if (!fs::file_exists(paste0(mod_init_path, ".yaml"))) {
+    stop("Cannot extract data path because init submodel doesn't exist.",
+         "\nThis is expected if the model has not been executed yet.")
+  }
+
+  return(get_data_path(read_model(mod_init_path)))
+}
+
+#' @export
 get_model_path.bbi_stan_model <- function(.bbi_object, .check_exists = TRUE) {
   get_stan_path_impl(.bbi_object, STANMOD_SUFFIX, .check_exists)
 }

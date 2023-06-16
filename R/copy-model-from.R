@@ -1,4 +1,103 @@
 
+### NONMEM Bayes
+
+#' Copy a "regular" NONMEM model to NONMEM Bayes model
+#'
+#' Like [bbr::copy_model_from()], but switch the model type from "nonmem" to
+#' "nmbayes" to begin defining a [NONMEM Bayes model][bbr_nmbayes].
+#'
+#' @inheritParams bbr::copy_model_from
+#' @param .parent_mod A `bbi_nonmem_model` object to copy. This should _not_ be
+#'   a `bbi_nmbayes_model` subclass; in that case, use [bbr::copy_model_from()]
+#'   to copy the model in the standard way.
+#' @param .update_model_file Whether to update the newly created model file. If
+#'   `TRUE`, the model will be adjusted by [copy_model_from()]. In addition, any
+#'   existing estimation records will be deleted, and the two estimation records
+#'   required for nmbayes models will be added along with a comment.
+#' @return A `bbi_nmbayes_model` object for the new model.
+#' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
+#'   models are structured in bbr
+#' @export
+copy_model_as_nmbayes <- function(.parent_mod,
+                                  .new_model = NULL,
+                                  .description = NULL,
+                                  .based_on_additional = NULL,
+                                  .add_tags = NULL,
+                                  .star = NULL,
+                                  .inherit_tags = FALSE,
+                                  .update_model_file = TRUE,
+                                  .overwrite = FALSE) {
+  if (!requireNamespace("nmrec", quietly = TRUE)) {
+    stop("nmbayes functionality requires nmrec package.")
+  }
+
+  checkmate::assert_class(.parent_mod, NM_MOD_CLASS)
+  if (inherits(.parent_mod, NMBAYES_MOD_CLASS)) {
+    stop(".parent_mod (", get_model_id(.parent_mod),
+         ") is already an nmbayes model.\n",
+         "Use copy_model_from() instead.")
+  }
+
+  mod <- copy_model_from(
+    .parent_mod = .parent_mod,
+    .new_model = .new_model,
+    .description = .description,
+    .based_on_additional = .based_on_additional,
+    .add_tags = .add_tags,
+    .star = .star,
+    .inherit_tags = .inherit_tags,
+    .update_model_file = .update_model_file,
+    .overwrite = .overwrite
+  )
+
+  mod[[YAML_MOD_TYPE]] <- "nmbayes"
+  save_model_yaml(mod)
+
+  if (isTRUE(.update_model_file)) {
+    msg <- glue::glue_data_safe(list(model_id = get_model_id(mod)),
+                                NMBAYES_HELP, .trim = FALSE)
+    ctl_file <- get_model_path(mod)
+    ctl <- nmrec::read_ctl(ctl_file)
+    ests <- nmrec::select_records(ctl, "estimation")
+    if (length(ests)) {
+      for (est in ests) {
+        est$parse()
+        est$values <- trailing_comments(est$values)
+      }
+      ests[[1]]$values <- c(msg, ests[[1]]$values)
+    } else {
+      ctl$records <- c(ctl$records, msg)
+    }
+    nmrec::write_ctl(ctl, ctl_file)
+  }
+
+  return(read_model(mod[[ABS_MOD_PATH]]))
+}
+
+#' Return trailing comments of record, if any
+#'
+#' @param values nmrec_record object values
+#' @noRd
+trailing_comments <- function(values) {
+  idx_opt <- purrr::detect_index(values,
+    function(x) inherits(x, "nmrec_option"),
+    .dir = "backward")
+
+  nvals <- length(values)
+
+  idx_lb <- idx_opt + purrr::detect_index(
+    values[idx_opt:nvals],
+    function(x) inherits(x, "nmrec_linebreak"))
+
+  tail <- values[idx_lb:nvals]
+  if (!purrr::some(tail, function(x) inherits(x, "nmrec_comment"))) {
+    return(list())
+  }
+  return(tail)
+}
+
+### Stan
+
 #' @export
 copy_model_from.bbi_stan_model <- function(
   .parent_mod,
