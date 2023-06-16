@@ -1,9 +1,8 @@
 #' Create model for generating initial estimates for an nmbayes model
 #'
 #' @param .mod A `bbi_nmbayes_model` object.
-#' @param .overwrite Whether to overwrite an existing model.
 #' @noRd
-nmbayes_init <- function(.mod, .overwrite = FALSE) {
+nmbayes_init <- function(.mod) {
   ctl_file <- get_model_path(.mod)
   outdir <- get_output_dir(.mod, .check_exists = FALSE)
   # Keep same extension so that bbi treats the data path the same way.
@@ -11,9 +10,6 @@ nmbayes_init <- function(.mod, .overwrite = FALSE) {
     outdir,
     fs::path_ext_set("init", fs::path_ext(ctl_file))
   )
-  if (!identical(.overwrite, TRUE) && fs::file_exists(ctl_file_init)) {
-    stop("init submodel already exists for ", get_model_id(.mod))
-  }
 
   ctl <- nmrec::read_ctl(ctl_file)
   adjust_data_path(ctl)
@@ -45,7 +41,9 @@ nmbayes_init <- function(.mod, .overwrite = FALSE) {
   fs::dir_create(outdir)
   nmrec::write_ctl(ctl, ctl_file_init)
 
-  return(new_model(file.path(outdir, "init"), .overwrite = .overwrite))
+  # Upstream code is responsible removing existing output if .overwrite=TRUE, so
+  # an unconditional .overwrite=FALSE is sufficient.
+  return(new_model(file.path(outdir, "init"), .overwrite = FALSE))
 }
 
 #' Run Bayes chains
@@ -123,7 +121,9 @@ run_chains <- function(.mod, ...) {
       file.path(outdir, glue("{.run}-{.chain}")),
       .description = glue("Chain {.chain}"),
       .based_on = based_on,
-      .overwrite = TRUE
+      # Upstream code is responsible removing existing output if
+      # .overwrite=TRUE, so an unconditional .overwrite=FALSE is sufficient.
+      .overwrite = FALSE
     )
     # Suppress "replacing ..." message.
     chain_mod <- suppressMessages(bbr::update_model_id(chain_mod))

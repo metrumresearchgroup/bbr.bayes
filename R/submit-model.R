@@ -44,11 +44,23 @@ submit_model.bbi_nmbayes_model <- function(
     fs::path_abs(.config_path)
   }
 
-  mod_init <- nmbayes_init(.mod, .overwrite)
+  outdir <- get_output_dir(.mod, .check_exists = FALSE)
+  if (fs::dir_exists(outdir)) {
+    if (!isTRUE(.overwrite)) {
+      subdirs <- basename(fs::dir_ls(outdir, all = TRUE, type = "directory"))
+      if (length(subdirs) && !identical(subdirs, "init")) {
+        stop("Output for model ", get_model_id(.mod), " already exists.\n",
+             "Pass `.overwrite = TRUE` to overwrite.")
+      }
+    }
+    fs::dir_delete(outdir)
+  }
+
+  mod_init <- nmbayes_init(.mod)
   submit_model(
     mod_init,
     .bbi_args = .bbi_args,
-    .overwrite = .overwrite,
+    .overwrite = TRUE,
     .config_path = .config_path,
     .wait = .wait,
     # Regardless of the mode for the main sampling (triggered by run_chains),
