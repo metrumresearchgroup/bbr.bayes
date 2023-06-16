@@ -58,14 +58,13 @@ copy_model_as_nmbayes <- function(.parent_mod,
                                 NMBAYES_HELP, .trim = FALSE)
     ctl_file <- get_model_path(mod)
     ctl <- nmrec::read_ctl(ctl_file)
-    is_est <- purrr::map_lgl(ctl$records,
-                             function(r) identical(r$name, "estimation"))
-    if (any(is_est)) {
-      idxs <- which(is_est)
-      ctl$records[idxs[1]] <- msg
-      if (length(idxs) > 1) {
-        ctl$records[idxs[2:length(idxs)]] <- NULL
+    ests <- nmrec::select_records(ctl, "estimation")
+    if (length(ests)) {
+      for (est in ests) {
+        est$parse()
+        est$values <- trailing_comments(est$values)
       }
+      ests[[1]]$values <- c(msg, ests[[1]]$values)
     } else {
       ctl$records <- c(ctl$records, msg)
     }
@@ -73,6 +72,28 @@ copy_model_as_nmbayes <- function(.parent_mod,
   }
 
   return(read_model(mod[[ABS_MOD_PATH]]))
+}
+
+#' Return trailing comments of record, if any
+#'
+#' @param values nmrec_record object values
+#' @noRd
+trailing_comments <- function(values) {
+  idx_opt <- purrr::detect_index(values,
+    function(x) inherits(x, "nmrec_option"),
+    .dir = "backward")
+
+  nvals <- length(values)
+
+  idx_lb <- idx_opt + purrr::detect_index(
+    values[idx_opt:nvals],
+    function(x) inherits(x, "nmrec_linebreak"))
+
+  tail <- values[idx_lb:nvals]
+  if (!purrr::some(tail, function(x) inherits(x, "nmrec_comment"))) {
+    return(list())
+  }
+  return(tail)
 }
 
 ### Stan
