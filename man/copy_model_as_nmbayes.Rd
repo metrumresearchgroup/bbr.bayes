@@ -46,11 +46,10 @@ no need to include that here.}
 tags passed to \code{.add_tags} argument. If \code{TRUE} inherit any tags from
 \code{.parent_mod}, with any tags passed to \code{.add_tags} appended.}
 
-\item{.update_model_file}{\strong{Only relevant to NONMEM models.} If \code{TRUE}, the
-default, update the newly created model file. If \code{FALSE}, new model file
-will be an exact copy of its parent. For a NONMEM model, this currently
-means only the \verb{$PROBLEM} line in the new control stream will be updated to
-read \verb{See {.new_model}.yaml. Created by bbr.}.}
+\item{.update_model_file}{Whether to update the newly created model file. If
+\code{TRUE}, the model will be adjusted by \code{\link[=copy_model_from]{copy_model_from()}}. In addition, any
+existing estimation records will be deleted, and the two estimation records
+required for nmbayes models will be added along with a comment.}
 
 \item{.overwrite}{If \code{FALSE}, the default,  function will error if a model
 file already exists at specified \code{.new_model} path. If \code{TRUE} any existing

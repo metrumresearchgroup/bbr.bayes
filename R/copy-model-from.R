@@ -10,6 +10,10 @@
 #' @param .parent_mod A `bbi_nonmem_model` object to copy. This should _not_ be
 #'   a `bbi_nmbayes_model` subclass; in that case, use [bbr::copy_model_from()]
 #'   to copy the model in the standard way.
+#' @param .update_model_file Whether to update the newly created model file. If
+#'   `TRUE`, the model will be adjusted by [copy_model_from()]. In addition, any
+#'   existing estimation records will be deleted, and the two estimation records
+#'   required for nmbayes models will be added along with a comment.
 #' @return A `bbi_nmbayes_model` object for the new model.
 #' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
 #'   models are structured in bbr
@@ -49,23 +53,24 @@ copy_model_as_nmbayes <- function(.parent_mod,
   mod[[YAML_MOD_TYPE]] <- "nmbayes"
   save_model_yaml(mod)
 
-
-  msg <- glue::glue_data_safe(list(model_id = get_model_id(mod)),
-                              NMBAYES_HELP, .trim = FALSE)
-  ctl_file <- get_model_path(mod)
-  ctl <- nmrec::read_ctl(ctl_file)
-  is_est <- purrr::map_lgl(ctl$records,
-                           function(r) identical(r$name, "estimation"))
-  if (any(is_est)) {
-    idxs <- which(is_est)
-    ctl$records[idxs[1]] <- msg
-    if (length(idxs) > 1) {
-      ctl$records[idxs[2:length(idxs)]] <- NULL
+  if (isTRUE(.update_model_file)) {
+    msg <- glue::glue_data_safe(list(model_id = get_model_id(mod)),
+                                NMBAYES_HELP, .trim = FALSE)
+    ctl_file <- get_model_path(mod)
+    ctl <- nmrec::read_ctl(ctl_file)
+    is_est <- purrr::map_lgl(ctl$records,
+                             function(r) identical(r$name, "estimation"))
+    if (any(is_est)) {
+      idxs <- which(is_est)
+      ctl$records[idxs[1]] <- msg
+      if (length(idxs) > 1) {
+        ctl$records[idxs[2:length(idxs)]] <- NULL
+      }
+    } else {
+      ctl$records <- c(ctl$records, msg)
     }
-  } else {
-    ctl$records <- c(ctl$records, msg)
+    nmrec::write_ctl(ctl, ctl_file)
   }
-  nmrec::write_ctl(ctl, ctl_file)
 
   return(read_model(mod[[ABS_MOD_PATH]]))
 }

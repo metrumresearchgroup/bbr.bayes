@@ -85,6 +85,14 @@ test_that("copy_model_as_nmbayes() creates nmbayes model", {
   check(m3)
 })
 
+test_that("copy_model_as_nmbayes(): .update_model_file=FALSE disables model updates", {
+  tdir <- local_test_dir()
+  mod <- copy_model_as_nmbayes(NM_MOD1, file.path(tdir, "foo"),
+                               .update_model_file = FALSE)
+  expect_identical(readLines(get_model_path(NM_MOD1)),
+                   readLines(get_model_path(mod)))
+})
+
 test_that("copy_model_as_nmbayes() aborts if parent is nmbayes model", {
   testthat::skip_if_not_installed("nmrec")
   expect_error(copy_model_as_nmbayes(NMBAYES_MOD1),
