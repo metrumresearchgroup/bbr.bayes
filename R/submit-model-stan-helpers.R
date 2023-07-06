@@ -66,7 +66,7 @@ import_stan_fitted_params <- function(.mod) {
 
 #' Private helper to compile a stan model and save a gitignore that ignores the
 #' binary and posterior csv's
-#' @keywords internal
+#' @noRd
 compile_stanmod <- function(.mod) {
   # compile model
   stanmod <- cmdstanr::cmdstan_model(get_model_path(.mod))
