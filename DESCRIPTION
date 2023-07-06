@@ -39,7 +39,7 @@ Imports:
     ellipsis,
     fs,
     glue,
-    jsonlite,
+    jsonlite (>= 1.8.5),
     magrittr,
     methods,
     posterior,
