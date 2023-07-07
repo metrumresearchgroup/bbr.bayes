@@ -65,22 +65,19 @@ import_stan_fitted_params <- function(.mod) {
 }
 
 #' Private helper to compile a stan model and save a gitignore that ignores the
-#' binary and posterior csv's
-#' @keywords internal
+#' binary.
+#' @noRd
 compile_stanmod <- function(.mod) {
   # compile model
   stanmod <- cmdstanr::cmdstan_model(get_model_path(.mod))
 
   # add to gitignore, if not already present
   gitignore <- file.path(.mod[[ABS_MOD_PATH]], ".gitignore")
-  out_dir_str <- as.character(glue("{get_model_id(.mod)}-output/*csv"))
 
   if (!fs::file_exists(gitignore)) {
     readr::write_lines(paste(
       "# ignore model binary",
       get_model_id(.mod), "",
-      "# ignore csv posterior output",
-      out_dir_str,
       sep = "\n"
     ), gitignore)
   } else {
@@ -88,9 +85,6 @@ compile_stanmod <- function(.mod) {
     # if either line is missing, append it
     if (!any(grepl(glue("^{get_model_id(.mod)}$"), gitignore_lines))) {
       readr::write_lines(glue("\n\n# ignore model binary\n{get_model_id(.mod)}"), gitignore, append = TRUE)
-    }
-    if (!any(grepl(out_dir_str, gitignore_lines, fixed = TRUE))) {
-      readr::write_lines(glue("\n\n# ignore csv posterior output\n{out_dir_str}"), gitignore, append = TRUE)
     }
   }
 
