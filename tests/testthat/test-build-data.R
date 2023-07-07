@@ -11,7 +11,7 @@ test_that("build_data.bbi_stan_model returns correct list", {
 test_that("build_data.bbi_stan_model write to disk", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     if (identical(mod, STAN_MOD1)) {
-      testthat::skip_if_not_installed("jsonlite", "1.8.5")
+      skip_if_jsonlite_prec_change()
     }
 
     tmp_path <- tempfile()

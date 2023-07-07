@@ -28,9 +28,7 @@ test_that("nmbayes: check_up_to_date() with mismatched data", {
 
 ### Stan
 
-# TODO: Once new jsonlite hits MPN, remove special handling for jsonlite < 1.8.5
-# (this code and all skip_if_not_installed() calls).
-if (packageVersion("jsonlite") < "1.8.5") {
+if (jsonlite_prec_change()) {
   cases <- list(STAN_GQ_MOD)
 } else {
   cases <- list(STAN_MOD1, STAN_GQ_MOD)
@@ -54,7 +52,7 @@ test_that("stan: check_up_to_date() with mismatched model", {
 })
 
 test_that("stan: check_up_to_date() with mismatched data .build_data=TRUE", {
-  testthat::skip_if_not_installed("jsonlite", "1.8.5")
+  skip_if_jsonlite_prec_change()
 
   perturb_file(
     system.file("extdata", "fxa.data.csv", package = "bbr.bayes"),
