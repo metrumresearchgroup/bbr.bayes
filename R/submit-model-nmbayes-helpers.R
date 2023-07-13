@@ -52,9 +52,11 @@ nmbayes_init <- function(.mod) {
 #' generated
 #'
 #' @param .mod A `bbi_nmbayes_model` object.
+#' @param .run_sims_col Column to include in `run_sims()` table. This will be
+#'   used to join the table with the input data.
 #' @param ... Arguments passed to [bbr::submit_model()].
 #' @noRd
-run_chains <- function(.mod, ...) {
+run_chains <- function(.mod, .run_sims_col, ...) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
 
   ctl_file <- get_model_path(.mod)
@@ -90,6 +92,7 @@ run_chains <- function(.mod, ...) {
   niter_opt$value <- 0
 
   set_chain_file(est_chain)
+  rs_table <- run_sims_table(ctl, .run_sims_col)
 
   .run <- get_model_id(.mod)
   outdir <- get_output_dir(.mod)
@@ -114,9 +117,12 @@ run_chains <- function(.mod, ...) {
     # TODO: Should we consider the user-specified seed and just increment it to
     # be chain specific, like cmdstan does?
     seed_opt$value <- .chain
-    nmrec::write_ctl(
-      ctl,
-      file.path(outdir, glue("{.run}-{.chain}.{ext}")))
+    chain_ctl_file <- file.path(outdir, glue("{.run}-{.chain}.{ext}"))
+    nmrec::write_ctl(ctl, chain_ctl_file)
+    if (!is.null(rs_table)) {
+      cat(rs_table, file = chain_ctl_file, append = TRUE)
+    }
+
     chain_mod <- new_model(
       file.path(outdir, glue("{.run}-{.chain}")),
       .description = glue("Chain {.chain}"),
@@ -181,4 +187,34 @@ set_chain_file <- function(record) {
   }
 
   return(invisible(NULL))
+}
+
+run_sims_table <- function(ctl, join_col) {
+  if (is.null(join_col)) {
+    return(NULL)
+  }
+
+  err_lines <- unlist(purrr::map(nmrec::select_records(ctl, "error"),
+                                 function(r) r$get_lines()))
+  if (any(stringr::str_detect(err_lines, "\\s*IPRED\\s*="))) {
+    ipred <- " IPRED"
+  } else {
+    ipred <- ""
+  }
+
+
+  # NONMEM errors if RANMETHOD is set in more than one table.
+  table_opts <- unlist(purrr::map(nmrec::select_records(ctl, "table"),
+                                  function(r) r$get_options()))
+  if (purrr::none(table_opts, function(o) o$name == "ranmethod")) {
+    ranmeth <- " RANMETHOD=P"
+  } else {
+    ranmeth <- ""
+  }
+
+  return(glue("\n",
+              "$TABLE {join_col} EPRED{ipred} NPDE EWRES\n",
+              "       NOPRINT ONEHEADER{ranmeth}\n",
+              "       FILE=bbr-bayes-run-sims.tab\n",
+              .trim = FALSE))
 }
