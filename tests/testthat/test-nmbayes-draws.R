@@ -1,6 +1,6 @@
 
 test_that("reshape_iph() return value can be converted into draws object", {
-  iphs <- get_chain_files(NMBAYES_MOD1, ".iph")
+  iphs <- chain_paths(NMBAYES_MOD1, ".iph")
   dfs <- purrr::map(iphs, ~ reshape_iph(fread_draws(.x))$draws)
 
   draws <- posterior::as_draws(dfs)

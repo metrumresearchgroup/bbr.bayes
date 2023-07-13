@@ -37,10 +37,25 @@ get_chain_dirs <- function(.mod) {
   return(chaindirs[chains])
 }
 
-#' Return `{run}.{extension}` file from each chain subdirectory.
+#' Return output file from each chain subdirectory
 #'
-#' @param .mod A `bbi_nmbayes_model`.
+#' Starting with the top-level NOMEM Bayes model, construct the paths to the
+#' specified per-chain output files.
+#'
+#' @param .mod A `bbi_nmbayes_model` object.
 #' @param extension File extension.
+#' @return Absolute file paths, one for each chain.
+#' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
+#'   models are structured
+#' @export
+chain_paths <- function(.mod, extension) {
+  checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
+  checkmate::assert_string(extension, null.ok = TRUE)
+  chain_paths_impl(.mod, extension = extension, check_exists = "no")
+}
+
+#' Internal implementation of `chain_paths()` with additional arguments
+#'
 #' @param chain_dirs Paths to chain subdirectories. This argument exists so that
 #'   callers can avoid repeated calls to `get_chain_dirs()`; the value should
 #'   match what is returned by `get_chain_dirs()`.
@@ -49,10 +64,9 @@ get_chain_dirs <- function(.mod) {
 #'   "all_or_none", do the same, but, if the file doesn't exist in any
 #'   subdirectory, return an empty character rather than aborting. Specify "no"
 #'   to disable the check entirely.
-#' @return Absolute file paths, one for each chain.
 #' @noRd
-get_chain_files <- function(.mod, extension, chain_dirs = NULL,
-                            check_exists = c("no", "all", "all_or_none")) {
+chain_paths_impl <- function(.mod, extension, chain_dirs = NULL,
+                             check_exists = c("no", "all", "all_or_none")) {
   check_exists <- match.arg(check_exists)
   dirs <- chain_dirs %||% get_chain_dirs(.mod)
   files <- file.path(dirs, fs::path_ext_set(basename(dirs), extension))
