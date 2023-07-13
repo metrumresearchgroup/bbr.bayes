@@ -1,29 +1,57 @@
 
 test_that("chain_paths() returns files in chain subdirs", {
-  exts <- chain_paths(NMBAYES_MOD1, ".ext")
+  exts <- chain_paths(NMBAYES_MOD1, extension = ".ext")
 
   expect_length(exts, 2)
   expect_true(all(fs::path_has_parent(exts, NMBAYES_ABS_MODEL_DIR)))
   expect_setequal(basename(exts), c("1100-1.ext", "1100-2.ext"))
 
   # It doesn't matter if "." is included.
-  expect_identical(exts, chain_paths(NMBAYES_MOD1, "ext"))
+  expect_identical(exts, chain_paths(NMBAYES_MOD1, extension = "ext"))
 
-  expect_setequal(basename(chain_paths(NMBAYES_MOD1, ".phi")),
+  expect_setequal(basename(chain_paths(NMBAYES_MOD1, extension = ".phi")),
                   c("1100-1.phi", "1100-2.phi"))
 })
 
+test_that("chain_paths() accepts custom name", {
+  res <- chain_paths(NMBAYES_MOD1,
+                     name = bbr::get_model_id(NMBAYES_MOD1),
+                     extension = ".ext")
+  expect_length(res, 2)
+  expect_true(all(fs::path_has_parent(res, NMBAYES_ABS_MODEL_DIR)))
+  expect_setequal(basename(res), c("1100.ext", "1100.ext"))
+
+  res <- chain_paths(NMBAYES_MOD1,
+                     name = "foo",
+                     extension = ".bar")
+  expect_length(res, 2)
+  expect_true(all(fs::path_has_parent(res, NMBAYES_ABS_MODEL_DIR)))
+  expect_setequal(basename(res), c("foo.bar", "foo.bar"))
+
+  # Empty name and extension can be used to grab chain directories.
+  res <- chain_paths(NMBAYES_MOD1,
+                     name = "",
+                     extension = "")
+  expect_length(res, 2)
+  expect_true(all(fs::path_has_parent(res, NMBAYES_ABS_MODEL_DIR)))
+  expect_setequal(basename(res), c("1100-1", "1100-2"))
+})
+
 test_that("chain_paths_impl() optionally checks existence: basic", {
-  expect_length(chain_paths_impl(NMBAYES_MOD1, ".ext",
+  expect_length(chain_paths_impl(NMBAYES_MOD1,
+                                 extension = ".ext",
                                  check_exists = "all"),
                 2)
-  expect_error(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
+  expect_error(chain_paths_impl(NMBAYES_MOD1,
+                                extension = ".i-do-not-exist",
                                 check_exists = "all"),
                "Missing")
-  expect_length(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
+  expect_length(chain_paths_impl(NMBAYES_MOD1,
+                                 extension = ".i-do-not-exist",
                                  check_exists = "no"),
                 2)
-  expect_identical(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
+  expect_identical(chain_paths_impl(NMBAYES_MOD1,
+                                    extension = ".i-do-not-exist",
                                     check_exists = "all_or_none"),
                    character(0))
 })
@@ -40,7 +68,7 @@ test_that("chain_paths_impl() optionally checks existence: some missing", {
                rundir)
 
   mod <- read_model(rundir)
-  exts <- chain_paths_impl(mod, ".ext", check_exists = "all")
+  exts <- chain_paths_impl(mod, extension = ".ext", check_exists = "all")
   expect_length(exts, 2)
   if (!all(fs::path_has_parent(exts, get_model_working_directory(mod)))) {
     fail(glue("Returned files are not under expected directory",
@@ -53,8 +81,13 @@ test_that("chain_paths_impl() optionally checks existence: some missing", {
     return(NULL)
   }
   fs::file_delete(exts[1])
-  expect_error(chain_paths_impl(mod, ".ext", check_exists = "all"),
-               "Missing")
-  expect_error(chain_paths_impl(mod, ".ext", check_exists = "all_or_none"),
-               "Missing")
+  expect_error(
+    chain_paths_impl(mod, extension = ".ext", check_exists = "all"),
+    "Missing")
+  expect_error(
+    chain_paths_impl(mod, extension = ".ext", check_exists = "all_or_none"),
+    "Missing")
+  expect_error(
+    chain_paths_impl(mod, extension = ".ext", check_exists = "all_or_none"),
+    "Missing")
 })
