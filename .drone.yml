@@ -40,7 +40,7 @@ steps:
   commands:
   - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
   - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
-  - R -s -e 'devtools::install_deps(upgrade = "never")'
+  - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
   - R -s -e 'devtools::check()'
   environment:
     NOT_CRAN: true
@@ -99,7 +99,7 @@ steps:
   - git fetch --tags
   - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
   - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
-  - R -s -e 'devtools::install_deps(upgrade = "never")'
+  - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
   - R -s -e 'pkgpub::create_tagged_repo(.dir = "/ephemeral")'
   environment:
     NOT_CRAN: true
