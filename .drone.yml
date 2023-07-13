@@ -97,8 +97,10 @@ steps:
   - git config --global user.email drone@metrumrg.com
   - git config --global user.name Drony
   - git fetch --tags
-  - R -s -e 'devtools::install_deps(upgrade = '"'"'never'"'"')'
-  - R -s -e 'pkgpub::create_tagged_repo(.dir = '"'"'/ephemeral'"'"')'
+  - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
+  - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
+  - R -s -e 'devtools::install_deps(upgrade = "never")'
+  - R -s -e 'pkgpub::create_tagged_repo(.dir = "/ephemeral")'
   environment:
     NOT_CRAN: true
   volumes:
