@@ -1,0 +1,314 @@
+RUN_SIMS_COLS <- c(
+  "PRED", "RES", "WRES",
+  "EPRED", "EPRED_lo", "EPRED_hi",
+  "LNEPRED", "LNEPRED_lo", "LNEPRED_hi",
+  "IPRED", "IPRED_lo", "IPRED_hi",
+  "LNIPRED", "LNIPRED_lo", "LNIPRED_hi",
+  "NPDE", "EWRES"
+)
+
+#' Simulate diagnostic quantities with mrgsolve
+#'
+#' HELP: (description)
+#'
+#' @param mod A `bbi_nmbayes_model` object.
+#' @param mod_mrgsolve An mrgsolve model object. HELP: (fill in more details
+#'   about requirements for this model)
+#' @param data A NONMEM dataset for `mod` to use instead of the default one
+#'   extracted from `mod` with [bbr::nm_data()]. This data frame must include a
+#'   `join_col` column.
+#' @param join_col Column used to join `data` to a data frame constructed by
+#'   combining values from the `bbr-bayes-run-sims.tab` file in each chain
+#'   subdirectory.
+#' @param y_col The name of the dependent variable in `mod_mrgsolve`.
+#' @param point_fn Function used to calculate point estimates of table values
+#'   across chains and of simulated EPRED and IPRED values.
+#' @param probs A two-item vector of lower and upper probabilities to pass to
+#'   [stats::quantile()] to calculate the bounds of the simulated EPRED and
+#'   IPRED values.
+#' @param resid_var Whether to include residual variability in simulations.
+#' @param n_post Randomly select this number of posterior draws to use as input
+#'   to the simulation.
+#' @param log_dv Whether the DV was log-transformed.
+#' @param epred Simulate EPRED values, including the point estimate as `EPRED`
+#'   and the bounds as `EPRED_lo` and `EPRED_hi`.
+#' @param ipred Simulate IPRED values, including the point estimate as `IPRED`
+#'   and the bounds as `IPRED_lo` and `IPRED_hi`.
+#' @param ipred_path Write the IPRED simulation result (as comma-separated
+#'   values) to this path. This is useful if you need access to the full results
+#'   (e.g., for LOO calculations), not just the summary returned by this
+#'   function.
+#' @param ewres_npde Whether to replace EWRES and NPDE values obtained from
+#'   table with ones generated with \pkg{npde}.
+#'
+#' @return A data frame. The base data frame is the result combining the
+#'   `bbr-bayes-run-sims.tab` values for each chain, collapsing across
+#'   `join_col` with `point_fn`, and then joining `data`. `EPRED`, `IPRED`,
+#'   `EWRES`, and `NPDE` values are replaced with a simulated estimate, if
+#'   requested by the corresponding argument.
+#' @export
+run_sims <- function(mod,
+                     mod_mrgsolve,
+                     data = NULL,
+                     join_col = "NUM",
+                     y_col = "Y",
+                     point_fn = stats::median,
+                     probs = c(0.025, 0.975),
+                     resid_var = TRUE,
+                     n_post = 1000,
+                     log_dv = FALSE,
+                     epred = TRUE,
+                     ipred = TRUE,
+                     ipred_path = NULL,
+                     ewres_npde = FALSE) {
+  checkmate::assert_class(mod, NMBAYES_MOD_CLASS)
+  checkmate::assert_class(mod_mrgsolve, "mrgmod")
+  checkmate::assert_data_frame(data, null.ok = TRUE)
+  checkmate::assert_string(join_col)
+  checkmate::assert_string(y_col)
+  checkmate::assert_string(ipred_path, null.ok = TRUE)
+  checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
+  checkmate::assert_int(n_post)
+
+  if (isTRUE(ewres_npde)) {
+    if (!isTRUE(epred)) {
+      stop("`ewres_npde = TRUE` depends on `epred = TRUE`.")
+    }
+
+    if (!requireNamespace("npde", quietly = TRUE)) {
+      stop("`npde = TRUE` requires npde package.")
+    }
+
+    if (utils::packageVersion("npde") <= 3.4) {
+      warning("Installed version of npde (",
+              utils::packageVersion("npde"),
+              ") is likely to fail saying input is not positive definite.")
+    }
+  }
+
+  # HELP: mrgsolve model checks?
+
+  if (!isTRUE(resid_var)) {
+    mod_mrgsolve <- mrgsolve::zero_re(mod_mrgsolve, "sigma")
+  }
+
+  res <- prep_run_sims_data(mod, data, join_col, point_fn)
+  rm(data)
+
+  ext <- sample_exts(mod, n_post)
+
+  if (isTRUE(epred)) {
+    epred_res <- sim_epred(mod_mrgsolve,
+                           ext, res,
+                           join_col, y_col)
+    epred_sum <- summarise_pred(
+      "EPRED", epred_res, join_col, point_fn, probs, log_dv)
+    res <- dplyr::select(res, -"EPRED") %>%
+      dplyr::left_join(epred_sum, by = join_col)
+  }
+
+  if (isTRUE(ipred)) {
+    ipred_res <- sim_ipred(mod, mod_mrgsolve,
+                           ext, res,
+                           join_col, y_col)
+
+    if (!is.null(ipred_path)) {
+      readr::write_csv(ipred_res, ipred_path)
+    }
+
+    ipred_sum <- summarise_pred(
+      "IPRED", ipred_res, join_col, point_fn, probs, log_dv)
+    rm(ipred_res)
+    res <- dplyr::select(res, -"IPRED") %>%
+      dplyr::left_join(ipred_sum, by = join_col)
+  }
+
+  if (isTRUE(ewres_npde)) {
+    en_res <- sim_ewres_npde(res, epred_res, join_col)
+    res <- dplyr::select(res, -c("EWRES", "NPDE")) %>%
+      dplyr::left_join(en_res, by = join_col)
+  }
+
+  dplyr::select(res, any_of(c(join_col, RUN_SIMS_COLS)))
+}
+
+prep_run_sims_data <- function(mod, data, join_col, point_fn) {
+  # TODO: Extract some of this logic for an exposed join function? (gh-50)
+  if (is.null(data)) {
+    withr::with_options(list(bbr.verbose = FALSE), {
+      data <- bbr::nm_data(mod)
+    })
+  }
+
+  data_cols <- names(data)
+
+  if (!join_col %in% data_cols) {
+    stop("`join_col` (", join_col, ") not found in data columns.")
+  }
+
+  if (length(intersect(RUN_SIMS_COLS, data_cols))) {
+    stop("Some data names collide with bbr-bayes-run-sims.tab names: ",
+         paste(intersect(RUN_SIMS_COLS, data_cols), collapse = ", "))
+  }
+
+  if (!"EVID" %in% data_cols) {
+    data$EVID <- 0
+  }
+
+  tab_files <- chain_paths_impl(mod,
+                                name = "bbr-bayes-run-sims",
+                                extension = "tab",
+                                check_exists = "all_or_none")
+  if (!length(tab_files)) {
+    stop("Chain models do not have bbr-bayes-run-sims.tab files\n",
+         "This is unexpected unless you called `submit_model()`\n",
+         "with `.run_sims_col = NULL`.")
+  }
+
+  tab <- purrr::map(tab_files, fread_chain_file) %>%
+    dplyr::bind_rows() %>%
+    dplyr::select(-"DV")
+
+  if (!join_col %in% names(tab)) {
+    stop("`join_col` (", join_col, ") is not in bbr-bayes-run-sims.tab\n",
+         "See `?bbr.bayes::nmbayes_submit_model`.")
+  }
+
+  tab_sum <- dplyr::group_by(tab, .data[[join_col]]) %>%
+    dplyr::summarise(dplyr::across(dplyr::everything(), .fns = point_fn))
+
+  dplyr::left_join(tab_sum, data, by = join_col)
+}
+
+#' Randomly select ext samples
+#'
+#' @param mod A `bbi_nmbayes_model` object.
+#' @param n_post Number of posterior samples to select.
+#' @return Data frame with ext samples.
+#' @noRd
+sample_exts <- function(mod, n_post) {
+  # Note: Downstream mrgsolve wants a data frame in the same form as the ext
+  # data files. Read these directly rather than using as_draws_df() to avoid
+  # needing to do extra work to get back to this same place.
+  ext <- chain_paths_impl(mod, extension = "ext", check_exists = "all") %>%
+    purrr::map(fread_chain_file) %>%
+    dplyr::bind_rows(.id = "chain") %>%
+    dplyr::filter(.data$ITERATION > 0) %>%
+    dplyr::mutate(draw = dplyr::row_number())
+
+  if (nrow(ext) > n_post) {
+    ext <- ext[sort(sample(nrow(ext), n_post)), ]
+  }
+
+  return(ext)
+}
+
+sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col) {
+  theta_cols <- grep("^THETA[0-9]+$", colnames(ext))
+  mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
+  res <- purrr::map(seq_len(nrow(ext)), function(n) {
+    ext_row <- ext[n, ]
+    theta <- ext_row[theta_cols]
+    mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
+      mrgsolve::omat(mrgsolve::as_bmat(ext_row, "OMEGA")) %>%
+      mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
+      mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
+      dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
+      dplyr::mutate(sample = n)
+  })
+
+  return(tibble::as_tibble(dplyr::bind_rows(res)))
+}
+
+sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
+  # Note: Read these directly rather than using as_draws_df() to avoid
+  # unnecessary reshaping. See ext note above.
+  iph_files <- chain_paths_impl(mod,
+                                extension = "iph",
+                                check_exists = "all_or_none")
+  if (!length(iph_files)) {
+    stop("`ipred = TRUE` requires iph files")
+  }
+
+  # TODO: Restrict fread() calls with `select`.
+  ipar <- purrr::map(iph_files, fread_chain_file) %>%
+    dplyr::bind_rows(.id = "chain") %>%
+    dplyr::filter(.data$ITERATION > 0) %>%
+    dplyr::select("chain", "ITERATION", "ID", starts_with("ETA("))
+  ipar <- dplyr::left_join(dplyr::select(ext, -starts_with("OMEGA(")),
+                           ipar,
+                           by = c("chain", "ITERATION")) %>%
+    dplyr::rename_with(function(x) gsub("\\(([0-9]+)\\)$", "\\1", x),
+                       starts_with("ETA("))
+
+  mod_sim <- mrgsolve::zero_re(mod_mrgsolve, "omega") %>%
+    mrgsolve::data_set(data)
+
+  res <- purrr::map(seq_len(nrow(ext)), function(n) {
+    ext_row <- ext[n, ]
+    ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
+    mrgsolve::idata_set(mod_sim, ipar_n) %>%
+      mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
+      mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
+      dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
+      dplyr::mutate(sample = n)
+  })
+
+  return(tibble::as_tibble(dplyr::bind_rows(res)))
+}
+
+summarise_pred <- function(name, simdf, join_col, point_fn, probs, log_dv) {
+  name_lo <- paste0(name, "_lo")
+  name_hi <- paste0(name, "_hi")
+
+  res <- dplyr::group_by(simdf, .data[[join_col]]) %>%
+    dplyr::summarise(
+      "{name}" := point_fn(.data$DV_sim),
+      "{name_lo}" := stats::quantile(.data$DV_sim, probs[1]),
+      "{name_hi}" := stats::quantile(.data$DV_sim, probs[2]))
+
+  if (isTRUE(log_dv)) {
+    res <- dplyr::mutate(
+      res,
+      "LN{name}" := .data[[name]],
+      "LN{name_lo}" := .data[[name_lo]],
+      "LN{name_hi}" := .data[[name_hi]],
+      "{name}" := exp(.data[[name]]),
+      "{name_lo}" := exp(.data[[name_lo]]),
+      "{name_hi}" := exp(.data[[name_hi]]))
+  }
+
+  return(res)
+}
+
+sim_ewres_npde <- function(data, epred_res, join_col) {
+  df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
+    dplyr::select("ID", "TIME", "DV", all_of(join_col))
+  df_sim <- dplyr::left_join(epred_res, df_obs, by = join_col) %>%
+    dplyr::select("ID", "TIME", DV = "DV_sim")
+
+  # TODO: Using tempfiles is workaround for the error mentioned in Bayes expo.
+  # Look into.
+  tdir <- withr::local_tempdir("bbr.bayes-run-sims-")
+  file_df_obs <- file.path(tdir, "df_obs.txt")
+  file_df_sim <- file.path(tdir, "df_sim.txt")
+  readr::write_delim(df_obs, file_df_obs)
+  readr::write_delim(df_sim, file_df_sim)
+
+  # Use output sink because, even with `verbose = FALSE`, npde prints
+  #
+  #   Distribution of npde :
+  #   [...]
+  #   Signif. codes: '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
+  withr::with_output_sink(nullfile(), {
+    # TODO: Expose any autonpde arguments? decorr.method?
+    out <- npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
+                          iid = "ID", ix = "TIME", iy = "DV",
+                          calc.npd = TRUE, calc.npde = TRUE,
+                          verbose = FALSE,
+                          boolsave = FALSE)
+  })
+
+  dplyr::bind_cols(out@results@res, df_obs[, join_col]) %>%
+    dplyr::select(all_of(join_col), EWRES = "ydobs", NPDE = "npde")
+}

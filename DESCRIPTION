@@ -57,7 +57,9 @@ Suggests:
     covr,
     devtools,
     knitr,
+    mrgsolve,
     nmrec,
+    npde,
     rmarkdown,
     testthat (>= 2.1.0),
     withr

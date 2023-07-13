@@ -12,7 +12,7 @@
 #'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
 #'   is executed to generate the initialization values regardless of this value.
 #' @param .run_sims_col When running the chain sub-models, a behind-the-scenes
-#'   table is generated for consumption by `run_sims()`. By default, a "NUM"
+#'   table is generated for consumption by [run_sims()]. By default, a "NUM"
 #'   column is included for the purpose of joining the table to the data.
 #'   Specify another value to use a different column, or pass `NULL` to disable
 #'   writing the table entirely.

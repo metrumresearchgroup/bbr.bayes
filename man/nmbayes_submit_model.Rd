@@ -32,7 +32,7 @@ or set globally with \code{options("bbr.bbi_exe_mode")}.}
 \item{...}{args passed through to \code{bbi_exec()}}
 
 \item{.run_sims_col}{When running the chain sub-models, a behind-the-scenes
-table is generated for consumption by \code{run_sims()}. By default, a "NUM"
+table is generated for consumption by \code{\link[=run_sims]{run_sims()}}. By default, a "NUM"
 column is included for the purpose of joining the table to the data.
 Specify another value to use a different column, or pass \code{NULL} to disable
 writing the table entirely.}
