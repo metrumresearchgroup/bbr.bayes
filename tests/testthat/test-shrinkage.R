@@ -142,7 +142,7 @@ test_that("shrinkage(): rank matches for use_sd=TRUE and use_sd=FALSE", {
 })
 
 test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
-  tdir <- withr::local_tempdir("bbr-bayes-")
+  tdir <- local_test_dir()
   modfile <- get_model_path(NMBAYES_MOD1)
   fs::file_copy(modfile, tdir)
   fs::file_copy(get_yaml_path(NMBAYES_MOD1), tdir)
