@@ -142,28 +142,7 @@ test_that("shrinkage(): rank matches for use_sd=TRUE and use_sd=FALSE", {
 })
 
 test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
-  tdir <- local_test_dir()
-  modfile <- get_model_path(NMBAYES_MOD1)
-  fs::file_copy(modfile, tdir)
-  fs::file_copy(get_yaml_path(NMBAYES_MOD1), tdir)
-
-  mod_id <- get_model_id(NMBAYES_MOD1)
-  rundir <- file.path(tdir, mod_id)
-  fs::dir_copy(fs::path_ext_remove(modfile),
-               rundir)
-
-  mod <- read_model(rundir)
-  iphs <- chain_paths_impl(mod, extension = ".iph", check_exists = "all")
-  if (!all(fs::path_has_parent(iphs, get_model_working_directory(mod)))) {
-    fail(glue("Returned files are not under expected directory",
-              " - directory: {get_model_working_directory(mod)}",
-              " - files:     {files}",
-              files = paste(iphs, collapse = ", "),
-              .sep = "\n"))
-    return(NULL)
-  }
-  fs::file_delete(iphs)
-
+  mod <- local_nmbayes_model_no_iph()
   res_shk <- shrinkage(mod)
   res_iph <- shrinkage(NMBAYES_MOD1)
   expect_false(any(res_shk == res_iph))
@@ -173,7 +152,7 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
 
   # Error cases
 
-  shk_files <- fs::path_ext_set(iphs, "shk")
+  shk_files <- chain_paths(mod, extension = "shk")
 
   invalid_data <- tibble::tibble(TYPE = 1:2)
   # No TYPE column found on second line.
