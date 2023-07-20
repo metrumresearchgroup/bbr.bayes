@@ -18,7 +18,8 @@ run_sims(
   epred = TRUE,
   ipred = TRUE,
   ipred_path = NULL,
-  ewres_npde = FALSE
+  ewres_npde = FALSE,
+  min_batch_size = 200
 )
 }
 \arguments{
@@ -64,6 +65,18 @@ function.}
 
 \item{ewres_npde}{Whether to replace EWRES and NPDE values obtained from
 table with ones generated with \pkg{npde}.}
+
+\item{min_batch_size}{To simulate EPRED and IPRED values, posterior samples
+are split into batches and sent as items to \pkg{future} \verb{*apply}
+functions. The number of batches is chosen so that each batch has at least
+the number of samples specified by this argument.
+
+\strong{Note:} You may be able to tune this value to get better performance for
+a particular case (considering factors such as the model, targeted future
+backend, and machine). However, the results across runs with the same
+initial seed will differ if you change this value. To avoid the results
+varying across different machines and future backends, do not dynamically
+set this value based on the number of available workers.}
 }
 \value{
 A data frame. The base data frame is the result combining the

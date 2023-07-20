@@ -1,6 +1,7 @@
 
 skip_long_tests("long-running run_sim() tests")
 testthat::skip_if_not_installed("mrgsolve")
+testthat::skip_if_not_installed("future.apply")
 
 get_mrgsolve_model <- function() {
   capture.output(type = "message", {
@@ -85,7 +86,7 @@ test_that("run_sims() works", {
   tfile <- withr::local_tempfile()
   readr::write_csv(res, tfile)
   expect_identical(unname(tools::md5sum(tfile)),
-                   "42c5a41db9a615873654db8b70f8e869")
+                   "fe35bc6cab6debd80b1b45c3bd9860dc")
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
