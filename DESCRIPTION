@@ -60,6 +60,7 @@ Suggests:
     mrgsolve,
     nmrec,
     npde,
+    progressr,
     rmarkdown,
     testthat (>= 2.1.0),
     withr

@@ -96,11 +96,13 @@ run_sims <- function(mod,
   rm(data)
 
   ext <- sample_exts(mod, n_post)
+  pbar <- sim_pbar_maybe(ext, epred, ipred)
 
   if (isTRUE(epred)) {
     epred_res <- sim_epred(mod_mrgsolve,
                            ext, res,
-                           join_col, y_col)
+                           join_col, y_col,
+                           pbar)
     epred_sum <- summarise_pred(
       "EPRED", epred_res, join_col, point_fn, probs, log_dv)
     res <- dplyr::select(res, -"EPRED") %>%
@@ -110,7 +112,8 @@ run_sims <- function(mod,
   if (isTRUE(ipred)) {
     ipred_res <- sim_ipred(mod, mod_mrgsolve,
                            ext, res,
-                           join_col, y_col)
+                           join_col, y_col,
+                           pbar)
 
     if (!is.null(ipred_path)) {
       readr::write_csv(ipred_res, ipred_path)
@@ -203,11 +206,12 @@ sample_exts <- function(mod, n_post) {
   return(ext)
 }
 
-sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col) {
+sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col, pbar) {
   theta_cols <- grep("^THETA[0-9]+$", colnames(ext))
   mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
   res <- purrr::map(seq_len(nrow(ext)), function(n) {
     ext_row <- ext[n, ]
+    pbar(sprintf("EPRED (%d)", ext_row$draw))
     theta <- ext_row[theta_cols]
     mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
       mrgsolve::omat(mrgsolve::as_bmat(ext_row, "OMEGA")) %>%
@@ -220,7 +224,7 @@ sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col) {
   return(tibble::as_tibble(dplyr::bind_rows(res)))
 }
 
-sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
+sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col, pbar) {
   # Note: Read these directly rather than using as_draws_df() to avoid
   # unnecessary reshaping. See ext note above.
   iph_files <- chain_paths_impl(mod,
@@ -244,6 +248,7 @@ sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
 
   res <- purrr::map(seq_len(nrow(ext)), function(n) {
     ext_row <- ext[n, ]
+    pbar(sprintf("IPRED (%d)", ext_row$draw))
     ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
     mrgsolve::idata_set(mod_sim, ipar_n) %>%
       mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
@@ -323,4 +328,16 @@ sim_ewres_npde <- function(data, epred_res, join_col) {
 
   dplyr::bind_cols(out@results@res, df_obs[, join_col]) %>%
     dplyr::select(all_of(join_col), EWRES = "ydobs", NPDE = "npde")
+}
+
+sim_pbar_maybe <- function(ext, epred, ipred, envir = parent.frame()) {
+  if (requireNamespace("progressr", quietly = TRUE)) {
+    ndraws <- nrow(ext)
+    nrep <- isTRUE(epred) + isTRUE(ipred)
+    fn <- progressr::progressor(steps = ndraws * nrep, envir = envir)
+  } else {
+    fn <- function(...) NULL
+  }
+
+  return(fn)
 }
