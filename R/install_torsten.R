@@ -1,28 +1,111 @@
+#' Install Torsten
+#'
+#' @description The `install_torsten()` function attempts to download and
+#'   install the latest release of [Torsten](https://github.com/metrumresearchgroup/Torsten/releases/latest).
+#'   Installing a previous release or a new release candidate is also possible
+#'   by specifying the `version` or `release_url` argument.
+#'   See the first few sections of the CmdStan
+#'   [installation guide](https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
+#'   for details on the C++ toolchain required for installing CmdStan.
+#'
+#'
+#' @export
+#' @param dir (string) The path to the directory in which to install Torsten
+#'   The default is to install it in a directory called `.torsten` within the
+#'   user's home directory (i.e, `file.path(Sys.getenv("HOME"), ".torsten")`).
+#' @param cores (integer) The number of CPU cores to use to parallelize building
+#'   CmdStan and speed up installation. If `cores` is not specified then the
+#'   default is to look for the option `"mc.cores"`, which can be set for an
+#'   entire \R session by `options(mc.cores=value)`. If the `"mc.cores"` option
+#'   has not been set then the default is `2`.
+#' @param quiet (logical) Should the verbose output
+#'   from the system processes be suppressed when building the Torsten binaries?
+#'   The default is `FALSE`.
+#' @param version (string) The Torsten release version to install. The default
+#'   is `NULL`, which downloads the latest stable release from
+#'   <https://github.com/metrumresearchgroup/Torsten/releases>.
+#' @param release_url (string) The URL for the specific Torsten release or
+#'   release candidate to install. See <https://github.com/metrumresearchgroup/Torsten/releases>.
+#'   The URL should point to the tarball (`.tar.gz.` file) itself, e.g.,
+#'   `release_url="https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.90.0.tar.gz"`.
+#'   If both `version` and `release_url` are specified then `version` will be used.
+#' @param cpp_options (list) Any makefile flags/variables to be written to
+#'   the `make/local` file. For example, `list("CXX" = "clang++")` will force
+#'   the use of clang for compilation.
+#' @param check_toolchain (logical) Should `install_torsten()` attempt to check
+#'   that the required toolchain is installed and properly configured. The
+#'   default is `TRUE`.
+#'
+#' @examples
+#' \dontrun{
+#' # install_torsten(cores = 4)
+#'
+#' cpp_options <- list(
+#'   "CXX" = "clang++",
+#'   "CXXFLAGS+= -march=native",
+#'   PRECOMPILED_HEADERS = TRUE
+#' )
+#' # install_torsten(cores = 4, cpp_options = cpp_options)
+#' }
+#'
+
+#'## install_torsten version without unexported dependencies
+
+latest_torsten_release <- function() {
+  require(jsonlite)
+  dest_file <- tempfile(pattern = "releases-", fileext = ".json")
+  download_url <- "https://api.github.com/repos/metrumresearchgroup/Torsten/releases/latest"
+  release_list_downloaded <- utils::download.file(url = download_url,
+                                                  destfile = dest_file,
+                                                  quiet = TRUE)
+  if (release_list_downloaded != 0) {
+    stop("GitHub download of release list failed.", call. = FALSE)
+  }
+  release <- jsonlite::read_json(dest_file)
+  release$tag_name
+}
+
+get_torsten_release_list <- function() {
+  require(jsonlite)
+  dest_file <- tempfile(pattern = "releases-", fileext = ".json")
+  download_url <- "https://api.github.com/repos/metrumresearchgroup/Torsten/releases"
+  release_list_downloaded <- utils::download.file(url = download_url,
+                                                  destfile = dest_file,
+                                                  quiet = TRUE)
+  if (release_list_downloaded != 0) {
+    stop("GitHub download of release list failed.", call. = FALSE)
+  }
+  release <- jsonlite::read_json(dest_file)
+  sapply(release,
+         function(x){
+           x$tag_name
+         })
+}
+
 install_torsten <- function(dir = NULL,
                             cores = getOption("mc.cores", 2),
                             quiet = FALSE,
-##                            overwrite = FALSE,
                             timeout = 1200,
                             version = NULL,
                             release_url = NULL,
                             cpp_options = list(),
-                            check_toolchain = TRUE,
-                            mpi_path = NULL
+                            check_toolchain = TRUE
 ) {
+
+  ## install_torsten is based on cmdstanr::install_cmdstan. Differences include
+  ## * install_torsten always overwrites pre-existing Torsten installation at the
+  ##.  specified cmdstan_path.
+  ## * install_torsten does not try to automatically append to cpp_options for
+  ##.  M1 Macs. Is this needed?
+  ## * install_torsten does not provide support for WSL. Should it?
+
   require(cmdstanr)
   if (check_toolchain) {
     cmdstanr::check_cmdstan_toolchain(fix = FALSE, quiet = quiet)
   }
-  make_local_msg <- NULL
-  if (!is.null(cmdstanr::cmdstan_version(error_on_NA = FALSE))) {
-    current_make_local_contents <- cmdstanr::cmdstan_make_local()
-    if (length(current_make_local_contents) > 0) {
-      old_cmdstan_path <- cmdstanr::cmdstan_path()
-      make_local_msg <- paste0("cmdstan_make_local(cpp_options = cmdstan_make_local(dir = \"", cmdstan_path(), "\"))")
-    }
-  }
   if (is.null(dir)) {
-    dir <- cmdstanr::cmdstan_default_install_path()
+    dir <- file.path(dirname(cmdstanr::cmdstan_default_install_path()),
+                     ".torsten")
   }
   if (!dir.exists(dir)) {
     dir.create(dir, recursive = TRUE)
@@ -36,9 +119,9 @@ install_torsten <- function(dir = NULL,
     release_list <- get_torsten_release_list()
     release <- release_list[grep(version, release_list)]
     if(length(release) < 1){
-      stop("Available Torsten versions do not include", version, call. = FALSE)
+      stop("Available Torsten versions do not include ", version, call. = FALSE)
     }
-    release_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
+    download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
                           release, ".tar.gz")
   }
   if (!is.null(release_url)) {
@@ -46,43 +129,34 @@ install_torsten <- function(dir = NULL,
       stop(release_url, " is not a .tar.gz archive!",
            "cmdstanr supports installing from .tar.gz archives only.", call. = FALSE)
     }
+    download_url <- release_url
     message("* Installing Torsten from ", release_url)
-    # download_url <- release_url
-    # split_url <- strsplit(release_url, "/")
-    # tar_name <- utils::tail(split_url[[1]], n = 1)
-    # cmdstan_ver <- substr(tar_name, 0, nchar(tar_name) - 7)
-    # tar_gz_file <- paste0(cmdstan_ver, ".tar.gz")
-    # dir_cmdstan <- file.path(dir, cmdstan_ver)
-    # dest_file <- file.path(dir, tar_gz_file)
   } else {
-    ver <- latest_torsten_release()
-    message("* Latest Torsten release is ", ver)
-    release_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
-                          ver, ".tar.gz")
-    # cmdstan_ver <- paste0("cmdstan-", ver, cmdstan_arch_suffix(ver))
-    # tar_gz_file <- paste0(cmdstan_ver, ".tar.gz")
-    # dir_cmdstan <- file.path(dir, cmdstan_ver)
-    # message("* Installing CmdStan v", ver, " in ", dir_cmdstan)
-    # message("* Downloading ", tar_gz_file, " from GitHub...")
-    # download_url <- github_download_url(ver)
-    # dest_file <- file.path(dir, tar_gz_file)
+    if(is.null(version)) {
+      ver <- latest_torsten_release()
+      message("* Latest Torsten release is ", ver)
+      download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
+                            ver, ".tar.gz")
+    }
   }
-  dir_torsten <- file.path(dir, substr(basename(release_url), 1, nchar(basename(release_url)) - 7))
-  dir.create(dir_torsten, recursive = TRUE)
-  dest_file <- file.path(dir_torsten, basename(release_url))
+  message("* Installing Torsten from ", download_url)
+  dir_torsten <- file.path(dir, substr(basename(download_url), 1, nchar(basename(download_url)) - 7))
+  dir.create(dir_torsten, recursive = TRUE, showWarnings = FALSE)
+  dest_file <- file.path(dir_torsten, basename(download_url))
   dir_cmdstan <- file.path(dir_torsten, "cmdstan")
-##  if (!check_install_dir(dir_cmdstan, overwrite)) {
-##    return(invisible(NULL))
-##  }
   ## Reset timeout for download. The 60 s default is not enough.
   options(timeout = max(300, getOption("timeout")))
-  tar_downloaded <- cmdstanr:::download_with_retries(release_url, dest_file)
-  if (!tar_downloaded) {
+  tar_downloaded <- try(suppressWarnings(utils::download.file(url = download_url,
+                                                              destfile = dest_file, quiet = quiet)),
+                        silent = TRUE)
+  if (tar_downloaded != 0) {
     if (!is.null(version)) {
-      stop("Download of Torsten failed. Please check if the supplied version number is valid.", call. = FALSE)
+      stop("Download of Torsten failed. Please check if the supplied version number is valid.",
+           call. = FALSE)
     }
     if (!is.null(release_url)) {
-      stop("Download of Torsten failed. Please check if the supplied release URL is valid.", call. = FALSE)
+      stop("Download of Torsten failed. Please check if the supplied release URL is valid.",
+           call. = FALSE)
     }
     stop("Download of Torsten failed. Please try again.", call. = FALSE)
   }
@@ -99,22 +173,20 @@ install_torsten <- function(dir = NULL,
   }
   file.remove(dest_file)
   cmdstanr::cmdstan_make_local(dir = dir_cmdstan, cpp_options = cpp_options, append = TRUE)
-  # Setting up native M1 compilation of CmdStan and its downstream libraries
-  if (cmdstanr:::is_rosetta2()) {
-    cmdstanr::cmdstan_make_local(
-      dir = dir_cmdstan,
-      cpp_options = list(
-        CXX = "arch -arch arm64e clang++"
-      ),
-      append = TRUE
-    )
-  }
+  # # Setting up native M1 compilation of CmdStan and its downstream libraries
+  # if (cmdstanr:::is_rosetta2()) {
+  #   cmdstanr::cmdstan_make_local(
+  #     dir = dir_cmdstan,
+  #     cpp_options = list(
+  #       CXX = "arch -arch arm64e clang++"
+  #     ),
+  #     append = TRUE
+  #   )
+  # }
 
   message("* Building CmdStan binaries...")
-  build_log <- cmdstanr:::build_cmdstan(dir_cmdstan, cores, quiet, timeout)
-  if (!cmdstanr:::build_status_ok(build_log, quiet = quiet)) {
-    return(invisible(build_log))
-  }
+  cmdstanr::rebuild_cmdstan(dir = dir_cmdstan, cores = cores,
+                            quiet = quiet, timeout = timeout)
 
   set_cmdstan_path(path = file.path(dir_cmdstan))
   message("Testing installation by attempting to compile an example model.\n")
@@ -122,13 +194,4 @@ install_torsten <- function(dir = NULL,
                          force_recompile = TRUE)
 
   message("* Finished installing Torsten to ", dir_torsten, "\n")
-  if (!is.null(make_local_msg) && old_cmdstan_path != cmdstan_path()) {
-    message(
-      "\nThe previous installation of CmdStan had a non-empty make/local file.\n",
-      "If you wish to copy the file to the new installation, run the following commands:\n",
-      "\n",
-      make_local_msg,
-      "\nrebuild_cmdstan(cores = ...)"
-    )
-  }
 }
