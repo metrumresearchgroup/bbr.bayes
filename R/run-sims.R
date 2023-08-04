@@ -237,8 +237,8 @@ sim_epred <- function(mod_mrgsolve, exts, data, join_col, y_col, pbar) {
     function(ext) {
       `%>%` <- magrittr::`%>%` # Make pipe available in other sessions.
       purrr::map(seq_len(nrow(ext)), function(n) {
+        pbar("EPRED")
         ext_row <- ext[n, ]
-        pbar(sprintf("EPRED (%d)", ext_row$draw))
         theta <- ext_row[theta_cols]
         mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
           mrgsolve::omat(mrgsolve::as_bmat(ext_row, "OMEGA")) %>%
@@ -283,8 +283,8 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
     function(ext, ipar) {
       `%>%` <- magrittr::`%>%`
       purrr::map(seq_len(nrow(ext)), function(n) {
+        pbar("IPRED")
         ext_row <- ext[n, ]
-        pbar(sprintf("IPRED (%d)", ext_row$draw))
         ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
         mrgsolve::idata_set(mod_sim, ipar_n) %>%
           mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
