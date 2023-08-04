@@ -340,6 +340,8 @@ summarise_pred <- function(name, simdf, join_col, point_fn, probs, log_dv) {
 
 sim_ewres_npde <- function(data, epred_res, join_col) {
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
+    # Note: The downstream autonpde() call depends on the position of the ID,
+    # TIME, and DV columns.
     dplyr::select("ID", "TIME", "DV", all_of(join_col))
   df_sim <- dplyr::left_join(epred_res, df_obs, by = join_col) %>%
     dplyr::select("ID", "TIME", DV = "DV_sim")
@@ -360,7 +362,11 @@ sim_ewres_npde <- function(data, epred_res, join_col) {
   withr::with_output_sink(nullfile(), {
     # TODO: Expose any autonpde arguments? decorr.method?
     out <- npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
-                          iid = "ID", ix = "TIME", iy = "DV",
+                          # autonpde also accepts a name or index for iid, ix,
+                          # and iy, so we could pass "ID", "TIME", and "DV".
+                          # However, its "is integer?" checks lead to "NAs
+                          # introduced by coercion" warnings, so use integers.
+                          iid = 1L, ix = 2L, iy = 3L,
                           calc.npd = TRUE, calc.npde = TRUE,
                           verbose = FALSE,
                           boolsave = FALSE)

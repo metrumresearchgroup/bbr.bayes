@@ -110,10 +110,6 @@ test_that("run_sims() optionally runs autonpde", {
     testthat::skip("npde does not have nearPD adjustments")
   }
 
-  # TODO: look into warnings:
-  #
-  # In read(x, dat, detect = detect, verbose = verbose) :
-  # NAs introduced by coercion
   withr::with_seed(3012, {
     res <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 10,
                     ewres_npde = TRUE)
