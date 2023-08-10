@@ -23,6 +23,10 @@
 #' @param quiet (logical) Should the verbose output
 #'   from the system processes be suppressed when building the Torsten binaries?
 #'   The default is `FALSE`.
+#' @param overwrite (logical) Should Torsten still be downloaded and installed
+#'   even if an installation of the same version is found in `dir`? The default
+#'   is `FALSE`, in which case an informative error is thrown instead of
+#'   overwriting the user's installation.
 #' @param timeout (positive real) Timeout (in seconds) for the build stage of
 #'   the installation.
 #' @param version (string) The Torsten release version to install. The default
@@ -65,8 +69,6 @@ install_torsten <- function(dir = NULL,
 ) {
 
   ## install_torsten is based on cmdstanr::install_cmdstan. Differences include
-  ## * install_torsten always overwrites pre-existing Torsten installation at the
-  ##.  specified cmdstan_path.
   ## * install_torsten does not try to automatically append to cpp_options for
   ##.  M1 Macs. Is this needed?
   ## * install_torsten does not provide support for WSL. Should it?
@@ -115,14 +117,18 @@ install_torsten <- function(dir = NULL,
   }
   message("* Installing Torsten from ", download_url)
   dir_torsten <- file.path(dir, substr(basename(download_url), 1, nchar(basename(download_url)) - 7))
+  if (!check_install_dir(dir_torsten, overwrite)) {
+    return(invisible(NULL))
+  }
   dir.create(dir_torsten, recursive = TRUE, showWarnings = FALSE)
   dest_file <- file.path(dir_torsten, basename(download_url))
   dir_cmdstan <- file.path(dir_torsten, "cmdstan")
   ## Reset timeout for download. The 60 s default is not enough.
-  options(timeout = max(300, getOption("timeout")))
-  tar_downloaded <- try(suppressWarnings(utils::download.file(url = download_url,
-                                                              destfile = dest_file, quiet = quiet)),
-                        silent = TRUE)
+  tar_downloaded <- withr::with_options(list(timeout = max(300, getOption("timeout"))),
+                                        try(suppressWarnings(utils::download.file(url = download_url,
+                                                                                  destfile = dest_file,
+                                                                                  quiet = quiet)),
+                                            silent = TRUE))
   if (tar_downloaded != 0) {
     if (!is.null(version)) {
       stop("Download of Torsten failed. Please check if the supplied version number is valid.",
@@ -145,7 +151,7 @@ install_torsten <- function(dir = NULL,
   if (untar_rc != 0) {
     stop("Problem extracting tarball. Exited with return code: ", untar_rc, call. = FALSE)
   }
-  file.remove(dest_file)
+  on.exit(file.remove(dest_file))
   cmdstanr::cmdstan_make_local(dir = dir_cmdstan, cpp_options = cpp_options, append = TRUE)
   # # Setting up native M1 compilation of CmdStan and its downstream libraries
   # if (cmdstanr:::is_rosetta2()) {
