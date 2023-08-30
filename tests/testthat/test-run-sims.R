@@ -1,5 +1,5 @@
 
-skip_long_tests("long-running run_sim() tests")
+skip_long_tests("long-running run_sims() tests")
 testthat::skip_if_not_installed("mrgsolve")
 testthat::skip_if_not_installed("future.apply")
 
