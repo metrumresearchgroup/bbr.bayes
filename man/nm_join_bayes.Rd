@@ -2,8 +2,16 @@
 % Please edit documentation in R/nm-join-bayes.R
 \name{nm_join_bayes}
 \alias{nm_join_bayes}
-\title{Simulate diagnostic quantities with mrgsolve}
+\alias{nm_join_bayes_quick}
+\title{Join input data to Bayesian model output summaries}
 \usage{
+nm_join_bayes_quick(
+  mod,
+  data = NULL,
+  join_col = "NUM",
+  point_fn = stats::median
+)
+
 nm_join_bayes(
   mod,
   mod_mrgsolve,
@@ -26,9 +34,6 @@ nm_join_bayes(
 \arguments{
 \item{mod}{A \code{bbi_nmbayes_model} object.}
 
-\item{mod_mrgsolve}{An mrgsolve model object. HELP: (fill in more details
-about requirements for this model)}
-
 \item{data}{A NONMEM dataset for \code{mod} to use instead of the default one
 extracted from \code{mod} with \code{\link[bbr:nm_file]{bbr::nm_data()}}. This data frame must include a
 \code{join_col} column.}
@@ -37,10 +42,13 @@ extracted from \code{mod} with \code{\link[bbr:nm_file]{bbr::nm_data()}}. This d
 combining values from the \code{bbr-bayes-join.tab} file in each chain
 subdirectory.}
 
-\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}
-
 \item{point_fn}{Function used to calculate point estimates of table values
 across chains and of simulated EPRED and IPRED values.}
+
+\item{mod_mrgsolve}{An mrgsolve model object. HELP: (fill in more details
+about requirements for this model)}
+
+\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}
 
 \item{probs}{A two-item vector of lower and upper probabilities to pass to
 \code{\link[stats:quantile]{stats::quantile()}} to calculate the bounds of the simulated EPRED and
@@ -90,5 +98,11 @@ with \code{point_fn}, and then joining \code{data}. \code{EPRED}, \code{IPRED}, 
 corresponding argument.
 }
 \description{
-HELP: (description)
+\code{nm_join_bayes()} and \code{nm_join_bayes_quick()} TODO
+}
+\details{
+HELP: (details)
+}
+\seealso{
+\code{\link[bbr:nm_join]{bbr::nm_join()}}
 }

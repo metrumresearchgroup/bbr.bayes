@@ -121,3 +121,28 @@ test_that("nm_join_bayes() optionally runs autonpde", {
 
   expect_s3_class(res, "tbl_df")
 })
+
+test_that("nm_join_bayes_quick() works", {
+  res <- nm_join_bayes_quick(NMBAYES_MOD1)
+
+  expect_s3_class(res, "tbl_df")
+
+  data <- read_mod_data()
+
+  expect_length(setdiff(names(data), names(res)), 0)
+  tab_cols <- c("NPDE", "EWRES", "PRED", "RES", "WRES", "EPRED", "IPRED")
+  expect_setequal(setdiff(names(res), names(data)),
+                  tab_cols)
+
+  expect_equal(nrow(res), sum(data$BLQ == 0))
+
+  expect_equal(sum(is.na(res$NUM)), 0)
+  expect_equal(dplyr::n_distinct(res$ID), 160)
+
+  res2 <- nm_join_bayes_quick(NMBAYES_MOD1,
+                              point_fn = function(x) 10 * stats::median(x))
+  expect_identical(names(res), names(res2))
+  expect_equal(dplyr::select(res, -any_of(tab_cols)),
+               dplyr::select(res2, -any_of(tab_cols)))
+  expect_equal(10 * res$IPRED, res2$IPRED)
+})

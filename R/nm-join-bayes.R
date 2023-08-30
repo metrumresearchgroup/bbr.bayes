@@ -1,6 +1,12 @@
-#' Simulate diagnostic quantities with mrgsolve
+#' Join input data to Bayesian model output summaries
 #'
-#' HELP: (description)
+#' @description
+#'
+#' `nm_join_bayes()` and `nm_join_bayes_quick()` TODO
+#'
+#' @details
+#'
+#' HELP: (details)
 #'
 #' @param mod A `bbi_nmbayes_model` object.
 #' @param mod_mrgsolve An mrgsolve model object. HELP: (fill in more details
@@ -50,6 +56,27 @@
 #'   with `point_fn`, and then joining `data`. `EPRED`, `IPRED`, `EWRES`, and
 #'   `NPDE` values are replaced with a simulated estimate, if requested by the
 #'   corresponding argument.
+#' @seealso [bbr::nm_join()]
+#' @name nm_join_bayes
+NULL
+
+#' @rdname nm_join_bayes
+#' @export
+nm_join_bayes_quick <- function(mod,
+                                data = NULL,
+                                join_col = "NUM",
+                                point_fn = stats::median) {
+  nm_join_bayes(mod = mod,
+                mod_mrgsolve = NULL,
+                data = data,
+                join_col = join_col,
+                point_fn = point_fn,
+                epred = FALSE,
+                ipred = FALSE,
+                ewres_npde = FALSE)
+}
+
+#' @rdname nm_join_bayes
 #' @export
 nm_join_bayes <- function(mod,
                           mod_mrgsolve,
@@ -67,8 +94,10 @@ nm_join_bayes <- function(mod,
                           ewres_npde = FALSE,
                           npde_decorr_method = c("cholesky", "inverse", "polar"),
                           min_batch_size = 200) {
+  quick <- !(epred || ipred || ewres_npde)
+
   checkmate::assert_class(mod, NMBAYES_MOD_CLASS)
-  checkmate::assert_class(mod_mrgsolve, "mrgmod")
+  checkmate::assert_class(mod_mrgsolve, "mrgmod", null.ok = quick)
   checkmate::assert_data_frame(data, null.ok = TRUE)
   checkmate::assert_string(join_col)
   checkmate::assert_string(y_col)
@@ -78,12 +107,14 @@ nm_join_bayes <- function(mod,
   npde_decorr_method <- match.arg(npde_decorr_method)
   checkmate::assert_int(min_batch_size)
 
-  if (!requireNamespace("mrgsolve", quietly = TRUE)) {
-    stop("run_sims() requires mrgsolve package.")
-  }
+  if (!quick) {
+    if (!requireNamespace("mrgsolve", quietly = TRUE)) {
+      stop("run_sims() requires mrgsolve package.")
+    }
 
-  if (!requireNamespace("future.apply", quietly = TRUE)) {
-    stop("nm_join_bayes() requires future.apply package.")
+    if (!requireNamespace("future.apply", quietly = TRUE)) {
+      stop("nm_join_bayes() requires future.apply package.")
+    }
   }
 
   if (isTRUE(ewres_npde)) {
@@ -103,6 +134,9 @@ nm_join_bayes <- function(mod,
   }
 
   res <- prep_nm_join_data(mod, data, join_col, point_fn)
+  if (quick) {
+    return(res)
+  }
   rm(data)
 
   exts <- sample_exts(mod, n_post, min_batch_size)
@@ -146,7 +180,6 @@ nm_join_bayes <- function(mod,
 }
 
 prep_nm_join_data <- function(mod, data, join_col, point_fn) {
-  # TODO: Extract some of this logic for an exposed join function? (gh-50)
   if (is.null(data)) {
     withr::with_options(list(bbr.verbose = FALSE), {
       data <- bbr::nm_data(mod)
