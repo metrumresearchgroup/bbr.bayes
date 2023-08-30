@@ -375,6 +375,9 @@ summarise_pred <- function(name, simdf, join_col, point_fn, probs, log_dv) {
 }
 
 sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
+  # TODO: Ideally this would give a message to inform the caller what's going
+  # on, but, in my testing, that message doesn't come through until after the
+  # function returns, so there may be a progressr interaction.
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
     # Note: The downstream autonpde() call depends on the position of the ID,
     # TIME, and DV columns.
