@@ -87,6 +87,10 @@ run_sims <- function(mod,
   npde_decorr_method <- match.arg(npde_decorr_method)
   checkmate::assert_int(min_batch_size)
 
+  if (!requireNamespace("mrgsolve", quietly = TRUE)) {
+    stop("run_sims() requires mrgsolve package.")
+  }
+
   if (!requireNamespace("future.apply", quietly = TRUE)) {
     stop("run_sims() requires future.apply package.")
   }
