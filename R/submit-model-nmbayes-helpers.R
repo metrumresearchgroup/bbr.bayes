@@ -52,11 +52,11 @@ nmbayes_init <- function(.mod) {
 #' generated
 #'
 #' @param .mod A `bbi_nmbayes_model` object.
-#' @param .run_sims_col Column to include in `run_sims()` table. This will be
+#' @param .join_col Column to include in `nm_join_bayes()` table. This will be
 #'   used to join the table with the input data.
 #' @param ... Arguments passed to [bbr::submit_model()].
 #' @noRd
-run_chains <- function(.mod, .run_sims_col, ...) {
+run_chains <- function(.mod, .join_col, ...) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
 
   ctl_file <- get_model_path(.mod)
@@ -92,7 +92,7 @@ run_chains <- function(.mod, .run_sims_col, ...) {
   niter_opt$value <- 0
 
   set_chain_file(est_chain)
-  rs_table <- run_sims_table(ctl, .run_sims_col)
+  rs_table <- nm_join_bayes_table(ctl, .join_col)
 
   .run <- get_model_id(.mod)
   outdir <- get_output_dir(.mod)
@@ -189,7 +189,7 @@ set_chain_file <- function(record) {
   return(invisible(NULL))
 }
 
-run_sims_table <- function(ctl, join_col) {
+nm_join_bayes_table <- function(ctl, join_col) {
   if (is.null(join_col)) {
     return(NULL)
   }
@@ -215,6 +215,6 @@ run_sims_table <- function(ctl, join_col) {
   return(glue("\n",
               "$TABLE {join_col} EPRED{ipred} NPDE EWRES\n",
               "       NOPRINT ONEHEADER{ranmeth}\n",
-              "       FILE=bbr-bayes-run-sims.tab\n",
+              "       FILE=bbr-bayes-join.tab\n",
               .trim = FALSE))
 }

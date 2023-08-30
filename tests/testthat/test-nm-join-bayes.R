@@ -1,5 +1,5 @@
 
-skip_long_tests("long-running run_sims() tests")
+skip_long_tests("long-running nm_join_bayes() tests")
 testthat::skip_if_not_installed("mrgsolve")
 testthat::skip_if_not_installed("future.apply")
 
@@ -26,48 +26,48 @@ read_mod_data <- function() {
   tibble::as_tibble(d)
 }
 
-test_that("run_sims() aborts: ewres_npde=TRUE without epred=TRUE", {
+test_that("nm_join_bayes() aborts: ewres_npde=TRUE without epred=TRUE", {
   testthat::skip_if_not_installed("npde")
 
   expect_error(
-    run_sims(NMBAYES_MOD1, MOD_MS, epred = FALSE, ewres_npde = TRUE),
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, epred = FALSE, ewres_npde = TRUE),
     "epred = TRUE")
 })
 
-test_that("run_sims() aborts: join_col not in data", {
+test_that("nm_join_bayes() aborts: join_col not in data", {
   expect_error(
-    run_sims(NMBAYES_MOD1, MOD_MS, join_col = "foobar"),
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, join_col = "foobar"),
     "foobar")
 })
 
-test_that("run_sims() aborts: join_col not in table", {
+test_that("nm_join_bayes() aborts: join_col not in table", {
   data <- read_mod_data()
   data[, "FOO"] <- data$NUM
   expect_error(
-    run_sims(NMBAYES_MOD1, MOD_MS, join_col = "FOO", data = data),
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, join_col = "FOO", data = data),
     ".tab",
     fixed = TRUE)
 })
 
-test_that("run_sims() aborts: data and table name collision", {
+test_that("nm_join_bayes() aborts: data and table name collision", {
   data <- read_mod_data()
   data[, "EWRES"] <- 1
   expect_error(
-    run_sims(NMBAYES_MOD1, MOD_MS, data = data),
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, data = data),
     "data names collide")
 })
 
-test_that("run_sims() aborts: ipred=TRUE aborts on model without iph files", {
+test_that("nm_join_bayes() aborts: ipred=TRUE aborts on model without iph files", {
   mod <- local_nmbayes_model_no_iph()
   data <- read_mod_data()
   expect_error(
-    run_sims(mod, MOD_MS, epred = FALSE, ipred = TRUE, data = data),
+    nm_join_bayes(mod, MOD_MS, epred = FALSE, ipred = TRUE, data = data),
     "requires iph files")
 })
 
-test_that("run_sims() works", {
+test_that("nm_join_bayes() works", {
   withr::with_seed(3012, {
-    res <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 10)
+    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 10)
   })
 
   expect_s3_class(res, "tbl_df")
@@ -96,8 +96,8 @@ test_that("run_sims() works", {
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
-    res2 <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 10,
-                     ipred_path = ipred_path)
+    res2 <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 10,
+                          ipred_path = ipred_path)
   })
 
   expect_equal(res, res2)
@@ -110,13 +110,13 @@ test_that("run_sims() works", {
   # TODO: Cover other arguments.
 })
 
-test_that("run_sims() optionally runs autonpde", {
+test_that("nm_join_bayes() optionally runs autonpde", {
   withr::with_seed(3012, {
     # Note: if n_post is dropped to a lower value (e.g., 10 or 20), the
     # decorr.chol call underneath fails, even with mrgsolve's 07793922 (all
     # records get a different draw from EPS, 2023-08-22).
-    res <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 25,
-                    ewres_npde = TRUE)
+    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 25,
+                         ewres_npde = TRUE)
   })
 
   expect_s3_class(res, "tbl_df")

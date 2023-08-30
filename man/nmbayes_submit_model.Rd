@@ -10,7 +10,7 @@
   .bbi_args = NULL,
   .mode = getOption("bbr.bbi_exe_mode"),
   ...,
-  .run_sims_col = "NUM",
+  .join_col = "NUM",
   .overwrite = NULL,
   .config_path = NULL,
   .wait = TRUE,
@@ -31,8 +31,8 @@ or set globally with \code{options("bbr.bbi_exe_mode")}.}
 
 \item{...}{args passed through to \code{bbi_exec()}}
 
-\item{.run_sims_col}{When running the chain sub-models, a behind-the-scenes
-table is generated for consumption by \code{\link[=run_sims]{run_sims()}}. By default, a "NUM"
+\item{.join_col}{When running the chain sub-models, a behind-the-scenes
+table is generated for consumption by \code{\link[=nm_join_bayes]{nm_join_bayes()}}. By default, a "NUM"
 column is included for the purpose of joining the table to the data.
 Specify another value to use a different column, or pass \code{NULL} to disable
 writing the table entirely.}

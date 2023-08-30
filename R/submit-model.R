@@ -11,8 +11,8 @@
 #' @param .dry_run Do not submit the sampling runs; just report what command
 #'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
 #'   is executed to generate the initialization values regardless of this value.
-#' @param .run_sims_col When running the chain sub-models, a behind-the-scenes
-#'   table is generated for consumption by [run_sims()]. By default, a "NUM"
+#' @param .join_col When running the chain sub-models, a behind-the-scenes
+#'   table is generated for consumption by [nm_join_bayes()]. By default, a "NUM"
 #'   column is included for the purpose of joining the table to the data.
 #'   Specify another value to use a different column, or pass `NULL` to disable
 #'   writing the table entirely.
@@ -28,7 +28,7 @@ submit_model.bbi_nmbayes_model <- function(
   .bbi_args = NULL,
   .mode = getOption("bbr.bbi_exe_mode"),
   ...,
-  .run_sims_col = "NUM",
+  .join_col = "NUM",
   .overwrite = NULL,
   .config_path = NULL,
   .wait = TRUE,
@@ -86,7 +86,7 @@ submit_model.bbi_nmbayes_model <- function(
              .bbi_args = .bbi_args,
              .mode = .mode,
              ...,
-             .run_sims_col = .run_sims_col,
+             .join_col = .join_col,
              .config_path = .config_path,
              .wait = .wait,
              .dry_run = .dry_run)

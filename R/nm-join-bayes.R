@@ -9,7 +9,7 @@
 #'   extracted from `mod` with [bbr::nm_data()]. This data frame must include a
 #'   `join_col` column.
 #' @param join_col Column used to join `data` to a data frame constructed by
-#'   combining values from the `bbr-bayes-run-sims.tab` file in each chain
+#'   combining values from the `bbr-bayes-join.tab` file in each chain
 #'   subdirectory.
 #' @param y_col The name of the dependent variable in `mod_mrgsolve`.
 #' @param point_fn Function used to calculate point estimates of table values
@@ -46,27 +46,27 @@
 #'   set this value based on the number of available workers.
 #'
 #' @return A data frame. The base data frame is the result combining the
-#'   `bbr-bayes-run-sims.tab` values for each chain, collapsing across
-#'   `join_col` with `point_fn`, and then joining `data`. `EPRED`, `IPRED`,
-#'   `EWRES`, and `NPDE` values are replaced with a simulated estimate, if
-#'   requested by the corresponding argument.
+#'   `bbr-bayes-join.tab` values for each chain, collapsing across `join_col`
+#'   with `point_fn`, and then joining `data`. `EPRED`, `IPRED`, `EWRES`, and
+#'   `NPDE` values are replaced with a simulated estimate, if requested by the
+#'   corresponding argument.
 #' @export
-run_sims <- function(mod,
-                     mod_mrgsolve,
-                     data = NULL,
-                     join_col = "NUM",
-                     y_col = "Y",
-                     point_fn = stats::median,
-                     probs = c(0.025, 0.975),
-                     resid_var = TRUE,
-                     n_post = 1000,
-                     log_dv = FALSE,
-                     epred = TRUE,
-                     ipred = TRUE,
-                     ipred_path = NULL,
-                     ewres_npde = FALSE,
-                     npde_decorr_method = c("cholesky", "inverse", "polar"),
-                     min_batch_size = 200) {
+nm_join_bayes <- function(mod,
+                          mod_mrgsolve,
+                          data = NULL,
+                          join_col = "NUM",
+                          y_col = "Y",
+                          point_fn = stats::median,
+                          probs = c(0.025, 0.975),
+                          resid_var = TRUE,
+                          n_post = 1000,
+                          log_dv = FALSE,
+                          epred = TRUE,
+                          ipred = TRUE,
+                          ipred_path = NULL,
+                          ewres_npde = FALSE,
+                          npde_decorr_method = c("cholesky", "inverse", "polar"),
+                          min_batch_size = 200) {
   checkmate::assert_class(mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
   checkmate::assert_data_frame(data, null.ok = TRUE)
@@ -83,7 +83,7 @@ run_sims <- function(mod,
   }
 
   if (!requireNamespace("future.apply", quietly = TRUE)) {
-    stop("run_sims() requires future.apply package.")
+    stop("nm_join_bayes() requires future.apply package.")
   }
 
   if (isTRUE(ewres_npde)) {
@@ -102,7 +102,7 @@ run_sims <- function(mod,
     mod_mrgsolve <- mrgsolve::zero_re(mod_mrgsolve, "sigma")
   }
 
-  res <- prep_run_sims_data(mod, data, join_col, point_fn)
+  res <- prep_nm_join_data(mod, data, join_col, point_fn)
   rm(data)
 
   exts <- sample_exts(mod, n_post, min_batch_size)
@@ -145,7 +145,7 @@ run_sims <- function(mod,
   return(res)
 }
 
-prep_run_sims_data <- function(mod, data, join_col, point_fn) {
+prep_nm_join_data <- function(mod, data, join_col, point_fn) {
   # TODO: Extract some of this logic for an exposed join function? (gh-50)
   if (is.null(data)) {
     withr::with_options(list(bbr.verbose = FALSE), {
@@ -169,7 +169,7 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
   )
 
   if (length(intersect(sim_cols, data_cols))) {
-    stop("Some data names collide with bbr-bayes-run-sims.tab names: ",
+    stop("Some data names collide with bbr-bayes-join.tab names: ",
          paste(intersect(sim_cols, data_cols), collapse = ", "))
   }
 
@@ -178,11 +178,11 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
   }
 
   tab_files <- chain_paths_impl(mod,
-                                name = "bbr-bayes-run-sims",
+                                name = "bbr-bayes-join",
                                 extension = "tab",
                                 check_exists = "all_or_none")
   if (!length(tab_files)) {
-    stop("Chain models do not have bbr-bayes-run-sims.tab files\n",
+    stop("Chain models do not have bbr-bayes-join.tab files\n",
          "This is unexpected unless you called `submit_model()`\n",
          "with `.run_sims_col = NULL`.")
   }
@@ -192,7 +192,7 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
     dplyr::select(-"DV")
 
   if (!join_col %in% names(tab)) {
-    stop("`join_col` (", join_col, ") is not in bbr-bayes-run-sims.tab\n",
+    stop("`join_col` (", join_col, ") is not in bbr-bayes-join.tab\n",
          "See `?bbr.bayes::nmbayes_submit_model`.")
   }
 
