@@ -41,6 +41,8 @@ steps:
   - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
   - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
   - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
+  - git clone -b release/1.2.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/mrgsolve.git /tmp/mrgsolve
+  - R -s -e 'devtools::install("/tmp/mrgsolve", upgrade = "never")'
   - R -s -e 'devtools::check()'
   environment:
     NOT_CRAN: true
