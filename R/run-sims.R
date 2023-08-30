@@ -153,7 +153,7 @@ run_sims <- function(mod,
       dplyr::left_join(en_res, by = join_col)
   }
 
-  dplyr::select(res, any_of(c(join_col, RUN_SIMS_COLS)))
+  return(res)
 }
 
 prep_run_sims_data <- function(mod, data, join_col, point_fn) {
@@ -201,7 +201,8 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
   tab_sum <- dplyr::group_by(tab, .data[[join_col]]) %>%
     dplyr::summarise(dplyr::across(everything(), .fns = point_fn))
 
-  dplyr::left_join(tab_sum, data, by = join_col)
+  dplyr::left_join(tab_sum, data, by = join_col) %>%
+    dplyr::select(any_of(data_cols), everything())
 }
 
 #' Randomly select ext samples

@@ -67,18 +67,20 @@ test_that("run_sims() works", {
   })
 
   expect_s3_class(res, "tbl_df")
+
+  data <- read_mod_data()
+
+  expect_length(setdiff(names(data), names(res)), 0)
   expect_setequal(
-    names(res),
-    c("NUM","NPDE", "EWRES", "PRED", "RES", "WRES",
+    setdiff(names(res), names(data)),
+    c("NPDE", "EWRES", "PRED", "RES", "WRES",
       "EPRED", "EPRED_lo", "EPRED_hi",
       "IPRED", "IPRED_lo", "IPRED_hi"))
 
-  data <- read_mod_data()
   expect_equal(nrow(res), sum(data$BLQ == 0))
 
-  data_res <- dplyr::left_join(res, data, by = "NUM")
-  expect_equal(sum(is.na(data_res$NUM)), 0)
-  expect_equal(dplyr::n_distinct(data_res$ID), 160)
+  expect_equal(sum(is.na(res$NUM)), 0)
+  expect_equal(dplyr::n_distinct(res$ID), 160)
 
   # TODO: This check just makes sure the output isn't changing unexpectedly
   # during development. The plan is to replace it with a hash check for some
@@ -86,7 +88,7 @@ test_that("run_sims() works", {
   tfile <- withr::local_tempfile()
   readr::write_csv(res, tfile)
   expect_identical(unname(tools::md5sum(tfile)),
-                   "fe35bc6cab6debd80b1b45c3bd9860dc")
+                   "856c61b8acb9e119a1adb63b792cf7ad")
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
