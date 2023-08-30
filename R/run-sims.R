@@ -195,7 +195,7 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
   }
 
   tab_sum <- dplyr::group_by(tab, .data[[join_col]]) %>%
-    dplyr::summarise(dplyr::across(dplyr::everything(), .fns = point_fn))
+    dplyr::summarise(dplyr::across(everything(), .fns = point_fn))
 
   dplyr::left_join(tab_sum, data, by = join_col)
 }
