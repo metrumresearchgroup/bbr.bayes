@@ -94,12 +94,6 @@ run_sims <- function(mod,
     if (!requireNamespace("npde", quietly = TRUE)) {
       stop("`npde = TRUE` requires npde package.")
     }
-
-    if (utils::packageVersion("npde") <= 3.4) {
-      warning("Installed version of npde (",
-              utils::packageVersion("npde"),
-              ") is likely to fail saying input is not positive definite.")
-    }
   }
 
   # HELP: mrgsolve model checks?
@@ -370,17 +364,26 @@ sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
   #   Signif. codes: '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
   withr::with_output_sink(nullfile(), {
     # TODO: Expose any other autonpde arguments?
-    out <- npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
-                          # autonpde also accepts a name or index for iid, ix,
-                          # and iy, so we could pass "ID", "TIME", and "DV".
-                          # However, its "is integer?" checks lead to "NAs
-                          # introduced by coercion" warnings, so use integers.
-                          iid = 1L, ix = 2L, iy = 3L,
-                          calc.npd = TRUE, calc.npde = TRUE,
-                          decorr.method = decorr_method,
-                          verbose = FALSE,
-                          boolsave = FALSE)
+    out <- tryCatch(
+      npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
+                     # autonpde also accepts a name or index for iid, ix, and
+                     # iy, so we could pass "ID", "TIME", and "DV". However, its
+                     # "is integer?" checks lead to "NAs introduced by coercion"
+                     # warnings, so use integers.
+                     iid = 1L, ix = 2L, iy = 3L,
+                     calc.npd = TRUE, calc.npde = TRUE,
+                     decorr.method = decorr_method,
+                     verbose = FALSE,
+                     boolsave = FALSE),
+      error = identity)
   })
+  if (inherits(out, "error")) {
+    if (utils::packageVersion("mrgsolve") < "1.2.0") {
+      warning("autonpde failure may be related to old mrgsolve version.\n",
+              "Try installing version 1.2.0 or later.")
+    }
+    stop(out)
+  }
 
   dplyr::bind_cols(out@results@res, df_obs[, join_col]) %>%
     dplyr::select(all_of(join_col), EWRES = "ydobs", NPDE = "npde")

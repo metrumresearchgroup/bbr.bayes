@@ -3,6 +3,10 @@ skip_long_tests("long-running run_sims() tests")
 testthat::skip_if_not_installed("mrgsolve")
 testthat::skip_if_not_installed("future.apply")
 
+if (packageVersion("mrgsolve") < "1.2.0") {
+  testthat::skip("mrgsolve >= 1.2.0 required to get different draws for EPS")
+}
+
 get_mrgsolve_model <- function() {
   capture.output(type = "message", {
     mod <- mrgsolve::mread(
@@ -88,7 +92,7 @@ test_that("run_sims() works", {
   tfile <- withr::local_tempfile()
   readr::write_csv(res, tfile)
   expect_identical(unname(tools::md5sum(tfile)),
-                   "856c61b8acb9e119a1adb63b792cf7ad")
+                   "9eed108984109825c70db2efe357b757")
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
@@ -107,13 +111,11 @@ test_that("run_sims() works", {
 })
 
 test_that("run_sims() optionally runs autonpde", {
-  testthat::skip_if_not_installed("npde")
-  if (packageVersion("npde") <= "3.4") {
-    testthat::skip("npde does not have nearPD adjustments")
-  }
-
   withr::with_seed(3012, {
-    res <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 10,
+    # Note: if n_post is dropped to a lower value (e.g., 10 or 20), the
+    # decorr.chol call underneath fails, even with mrgsolve's 07793922 (all
+    # records get a different draw from EPS, 2023-08-22).
+    res <- run_sims(NMBAYES_MOD1, MOD_MS, n_post = 25,
                     ewres_npde = TRUE)
   })
 
