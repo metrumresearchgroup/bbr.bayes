@@ -1,12 +1,3 @@
-RUN_SIMS_COLS <- c(
-  "PRED", "RES", "WRES",
-  "EPRED", "EPRED_lo", "EPRED_hi",
-  "LNEPRED", "LNEPRED_lo", "LNEPRED_hi",
-  "IPRED", "IPRED_lo", "IPRED_hi",
-  "LNIPRED", "LNIPRED_lo", "LNIPRED_hi",
-  "NPDE", "EWRES"
-)
-
 #' Simulate diagnostic quantities with mrgsolve
 #'
 #' HELP: (description)
@@ -174,9 +165,18 @@ prep_run_sims_data <- function(mod, data, join_col, point_fn) {
     stop("`join_col` (", join_col, ") not found in data columns.")
   }
 
-  if (length(intersect(RUN_SIMS_COLS, data_cols))) {
+  sim_cols <- c(
+    "PRED", "RES", "WRES",
+    "EPRED", "EPRED_lo", "EPRED_hi",
+    "LNEPRED", "LNEPRED_lo", "LNEPRED_hi",
+    "IPRED", "IPRED_lo", "IPRED_hi",
+    "LNIPRED", "LNIPRED_lo", "LNIPRED_hi",
+    "NPDE", "EWRES"
+  )
+
+  if (length(intersect(sim_cols, data_cols))) {
     stop("Some data names collide with bbr-bayes-run-sims.tab names: ",
-         paste(intersect(RUN_SIMS_COLS, data_cols), collapse = ", "))
+         paste(intersect(sim_cols, data_cols), collapse = ", "))
   }
 
   if (!"EVID" %in% data_cols) {
