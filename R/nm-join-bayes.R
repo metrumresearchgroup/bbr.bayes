@@ -396,7 +396,6 @@ sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
   #   [...]
   #   Signif. codes: '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
   withr::with_output_sink(nullfile(), {
-    # TODO: Expose any other autonpde arguments?
     out <- tryCatch(
       npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
                      # autonpde also accepts a name or index for iid, ix, and
