@@ -40,6 +40,8 @@ RUN_SIMS_COLS <- c(
 #'   function.
 #' @param ewres_npde Whether to replace EWRES and NPDE values obtained from
 #'   table with ones generated with \pkg{npde}.
+#' @param npde_decorr_method Pass this value to `decorr.method` of
+#'   [npde::autonpde()].
 #' @param min_batch_size To simulate EPRED and IPRED values, posterior samples
 #'   are split into batches and sent as items to \pkg{future} `*apply`
 #'   functions. The number of batches is chosen so that each batch has at least
@@ -72,6 +74,7 @@ run_sims <- function(mod,
                      ipred = TRUE,
                      ipred_path = NULL,
                      ewres_npde = FALSE,
+                     npde_decorr_method = c("cholesky", "inverse", "polar"),
                      min_batch_size = 200) {
   checkmate::assert_class(mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
@@ -81,6 +84,7 @@ run_sims <- function(mod,
   checkmate::assert_string(ipred_path, null.ok = TRUE)
   checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
   checkmate::assert_int(n_post)
+  npde_decorr_method <- match.arg(npde_decorr_method)
   checkmate::assert_int(min_batch_size)
 
   if (!requireNamespace("future.apply", quietly = TRUE)) {
@@ -144,7 +148,7 @@ run_sims <- function(mod,
   }
 
   if (isTRUE(ewres_npde)) {
-    en_res <- sim_ewres_npde(res, epred_res, join_col)
+    en_res <- sim_ewres_npde(res, epred_res, join_col, npde_decorr_method)
     res <- dplyr::select(res, -c("EWRES", "NPDE")) %>%
       dplyr::left_join(en_res, by = join_col)
   }
@@ -338,7 +342,7 @@ summarise_pred <- function(name, simdf, join_col, point_fn, probs, log_dv) {
   return(res)
 }
 
-sim_ewres_npde <- function(data, epred_res, join_col) {
+sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
     # Note: The downstream autonpde() call depends on the position of the ID,
     # TIME, and DV columns.
@@ -360,7 +364,7 @@ sim_ewres_npde <- function(data, epred_res, join_col) {
   #   [...]
   #   Signif. codes: '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1
   withr::with_output_sink(nullfile(), {
-    # TODO: Expose any autonpde arguments? decorr.method?
+    # TODO: Expose any other autonpde arguments?
     out <- npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
                           # autonpde also accepts a name or index for iid, ix,
                           # and iy, so we could pass "ID", "TIME", and "DV".
@@ -368,6 +372,7 @@ sim_ewres_npde <- function(data, epred_res, join_col) {
                           # introduced by coercion" warnings, so use integers.
                           iid = 1L, ix = 2L, iy = 3L,
                           calc.npd = TRUE, calc.npde = TRUE,
+                          decorr.method = decorr_method,
                           verbose = FALSE,
                           boolsave = FALSE)
   })

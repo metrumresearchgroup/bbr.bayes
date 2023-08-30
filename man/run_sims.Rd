@@ -19,6 +19,7 @@ run_sims(
   ipred = TRUE,
   ipred_path = NULL,
   ewres_npde = FALSE,
+  npde_decorr_method = c("cholesky", "inverse", "polar"),
   min_batch_size = 200
 )
 }
@@ -65,6 +66,9 @@ function.}
 
 \item{ewres_npde}{Whether to replace EWRES and NPDE values obtained from
 table with ones generated with \pkg{npde}.}
+
+\item{npde_decorr_method}{Pass this value to \code{decorr.method} of
+\code{\link[npde:autonpde]{npde::autonpde()}}.}
 
 \item{min_batch_size}{To simulate EPRED and IPRED values, posterior samples
 are split into batches and sent as items to \pkg{future} \verb{*apply}
