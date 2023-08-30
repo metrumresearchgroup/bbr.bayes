@@ -109,7 +109,7 @@ nm_join_bayes <- function(mod,
 
   if (!quick) {
     if (!requireNamespace("mrgsolve", quietly = TRUE)) {
-      stop("run_sims() requires mrgsolve package.")
+      stop("nm_join_bayes() requires mrgsolve package.")
     }
 
     if (!requireNamespace("future.apply", quietly = TRUE)) {
@@ -217,7 +217,7 @@ prep_nm_join_data <- function(mod, data, join_col, point_fn) {
   if (!length(tab_files)) {
     stop("Chain models do not have bbr-bayes-join.tab files\n",
          "This is unexpected unless you called `submit_model()`\n",
-         "with `.run_sims_col = NULL`.")
+         "with `.join_col = NULL`.")
   }
 
   tab <- purrr::map(tab_files, fread_chain_file) %>%
