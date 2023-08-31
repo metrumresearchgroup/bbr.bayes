@@ -17,6 +17,7 @@ nm_join_bayes(
   mod_mrgsolve,
   data = NULL,
   join_col = "NUM",
+  dv_col = "DV",
   y_col = "Y",
   point_fn = stats::median,
   probs = c(0.025, 0.975),
@@ -47,6 +48,9 @@ across chains and of simulated EPRED and IPRED values.}
 
 \item{mod_mrgsolve}{An mrgsolve model object. HELP: (fill in more details
 about requirements for this model)}
+
+\item{dv_col}{Pass this \code{data} column as the dependent variable when
+calculating EWRES and NPDE.}
 
 \item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}
 

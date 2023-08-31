@@ -17,6 +17,8 @@
 #' @param join_col Column used to join `data` to a data frame constructed by
 #'   combining values from the `bbr-bayes-join.tab` file in each chain
 #'   subdirectory.
+#' @param dv_col Pass this `data` column as the dependent variable when
+#'   calculating EWRES and NPDE.
 #' @param y_col The name of the dependent variable in `mod_mrgsolve`.
 #' @param point_fn Function used to calculate point estimates of table values
 #'   across chains and of simulated EPRED and IPRED values.
@@ -82,6 +84,7 @@ nm_join_bayes <- function(mod,
                           mod_mrgsolve,
                           data = NULL,
                           join_col = "NUM",
+                          dv_col = "DV",
                           y_col = "Y",
                           point_fn = stats::median,
                           probs = c(0.025, 0.975),
@@ -100,6 +103,7 @@ nm_join_bayes <- function(mod,
   checkmate::assert_class(mod_mrgsolve, "mrgmod", null.ok = quick)
   checkmate::assert_data_frame(data, null.ok = TRUE)
   checkmate::assert_string(join_col)
+  checkmate::assert_string(dv_col)
   checkmate::assert_string(y_col)
   checkmate::assert_string(ipred_path, null.ok = TRUE)
   checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
@@ -137,6 +141,14 @@ nm_join_bayes <- function(mod,
     withr::with_options(list(bbr.verbose = FALSE), {
       data <- bbr::nm_data(mod)
     })
+  }
+
+  if (isTRUE(ewres_npde) && !dv_col %in% names(data)) {
+    msg <- paste(dv_col, "not found in data columns.")
+    if (identical(dv_col, "DV")) {
+      msg <- paste0(msg, "\nUse `dv_col` to specify a column remapped to DV.")
+    }
+    stop(msg)
   }
 
   res <- prep_nm_join_data(mod, data, join_col, point_fn)
@@ -177,7 +189,8 @@ nm_join_bayes <- function(mod,
   }
 
   if (isTRUE(ewres_npde)) {
-    en_res <- sim_ewres_npde(res, epred_res, join_col, npde_decorr_method)
+    en_res <- sim_ewres_npde(res, epred_res, join_col, dv_col,
+                             npde_decorr_method)
     res <- dplyr::select(res, -c("EWRES", "NPDE")) %>%
       dplyr::left_join(en_res, by = join_col)
   }
@@ -377,14 +390,14 @@ summarise_pred <- function(name, simdf, join_col, point_fn, probs, log_dv) {
   return(res)
 }
 
-sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
+sim_ewres_npde <- function(data, epred_res, join_col, dv_col, decorr_method) {
   # TODO: Ideally this would give a message to inform the caller what's going
   # on, but, in my testing, that message doesn't come through until after the
   # function returns, so there may be a progressr interaction.
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
     # Note: The downstream autonpde() call depends on the position of the ID,
     # TIME, and DV columns.
-    dplyr::select("ID", "TIME", "DV", all_of(join_col))
+    dplyr::select("ID", "TIME", all_of(c(dv_col, join_col)))
   df_sim <- dplyr::left_join(epred_res, df_obs, by = join_col) %>%
     dplyr::select("ID", "TIME", DV = "DV_sim")
 
@@ -405,9 +418,9 @@ sim_ewres_npde <- function(data, epred_res, join_col, decorr_method) {
     out <- tryCatch(
       npde::autonpde(namobs = file_df_obs, namsim = file_df_sim,
                      # autonpde also accepts a name or index for iid, ix, and
-                     # iy, so we could pass "ID", "TIME", and "DV". However, its
-                     # "is integer?" checks lead to "NAs introduced by coercion"
-                     # warnings, so use integers.
+                     # iy. Passing names leads to its "is integer?" checks
+                     # giving "NAs introduced by coercion" warnings, so use
+                     # integers.
                      iid = 1L, ix = 2L, iy = 3L,
                      calc.npd = TRUE, calc.npde = TRUE,
                      decorr.method = decorr_method,
