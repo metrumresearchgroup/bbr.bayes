@@ -221,13 +221,16 @@ prep_nm_join_data <- function(mod, data, join_col, point_fn) {
   }
 
   tab <- purrr::map(tab_files, fread_chain_file) %>%
-    dplyr::bind_rows() %>%
-    dplyr::select(-"DV")
+    dplyr::bind_rows()
 
-  if (!join_col %in% names(tab)) {
+  tab_cols <- names(tab)
+  if (!join_col %in% tab_cols) {
     stop("`join_col` (", join_col, ") is not in bbr-bayes-join.tab\n",
          "See `?bbr.bayes::nmbayes_submit_model`.")
   }
+
+  # Drop DV column (potentially renamed via FOO=DV in the $INPUT record).
+  tab <- tab[c(join_col, setdiff(tab_cols, data_cols))]
 
   tab_sum <- dplyr::group_by(tab, .data[[join_col]]) %>%
     dplyr::summarise(dplyr::across(everything(), .fns = point_fn))
