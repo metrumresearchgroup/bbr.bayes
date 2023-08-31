@@ -133,6 +133,12 @@ nm_join_bayes <- function(mod,
     mod_mrgsolve <- mrgsolve::zero_re(mod_mrgsolve, "sigma")
   }
 
+  if (is.null(data)) {
+    withr::with_options(list(bbr.verbose = FALSE), {
+      data <- bbr::nm_data(mod)
+    })
+  }
+
   res <- prep_nm_join_data(mod, data, join_col, point_fn)
   if (quick) {
     return(res)
@@ -180,12 +186,6 @@ nm_join_bayes <- function(mod,
 }
 
 prep_nm_join_data <- function(mod, data, join_col, point_fn) {
-  if (is.null(data)) {
-    withr::with_options(list(bbr.verbose = FALSE), {
-      data <- bbr::nm_data(mod)
-    })
-  }
-
   data_cols <- names(data)
 
   if (!join_col %in% data_cols) {
