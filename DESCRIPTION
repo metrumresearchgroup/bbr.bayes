@@ -34,7 +34,6 @@ Imports:
     cmdstanr,
     data.table,
     diffobj,
-    digest,
     dplyr (>= 1.0.0),
     ellipsis,
     fs,
