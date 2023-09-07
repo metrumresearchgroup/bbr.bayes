@@ -8,5 +8,5 @@ parameters {
 }
 
 generated quantities {
-  int y_rep[N] = bernoulli_rng(rep_vector(theta, N));
+  array[N] int y_rep = bernoulli_rng(rep_vector(theta, N));
 }
