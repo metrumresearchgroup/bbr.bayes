@@ -1,14 +1,14 @@
 {
   "output_dir": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/stan/bern-gq/bern-gq-output",
   "data_path": "../bern-gq-standata.json",
-  "model_md5": "b578f7c5eb0ca20e6d0d19fe277204fd",
+  "model_md5": "b129cb880a15443a1fa665211c57daff",
   "data_md5": "bbd614b5f22e35c2a7cfd6ce88a9bf41",
   "standata_script_md5": "05a2e69e5e8e8692321a06b513f291b1",
   "stanargs_md5": "4ba94ac65c357500f7a5279b710c96b9",
   "stan_fitted_params_md5": "045b8ee6072c5652cc624342a42ee650",
-  "gq_parent_md5": ["6d56e2884c2c9a99cd63d79782345c7c"],
+  "gq_parent_md5": ["7b956eac4d49d0183885b47b260adc2c"],
   "configuration": {
-    "cmdstan_version": "2.27.0",
-    "cmdstanr_version": "0.5.2"
+    "cmdstan_version": "2.33.0",
+    "cmdstanr_version": "0.5.3"
   }
 }

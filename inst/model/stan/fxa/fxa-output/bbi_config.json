@@ -7,7 +7,7 @@
   "stanargs_md5": "6540104c1cb2a214fad3ca50b4a05fe7",
   "init_script_md5": "474df717df57f204ef28c7f44175995e",
   "configuration": {
-    "cmdstan_version": "2.32.1",
+    "cmdstan_version": "2.33.0",
     "cmdstanr_version": "0.5.3"
   }
 }
