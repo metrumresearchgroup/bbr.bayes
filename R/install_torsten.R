@@ -186,7 +186,7 @@ check_install_dir <- function(dir_torsten, overwrite = FALSE) {
       )
       return(FALSE)
     } else {
-      message("* Removing the existing installation of CmdStan...")
+      message("* Removing the existing installation of Torsten...")
       unlink(dir_torsten, recursive = TRUE, force = TRUE)
     }
   }
