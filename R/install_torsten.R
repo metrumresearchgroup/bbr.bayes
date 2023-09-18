@@ -99,8 +99,7 @@ install_torsten <- function(dir = NULL,
     }
     download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
                           release, ".tar.gz")
-  }
-  if (!is.null(release_url)) {
+  } else if (!is.null(release_url)) {
     if (!endsWith(release_url, ".tar.gz")) {
       stop(release_url, " is not a .tar.gz archive!",
            "cmdstanr supports installing from .tar.gz archives only.", call. = FALSE)
