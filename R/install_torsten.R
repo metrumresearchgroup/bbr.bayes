@@ -1,3 +1,5 @@
+TORSTEN_URL_BASE <- "https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/"
+
 #' Install Torsten
 #'
 #' @description The `install_torsten()` function attempts to download and
@@ -95,8 +97,7 @@ install_torsten <- function(dir = NULL,
       stop("The version argument, ", version, ", matches multiple Torsten version names",
            call. = FALSE)
     }
-    download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
-                          release, ".tar.gz")
+    download_url <- paste0(TORSTEN_URL_BASE, release, ".tar.gz")
   } else if (!is.null(release_url)) {
     if (!endsWith(release_url, ".tar.gz")) {
       stop(release_url, " is not a .tar.gz archive!",
@@ -107,8 +108,7 @@ install_torsten <- function(dir = NULL,
   } else {
     ver <- latest_torsten_release()
     message("* Latest Torsten release is ", ver)
-    download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
-                           ver, ".tar.gz")
+    download_url <- paste0(TORSTEN_URL_BASE, ver, ".tar.gz")
   }
   message("* Installing Torsten from ", download_url)
   targz_name <- basename(download_url)

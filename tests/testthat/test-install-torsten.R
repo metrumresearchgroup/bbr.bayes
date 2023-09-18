@@ -61,11 +61,11 @@ test_that("install_torsten() errors if invalid version or URL", {
     "Available Torsten versions do not include 0.89.2"
   )
   expect_error(
-    install_torsten(release_url = "https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.89.2.tar.gz"),
+    install_torsten(release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")),
     "Download of Torsten failed. Please check if the supplied release URL is valid."
   )
   expect_error(
-    install_torsten(release_url = "https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/0.89.2"),
+    install_torsten(release_url = paste0(TORSTEN_URL_BASE, "0.89.2")),
     "cmdstanr supports installing from .tar.gz archives only"
   )
 })
@@ -80,7 +80,7 @@ test_that("install_torsten() works with version and release_url", {
   expect_message(
     expect_output(
       install_torsten(dir = dir,
-                      release_url = "https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.89.1.tar.gz"),
+                      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")),
       "--- Torsten",
       fixed = TRUE
     ),
@@ -93,7 +93,7 @@ test_that("install_torsten() works with version and release_url", {
         install_torsten(dir = dir,
                         version = "0.89.1",
                         # the URL is intentionally invalid to test that the version has higher priority
-                        release_url = "https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.89.3.tar.gz"),
+                        release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")),
         "--- Torsten",
         fixed = TRUE
       ),
