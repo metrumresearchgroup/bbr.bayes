@@ -107,12 +107,10 @@ install_torsten <- function(dir = NULL,
     download_url <- release_url
     message("* Installing Torsten from ", release_url)
   } else {
-    if(is.null(version)) {
-      ver <- latest_torsten_release()
-      message("* Latest Torsten release is ", ver)
-      download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
-                            ver, ".tar.gz")
-    }
+    ver <- latest_torsten_release()
+    message("* Latest Torsten release is ", ver)
+    download_url <- paste0("https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/",
+                           ver, ".tar.gz")
   }
   message("* Installing Torsten from ", download_url)
   dir_torsten <- file.path(dir, substr(basename(download_url), 1, nchar(basename(download_url)) - 7))
