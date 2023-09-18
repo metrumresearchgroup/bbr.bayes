@@ -2,9 +2,10 @@
 
 skip_if_over_rate_limit()
 
+torsten_test_tarball_url_default <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
-  torsten_test_tarball_url <- NULL
+  torsten_test_tarball_url <- torsten_test_tarball_url_default
 }
 
 test_that("install_torsten() successfully installs torsten", {
@@ -20,6 +21,10 @@ test_that("install_torsten() successfully installs torsten", {
   outdir <- file.path(dir, "R", "torsten")
   expect_true(file.exists(outdir))
   subdirs <- list.files(outdir)
+  expect_identical(
+    subdirs,
+    fs::path_ext_remove(fs::path_ext_remove(basename(torsten_test_tarball_url)))
+  )
   expect_identical(
     cmdstanr::cmdstan_path(),
     file.path(outdir, subdirs, "cmdstan")
@@ -78,29 +83,38 @@ test_that("install_torsten() overwrite check works", {
 })
 
 test_that("install_torsten() works with version and release_url", {
-  dir <- local_test_dir()
-
-  expect_message(
-    install_torsten(
-      dir = dir, quiet = TRUE,
-      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
-    ),
-    "* Finished installing Torsten",
-    fixed = TRUE
+  expect_identical(
+    get_torsten_download_url(version = "0.89.1", release_url = NULL),
+    torsten_test_tarball_url_default
   )
+
+  expect_identical(
+    get_torsten_download_url(version = "torsten_v0.89.1", release_url = NULL),
+    torsten_test_tarball_url_default
+  )
+
   expect_warning(
-    expect_message(
-      install_torsten(
-        dir = dir, quiet = TRUE,
-        version = "0.89.1",
-        # the URL is intentionally invalid to test that the version has higher priority
-        release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
-      ),
-      "* Finished installing Torsten",
-      fixed = TRUE
+    res <- get_torsten_download_url(
+      version = "0.89.1",
+      # the URL is intentionally invalid to test that the version has higher priority
+      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
     ),
     "version and release_url shouldn't both be specified",
     fixed = TRUE
   )
-  expect_true(dir.exists(file.path(dir, "torsten_v0.89.1")))
+  expect_identical(res, torsten_test_tarball_url_default)
+
+  url_to_version <- function(url) {
+    m <- regexec("([0-9.]+)\\.tar\\.gz$", url)[[1]]
+    if (length(m) != 2) {
+      stop("URL does not specify version: ", url)
+    }
+    v <- substr(url, m[2], m[2] + attr(m, "match.length")[2] - 1)
+    return(numeric_version(v))
+  }
+
+  v_latest <- url_to_version(
+    get_torsten_download_url(version = NULL, release_url = NULL)
+  )
+  expect_true(v_latest > url_to_version(torsten_test_tarball_url_default))
 })
