@@ -111,7 +111,12 @@ install_torsten <- function(dir = NULL,
                            ver, ".tar.gz")
   }
   message("* Installing Torsten from ", download_url)
-  dir_torsten <- file.path(dir, substr(basename(download_url), 1, nchar(basename(download_url)) - 7))
+  targz_name <- basename(download_url)
+  dir_torsten <- file.path(
+    dir,
+    # Drop ".tar.gz".
+    substr(targz_name, 1, nchar(targz_name) - 7)
+  )
   if (!check_install_dir(dir_torsten, overwrite)) {
     return(invisible(NULL))
   }
