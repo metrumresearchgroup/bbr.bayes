@@ -1,5 +1,7 @@
 ## Adapted from test-install.R from the cmdstanr package
 
+skip_if_over_rate_limit()
+
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
   torsten_test_tarball_url <- NULL
