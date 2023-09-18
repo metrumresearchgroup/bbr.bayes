@@ -79,9 +79,7 @@ install_torsten <- function(dir = NULL,
   if (is.null(dir)) {
     dir <- file.path(tools::R_user_dir("torsten"))
   }
-  if (!dir.exists(dir)) {
-    dir.create(dir, recursive = TRUE)
-  }
+
   if (!is.null(version)) {
     if (!is.null(release_url)) {
       warning("version and release_url shouldn't both be specified!",
