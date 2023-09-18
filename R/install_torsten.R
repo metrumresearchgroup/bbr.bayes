@@ -121,7 +121,7 @@ install_torsten <- function(dir = NULL,
     return(invisible(NULL))
   }
   dir.create(dir_torsten, recursive = TRUE, showWarnings = FALSE)
-  dest_file <- file.path(dir_torsten, basename(download_url))
+  dest_file <- withr::local_tempfile(fileext = ".tar.gz")
   dir_cmdstan <- file.path(dir_torsten, "cmdstan")
   ## Reset timeout for download. The 60 s default is not enough.
   tar_downloaded <- withr::with_options(list(timeout = max(300, getOption("timeout"))),
@@ -151,7 +151,6 @@ install_torsten <- function(dir = NULL,
   if (untar_rc != 0) {
     stop("Problem extracting tarball. Exited with return code: ", untar_rc, call. = FALSE)
   }
-  on.exit(file.remove(dest_file))
   cmdstanr::cmdstan_make_local(dir = dir_cmdstan, cpp_options = cpp_options, append = TRUE)
   # # Setting up native M1 compilation of CmdStan and its downstream libraries
   # if (cmdstanr:::is_rosetta2()) {
