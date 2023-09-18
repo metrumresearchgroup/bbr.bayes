@@ -9,15 +9,25 @@ if (!nzchar(torsten_test_tarball_url)) {
 
 test_that("install_torsten() successfully installs torsten", {
   dir <- local_test_dir()
+  withr::local_envvar(c("R_USER_DATA_DIR" = dir))
+
   expect_message(
     expect_output(
-      install_torsten(dir = dir, quiet = FALSE,
+      install_torsten(quiet = FALSE,
                       release_url = torsten_test_tarball_url),
       "--- Torsten",
       fixed = TRUE
     ),
     "* Finished installing Torsten",
     fixed = TRUE
+  )
+
+  outdir <- file.path(dir, "R", "torsten")
+  expect_true(file.exists(outdir))
+  subdirs <- list.files(outdir)
+  expect_identical(
+    cmdstanr::cmdstan_path(),
+    file.path(outdir, subdirs, "cmdstan")
   )
 })
 
