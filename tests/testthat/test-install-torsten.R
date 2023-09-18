@@ -6,11 +6,7 @@ if (!nzchar(torsten_test_tarball_url)) {
 }
 
 test_that("install_torsten() successfully installs torsten", {
-  if (getRversion() < '3.5.0') {
-    dir <- tempdir()
-  } else {
-    dir <- tempdir(check = TRUE)
-  }
+  dir <- local_test_dir()
   expect_message(
     expect_output(
       install_torsten(dir = dir, quiet = FALSE,
@@ -39,11 +35,7 @@ test_that("install_torsten() errors if invalid version or URL", {
 })
 
 test_that("install_torsten() works with version and release_url", {
-  if (getRversion() < '3.5.0') {
-    dir <- tempdir()
-  } else {
-    dir <- tempdir(check = TRUE)
-  }
+  dir <- local_test_dir()
 
   expect_message(
     expect_output(
