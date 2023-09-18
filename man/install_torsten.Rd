@@ -45,7 +45,7 @@ is \code{NULL}, which downloads the latest stable release from
 
 \item{release_url}{(string) The URL for the specific Torsten release or
 release candidate to install. See \url{https://github.com/metrumresearchgroup/Torsten/releases}.
-The URL should point to the tarball (\code{.tar.gz.} file) itself, e.g.,
+The URL should point to the tarball (\code{.tar.gz} file) itself, e.g.,
 \code{release_url="https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.90.0.tar.gz"}.
 If both \code{version} and \code{release_url} are specified then \code{version} will be used.}
 
@@ -65,7 +65,7 @@ by specifying the \code{version} or \code{release_url} argument.
 See the first few sections of the CmdStan
 \href{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}{installation guide}
 for details on the C++ toolchain required for installing CmdStan.
-\code{install_torsten()} does not automatically append to \code{cpp_options} for M1 Macs, It also
+\code{install_torsten()} does not automatically append to \code{cpp_options} for M1 Macs. It also
 does not provide support for WSL.
 }
 \examples{

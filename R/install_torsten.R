@@ -7,7 +7,7 @@
 #'   See the first few sections of the CmdStan
 #'   [installation guide](https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
 #'   for details on the C++ toolchain required for installing CmdStan.
-#'   `install_torsten()` does not automatically append to `cpp_options` for M1 Macs, It also
+#'   `install_torsten()` does not automatically append to `cpp_options` for M1 Macs. It also
 #'   does not provide support for WSL.
 #'
 #'
@@ -34,7 +34,7 @@
 #'   <https://github.com/metrumresearchgroup/Torsten/releases>.
 #' @param release_url (string) The URL for the specific Torsten release or
 #'   release candidate to install. See <https://github.com/metrumresearchgroup/Torsten/releases>.
-#'   The URL should point to the tarball (`.tar.gz.` file) itself, e.g.,
+#'   The URL should point to the tarball (`.tar.gz` file) itself, e.g.,
 #'   `release_url="https://github.com/metrumresearchgroup/Torsten/archive/refs/tags/torsten_v0.90.0.tar.gz"`.
 #'   If both `version` and `release_url` are specified then `version` will be used.
 #' @param cpp_options (list) Any makefile flags/variables to be written to
