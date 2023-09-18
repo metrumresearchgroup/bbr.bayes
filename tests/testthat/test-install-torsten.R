@@ -12,12 +12,7 @@ test_that("install_torsten() successfully installs torsten", {
   withr::local_envvar(c("R_USER_DATA_DIR" = dir))
 
   expect_message(
-    expect_output(
-      install_torsten(quiet = FALSE,
-                      release_url = torsten_test_tarball_url),
-      "--- Torsten",
-      fixed = TRUE
-    ),
+    install_torsten(quiet = TRUE, release_url = torsten_test_tarball_url),
     "* Finished installing Torsten",
     fixed = TRUE
   )
@@ -35,19 +30,19 @@ test_that("install_torsten() errors if invalid version or URL", {
   tdir <- local_test_dir()
 
   expect_error(
-    install_torsten(dir = tdir, version = "0.89.2"),
+    install_torsten(dir = tdir, quiet = TRUE, version = "0.89.2"),
     "Available Torsten versions do not include 0.89.2"
   )
   expect_error(
     install_torsten(
-      dir = tdir,
+      dir = tdir, quiet = TRUE,
       release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")
     ),
     "Download of Torsten failed. Please check if the supplied release URL is valid."
   )
   expect_error(
     install_torsten(
-      dir = tdir,
+      dir = tdir, quiet = TRUE,
       release_url = paste0(TORSTEN_URL_BASE, "0.89.2")
     ),
     "cmdstanr supports installing from .tar.gz archives only"
@@ -58,24 +53,20 @@ test_that("install_torsten() works with version and release_url", {
   dir <- local_test_dir()
 
   expect_message(
-    expect_output(
-      install_torsten(dir = dir,
-                      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")),
-      "--- Torsten",
-      fixed = TRUE
+    install_torsten(
+      dir = dir, quiet = TRUE,
+      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
     ),
     "* Finished installing Torsten",
     fixed = TRUE
   )
   expect_warning(
     expect_message(
-      expect_output(
-        install_torsten(dir = dir,
-                        version = "0.89.1",
-                        # the URL is intentionally invalid to test that the version has higher priority
-                        release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")),
-        "--- Torsten",
-        fixed = TRUE
+      install_torsten(
+        dir = dir, quiet = TRUE,
+        version = "0.89.1",
+        # the URL is intentionally invalid to test that the version has higher priority
+        release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
       ),
       "* Finished installing Torsten",
       fixed = TRUE
