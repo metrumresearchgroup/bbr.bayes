@@ -47,6 +47,10 @@ test_that("install_torsten() errors if invalid version or URL", {
     ),
     "cmdstanr supports installing from .tar.gz archives only"
   )
+  expect_error(
+    install_torsten(dir = tdir, quiet = TRUE, version = "0"),
+    "matches multiple"
+  )
 })
 
 test_that("install_torsten() overwrite check works", {
