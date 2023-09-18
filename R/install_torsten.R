@@ -82,34 +82,8 @@ install_torsten <- function(dir = NULL,
     dir <- file.path(tools::R_user_dir("torsten"))
   }
 
-  if (!is.null(version)) {
-    if (!is.null(release_url)) {
-      warning("version and release_url shouldn't both be specified!",
-              "\nrelease_url will be ignored.", call. = FALSE)
-    }
+  download_url <- get_torsten_download_url(version, release_url)
 
-    release_list <- get_torsten_release_list()
-    release <- release_list[grep(version, release_list, fixed = TRUE)]
-    if(length(release) < 1){
-      stop("Available Torsten versions do not include ", version, call. = FALSE)
-    }
-    if(length(release) > 1){
-      stop("The version argument, ", version, ", matches multiple Torsten version names",
-           call. = FALSE)
-    }
-    download_url <- paste0(TORSTEN_URL_BASE, release, ".tar.gz")
-  } else if (!is.null(release_url)) {
-    if (!endsWith(release_url, ".tar.gz")) {
-      stop(release_url, " is not a .tar.gz archive!",
-           "cmdstanr supports installing from .tar.gz archives only.", call. = FALSE)
-    }
-    download_url <- release_url
-    message("* Installing Torsten from ", release_url)
-  } else {
-    ver <- latest_torsten_release()
-    message("* Latest Torsten release is ", ver)
-    download_url <- paste0(TORSTEN_URL_BASE, ver, ".tar.gz")
-  }
   message("* Installing Torsten from ", download_url)
   targz_name <- basename(download_url)
   dir_torsten <- file.path(
@@ -176,6 +150,39 @@ install_torsten <- function(dir = NULL,
 }
 
 # internal ----------------------------------------------------------------
+
+get_torsten_download_url <- function(version, release_url) {
+  if (!is.null(version)) {
+    if (!is.null(release_url)) {
+      warning("version and release_url shouldn't both be specified!",
+              "\nrelease_url will be ignored.", call. = FALSE)
+    }
+
+    release_list <- get_torsten_release_list()
+    release <- release_list[grep(version, release_list, fixed = TRUE)]
+    if(length(release) < 1){
+      stop("Available Torsten versions do not include ", version, call. = FALSE)
+    }
+    if(length(release) > 1){
+      stop("The version argument, ", version, ", matches multiple Torsten version names",
+           call. = FALSE)
+    }
+    download_url <- paste0(TORSTEN_URL_BASE, release, ".tar.gz")
+  } else if (!is.null(release_url)) {
+    if (!endsWith(release_url, ".tar.gz")) {
+      stop(release_url, " is not a .tar.gz archive!",
+           "cmdstanr supports installing from .tar.gz archives only.", call. = FALSE)
+    }
+    download_url <- release_url
+    message("* Installing Torsten from ", release_url)
+  } else {
+    ver <- latest_torsten_release()
+    message("* Latest Torsten release is ", ver)
+    download_url <- paste0(TORSTEN_URL_BASE, ver, ".tar.gz")
+  }
+
+  return(download_url)
+}
 
 check_install_dir <- function(dir_torsten, overwrite = FALSE) {
   ## Adapted from cmdstanr function of the same name
