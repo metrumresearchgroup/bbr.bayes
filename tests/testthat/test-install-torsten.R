@@ -49,6 +49,30 @@ test_that("install_torsten() errors if invalid version or URL", {
   )
 })
 
+test_that("install_torsten() overwrite check works", {
+  tdir <- local_test_dir()
+  # Use a bogus URL to avoid the full install.
+  url <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")
+
+  fs::dir_create(file.path(tdir), "torsten_v0.89.2")
+  expect_warning(
+    install_torsten(dir = tdir, release_url = url, quiet = TRUE),
+    "installation already exists"
+  )
+  expect_error(
+    expect_message(
+      install_torsten(
+        dir = tdir, release_url = url, quiet = TRUE,
+        overwrite = TRUE
+      ),
+      "Removing the existing installation",
+      fixed = TRUE
+    ),
+    "Download of Torsten failed",
+    fixed = TRUE
+  )
+})
+
 test_that("install_torsten() works with version and release_url", {
   dir <- local_test_dir()
 
