@@ -9,6 +9,7 @@ if (!nzchar(torsten_test_tarball_url)) {
 }
 
 test_that("install_torsten() successfully installs torsten", {
+  skip_long_tests("long-running install_torsten() test")
   dir <- local_test_dir()
   withr::local_envvar(c("R_USER_DATA_DIR" = dir))
 
