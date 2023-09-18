@@ -32,16 +32,24 @@ test_that("install_torsten() successfully installs torsten", {
 })
 
 test_that("install_torsten() errors if invalid version or URL", {
+  tdir <- local_test_dir()
+
   expect_error(
-    install_torsten(version = "0.89.2"),
+    install_torsten(dir = tdir, version = "0.89.2"),
     "Available Torsten versions do not include 0.89.2"
   )
   expect_error(
-    install_torsten(release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")),
+    install_torsten(
+      dir = tdir,
+      release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")
+    ),
     "Download of Torsten failed. Please check if the supplied release URL is valid."
   )
   expect_error(
-    install_torsten(release_url = paste0(TORSTEN_URL_BASE, "0.89.2")),
+    install_torsten(
+      dir = tdir,
+      release_url = paste0(TORSTEN_URL_BASE, "0.89.2")
+    ),
     "cmdstanr supports installing from .tar.gz archives only"
   )
 })
