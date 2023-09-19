@@ -8,8 +8,15 @@ if (!nzchar(torsten_test_tarball_url)) {
   torsten_test_tarball_url <- torsten_test_tarball_url_default
 }
 
+reset_cmdstan_path <- function(envir = parent.frame()) {
+  oldpath <- cmdstanr::cmdstan_path()
+  withr::defer(cmdstanr::set_cmdstan_path(oldpath), envir = envir)
+}
+
 test_that("install_torsten() successfully installs torsten", {
   skip_long_tests("long-running install_torsten() test")
+  reset_cmdstan_path()
+
   dir <- local_test_dir()
   withr::local_envvar(c("R_USER_DATA_DIR" = dir))
 
@@ -33,6 +40,8 @@ test_that("install_torsten() successfully installs torsten", {
 })
 
 test_that("install_torsten() errors if invalid version or URL", {
+  reset_cmdstan_path()
+
   tdir <- local_test_dir()
 
   expect_error(
@@ -60,6 +69,8 @@ test_that("install_torsten() errors if invalid version or URL", {
 })
 
 test_that("install_torsten() overwrite check works", {
+  reset_cmdstan_path()
+
   tdir <- local_test_dir()
   # Use a bogus URL to avoid the full install.
   url <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")
