@@ -105,7 +105,18 @@ with \code{point_fn}, and then joining \code{data}. \code{EPRED}, \code{IPRED}, 
 corresponding argument.
 }
 \description{
-\code{nm_join_bayes()} and \code{nm_join_bayes_quick()} TODO
+\code{nm_join_bayes()} and \code{nm_join_bayes_quick()} both join input data to model
+output summaries. Conceptually these are similar to \code{\link[bbr:nm_join]{bbr::nm_join()}}, but
+they summarize across chains.
+
+\code{nm_join_bayes()} selects a subset of posterior samples and \strong{simulates}
+EPRED and IPRED with specified mrgsolve model. These simulated values are
+passed to the specified summary function (\code{\link[stats:median]{stats::median()}} by default).
+
+\code{nm_join_bayes_quick()}, on the other hand, avoids the simulation and passes
+the the table values for each chain to the summary function. \strong{Warning}:
+this estimate should not be considered as reliable but may be useful in the
+early stages of model development.
 }
 \details{
 HELP: (details)

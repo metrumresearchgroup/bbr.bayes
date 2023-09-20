@@ -2,7 +2,18 @@
 #'
 #' @description
 #'
-#' `nm_join_bayes()` and `nm_join_bayes_quick()` TODO
+#' `nm_join_bayes()` and `nm_join_bayes_quick()` both join input data to model
+#' output summaries. Conceptually these are similar to [bbr::nm_join()], but
+#' they summarize across chains.
+#'
+#' `nm_join_bayes()` selects a subset of posterior samples and **simulates**
+#' EPRED and IPRED with specified mrgsolve model. These simulated values are
+#' passed to the specified summary function ([stats::median()] by default).
+#'
+#' `nm_join_bayes_quick()`, on the other hand, avoids the simulation and passes
+#' the the table values for each chain to the summary function. **Warning**:
+#' this estimate should not be considered as reliable but may be useful in the
+#' early stages of model development.
 #'
 #' @details
 #'
