@@ -9,8 +9,9 @@
 #' HELP: (details)
 #'
 #' @param mod A `bbi_nmbayes_model` object.
-#' @param mod_mrgsolve An mrgsolve model object. HELP: (fill in more details
-#'   about requirements for this model)
+#' @param mod_mrgsolve An mrgsolve model object, potentially updated to be
+#'   optimized for simulation from the data set and model (e.g., ODE solver
+#'   tolerance). This must capture `y_col`.
 #' @param data A NONMEM dataset for `mod` to use instead of the default one
 #'   extracted from `mod` with [bbr::nm_data()]. This data frame must include a
 #'   `join_col` column.
@@ -19,9 +20,11 @@
 #'   subdirectory.
 #' @param dv_col Pass this `data` column as the dependent variable when
 #'   calculating EWRES and NPDE.
-#' @param y_col The name of the dependent variable in `mod_mrgsolve`.
+#' @param y_col The name of the dependent variable in `mod_mrgsolve`. This is a
+#'   simulated quantity corresponding to `dv_col`.
 #' @param point_fn Function used to calculate point estimates of table values
-#'   across chains and of simulated EPRED and IPRED values.
+#'   across chains and of simulated EPRED and IPRED values (e.g., mean or
+#'   median).
 #' @param probs A two-item vector of lower and upper probabilities to pass to
 #'   [stats::quantile()] to calculate the bounds of the simulated EPRED and
 #'   IPRED values.

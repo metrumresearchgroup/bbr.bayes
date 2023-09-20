@@ -44,15 +44,18 @@ combining values from the \code{bbr-bayes-join.tab} file in each chain
 subdirectory.}
 
 \item{point_fn}{Function used to calculate point estimates of table values
-across chains and of simulated EPRED and IPRED values.}
+across chains and of simulated EPRED and IPRED values (e.g., mean or
+median).}
 
-\item{mod_mrgsolve}{An mrgsolve model object. HELP: (fill in more details
-about requirements for this model)}
+\item{mod_mrgsolve}{An mrgsolve model object, potentially updated to be
+optimized for simulation from the data set and model (e.g., ODE solver
+tolerance). This must capture \code{y_col}.}
 
 \item{dv_col}{Pass this \code{data} column as the dependent variable when
 calculating EWRES and NPDE.}
 
-\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}
+\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}. This is a
+simulated quantity corresponding to \code{dv_col}.}
 
 \item{probs}{A two-item vector of lower and upper probabilities to pass to
 \code{\link[stats:quantile]{stats::quantile()}} to calculate the bounds of the simulated EPRED and
