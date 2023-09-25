@@ -38,11 +38,7 @@ steps:
   pull: never
   image: 906087756158.dkr.ecr.us-east-1.amazonaws.com/r-dev-ci-mpn-4.1:cmdstanr
   commands:
-  - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
-  - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
   - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
-  - git clone -b release/1.2.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/mrgsolve.git /tmp/mrgsolve
-  - R -s -e 'devtools::install("/tmp/mrgsolve", upgrade = "never")'
   - R -s -e 'devtools::check()'
   environment:
     NOT_CRAN: true
@@ -99,8 +95,6 @@ steps:
   - git config --global user.email drone@metrumrg.com
   - git config --global user.name Drony
   - git fetch --tags
-  - git clone -b 0.1.0 --depth 1 --single-branch https://github.com/metrumresearchgroup/nmrec.git /tmp/nmrec
-  - R -s -e 'devtools::install("/tmp/nmrec", upgrade = "never")'
   - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
   - R -s -e 'pkgpub::create_tagged_repo(.dir = "/ephemeral")'
   environment:
