@@ -67,7 +67,7 @@ test_that("nm_join_bayes() aborts: ipred=TRUE aborts on model without iph files"
 
 test_that("nm_join_bayes() works", {
   withr::with_seed(3012, {
-    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 10)
+    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 30)
   })
 
   expect_s3_class(res, "tbl_df")
@@ -92,11 +92,11 @@ test_that("nm_join_bayes() works", {
   tfile <- withr::local_tempfile()
   readr::write_csv(res, tfile)
   expect_identical(unname(tools::md5sum(tfile)),
-                   "9eed108984109825c70db2efe357b757")
+                   "f27a9716ad84876f2717c48132caffe5")
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
-    res2 <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 10,
+    res2 <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 30,
                           ipred_path = ipred_path)
   })
 
@@ -112,10 +112,7 @@ test_that("nm_join_bayes() works", {
 
 test_that("nm_join_bayes() optionally runs autonpde", {
   withr::with_seed(3012, {
-    # Note: if n_post is dropped to a lower value (e.g., 10 or 20), the
-    # decorr.chol call underneath fails, even with mrgsolve's 07793922 (all
-    # records get a different draw from EPS, 2023-08-22).
-    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 25,
+    res <- nm_join_bayes(NMBAYES_MOD1, MOD_MS, n_post = 30,
                          ewres_npde = TRUE)
   })
 
