@@ -61,7 +61,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
   rlang::check_dots_empty()
 
   mod <- errors
-  iph_files <- get_chain_files(mod, ".iph", check_exists = "all_or_none")
+  iph_files <- chain_paths_impl(mod, ".iph", check_exists = "all_or_none")
   if (length(iph_files)) {
     draws <- posterior::as_draws_rvars(mod)
     eta <- draws[["ETA"]]
@@ -73,7 +73,7 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
               variance = diag(draws[["OMEGA"]]),
               use_sd = use_sd)
   } else {
-    shk_files <- get_chain_files(mod, ".shk", check_exists = "all_or_none")
+    shk_files <- chain_paths_impl(mod, ".shk", check_exists = "all_or_none")
     if (!length(shk_files)) {
       stop("No *.iph or *.shk files found; cannot calculate shrinkage")
     }

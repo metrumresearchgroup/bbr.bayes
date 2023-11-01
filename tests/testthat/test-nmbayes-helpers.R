@@ -1,34 +1,34 @@
 
-test_that("get_chain_files() returns files chain subdirs", {
-  exts <- get_chain_files(NMBAYES_MOD1, ".ext")
+test_that("chain_paths() returns files in chain subdirs", {
+  exts <- chain_paths(NMBAYES_MOD1, ".ext")
 
   expect_length(exts, 2)
   expect_true(all(fs::path_has_parent(exts, NMBAYES_ABS_MODEL_DIR)))
   expect_setequal(basename(exts), c("1100-1.ext", "1100-2.ext"))
 
   # It doesn't matter if "." is included.
-  expect_identical(exts, get_chain_files(NMBAYES_MOD1, "ext"))
+  expect_identical(exts, chain_paths(NMBAYES_MOD1, "ext"))
 
-  expect_setequal(basename(get_chain_files(NMBAYES_MOD1, ".phi")),
+  expect_setequal(basename(chain_paths(NMBAYES_MOD1, ".phi")),
                   c("1100-1.phi", "1100-2.phi"))
 })
 
-test_that("get_chain_files() optionally checks existence: basic", {
-  expect_length(get_chain_files(NMBAYES_MOD1, ".ext",
+test_that("chain_paths_impl() optionally checks existence: basic", {
+  expect_length(chain_paths_impl(NMBAYES_MOD1, ".ext",
+                                 check_exists = "all"),
+                2)
+  expect_error(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
                                 check_exists = "all"),
-                2)
-  expect_error(get_chain_files(NMBAYES_MOD1, ".i-do-not-exist",
-                               check_exists = "all"),
                "Missing")
-  expect_length(get_chain_files(NMBAYES_MOD1, ".i-do-not-exist",
-                                check_exists = "no"),
+  expect_length(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
+                                 check_exists = "no"),
                 2)
-  expect_identical(get_chain_files(NMBAYES_MOD1, ".i-do-not-exist",
-                                   check_exists = "all_or_none"),
+  expect_identical(chain_paths_impl(NMBAYES_MOD1, ".i-do-not-exist",
+                                    check_exists = "all_or_none"),
                    character(0))
 })
 
-test_that("get_chain_files() optionally checks existence: some missing", {
+test_that("chain_paths_impl() optionally checks existence: some missing", {
   tdir <- local_test_dir()
   modfile <- get_model_path(NMBAYES_MOD1)
   fs::file_copy(modfile, tdir)
@@ -40,7 +40,7 @@ test_that("get_chain_files() optionally checks existence: some missing", {
                rundir)
 
   mod <- read_model(rundir)
-  exts <- get_chain_files(mod, ".ext", check_exists = "all")
+  exts <- chain_paths_impl(mod, ".ext", check_exists = "all")
   expect_length(exts, 2)
   if (!all(fs::path_has_parent(exts, get_model_working_directory(mod)))) {
     fail(glue("Returned files are not under expected directory",
@@ -53,8 +53,8 @@ test_that("get_chain_files() optionally checks existence: some missing", {
     return(NULL)
   }
   fs::file_delete(exts[1])
-  expect_error(get_chain_files(mod, ".ext", check_exists = "all"),
+  expect_error(chain_paths_impl(mod, ".ext", check_exists = "all"),
                "Missing")
-  expect_error(get_chain_files(mod, ".ext", check_exists = "all_or_none"),
+  expect_error(chain_paths_impl(mod, ".ext", check_exists = "all_or_none"),
                "Missing")
 })

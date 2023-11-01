@@ -2,7 +2,7 @@
 ### Example project reference comparison
 
 read_chain_files <- function(mod, extension) {
-  files <- get_chain_files(mod, extension)
+  files <- chain_paths(mod, extension)
   names(files) <- seq_along(files)
   purrr::map_dfr(files, fread_chain_file, .id = "chain") %>%
     dplyr::filter(.data$ITERATION > 0)
@@ -153,7 +153,7 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
                rundir)
 
   mod <- read_model(rundir)
-  iphs <- get_chain_files(mod, ".iph", check_exists = "all")
+  iphs <- chain_paths_impl(mod, ".iph", check_exists = "all")
   if (!all(fs::path_has_parent(iphs, get_model_working_directory(mod)))) {
     fail(glue("Returned files are not under expected directory",
               " - directory: {get_model_working_directory(mod)}",
