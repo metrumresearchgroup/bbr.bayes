@@ -78,9 +78,14 @@ shrinkage.bbi_nmbayes_model <- function(errors, ..., use_sd = TRUE) {
       stop("No *.iph or *.shk files found; cannot calculate shrinkage")
     }
 
-    shk <- purrr::map_dfr(shk_files, fread_chain_file, .id = "chain") %>%
-      # From Intro to NM 7: "Type 4=%Eta shrinkage SD version"
-      dplyr::filter(.data$TYPE == 4)
+    shk <- purrr::map_dfr(shk_files, fread_chain_file, .id = "chain")
+    if (!"TYPE" %in% names(shk)) {
+      stop("Failed to extract TYPE column from *.shk files:\n",
+           paste("  -", shk_files, collapse = "\n"))
+    }
+
+    # From Intro to NM 7: "Type 4=%Eta shrinkage SD version"
+    shk <- dplyr::filter(shk, .data$TYPE == 4)
 
     if (!nrow(shk)) {
       stop("Failed to extract TYPE=4 rows from *.shk files:\n",
