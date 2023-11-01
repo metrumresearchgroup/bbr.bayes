@@ -4,10 +4,13 @@
 \alias{chain_paths}
 \title{Return output file from each chain subdirectory}
 \usage{
-chain_paths(.mod, extension)
+chain_paths(.mod, name = NULL, extension = "")
 }
 \arguments{
 \item{.mod}{A \code{bbi_nmbayes_model} object.}
+
+\item{name}{Name of file, without leading path or extension. If unspecified,
+defaults to "{id}-{chain}".}
 
 \item{extension}{File extension.}
 }
