@@ -175,9 +175,11 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
 
   shk_files <- fs::path_ext_set(iphs, "shk")
 
-  invalid_data <- tibble::tibble(TYPE = 1:2)
+  # No TYPE=4 row
   for (f in shk_files) {
-    readr::write_csv(invalid_data, f)
+    # Drop TYPE=4 value.
+    lines <- sub(" 4 ", " 1 ", readLines(f))
+    writeLines(lines, f)
   }
   expect_error(shrinkage(mod), "TYPE=4")
 
