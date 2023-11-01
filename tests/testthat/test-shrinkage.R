@@ -183,6 +183,13 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
   }
   expect_error(shrinkage(mod), "TYPE=4")
 
+  # No TYPE column found on second line
+  for (f in shk_files) {
+    lines <- readLines(f)
+    writeLines(lines[2:length(lines)], f)
+  }
+  expect_error(shrinkage(mod), "extract TYPE column")
+
   # No TYPE column
   for (f in shk_files) {
     readr::write_delim(tibble::tibble(foo = 1:2, bar = 3:4), f, delim = " ")
