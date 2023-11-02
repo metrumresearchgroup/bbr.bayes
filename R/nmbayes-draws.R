@@ -10,16 +10,18 @@ nmbayes_draws <- function(.mod,
   draws_fn <- select_draws_fn(match.arg(format))
 
   chain_dirs <- get_chain_dirs(.mod)
-  exts <- get_chain_files(.mod, ".ext",
-                          chain_dirs = chain_dirs,
-                          check_exists = "all")
+  exts <- chain_paths_impl(.mod,
+                           extension = ".ext",
+                           chain_dirs = chain_dirs,
+                           check_exists = "all")
   nchains <- length(exts)
 
   iphs <- character(0)
   if (isTRUE(include_iph)) {
-    iphs <- get_chain_files(.mod, ".iph",
-                            chain_dirs = chain_dirs,
-                            check_exists = "all_or_none")
+    iphs <- chain_paths_impl(.mod,
+                             extension = ".iph",
+                             chain_dirs = chain_dirs,
+                             check_exists = "all_or_none")
     include_iph <- length(iphs) == nchains
   }
   iph_select <- if (include_iph) get_iph_variables(iphs[1]) else NULL
