@@ -7,23 +7,25 @@ Bayes models.
 
 ## Installation
 
-`bbr.bayes` and two of its dependencies, `bbr` and `cmdstanr`, are not
-on CRAN.  They can be installed from GitHub with, e.g.,
-[remotes::install_git()][rig].
+You can install the latest release of `bbr.bayes` from [MPN].
+
+To install the latest development version from GitHub, you can use
+`remotes`:
 
 ```R
-> remotes::install_git("git@github.com:stan-dev/cmdstanr.git")
-> remotes::install_git("git@github.com:metrumresearchgroup/bbr.git")
-> remotes::install_git("git@github.com:metrumresearchgroup/bbr.bayes.git")
+# install.packages("remotes")
+remotes::install_github("metrumresearchgroup/bbr.bayes")
 ```
 
-The `bbr` and `cmdstanr` dependencies are also available from
-CRAN-like repositories:
+Note that a few `bbr.bayes` dependencies are not on CRAN but are
+available from other CRAN-like repos:
 
- * `bbr` is available on [MPN].  Use snapshot 2023-05-14 or later to
+ * [bbr] is available on [MPN].  Use snapshot 2023-05-14 or later to
    get the minimum version required by `bbr.bayes`.
 
- * `cmdstanr` is available from [MPN] and
+ * [nmrec] is available on [MPN] as of the 2023-09-19 snapshot.
+
+ * [cmdstanr] is available from [MPN] and
    <https://mc-stan.org/r-packages/>.
 
 
@@ -52,7 +54,7 @@ to provide isolation. To set up an environment with pkgr and renv:
 [cmdstanr]: https://mc-stan.org/cmdstanr/
 [gss]: https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html
 [MPN]: https://mpn.metworx.com/docs/snapshots
+[nmrec]: https://metrumresearchgroup.github.io/nmrec
 [pkgr]: https://github.com/metrumresearchgroup/pkgr
 [renv]: https://rstudio.github.io/renv/
-[rig]: https://remotes.r-lib.org/reference/install_git.html
 [Stan]: https://mc-stan.org/
