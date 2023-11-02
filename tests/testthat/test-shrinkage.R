@@ -175,11 +175,26 @@ test_that("shrinkage.bbi_nmbayes_model() falls back to *.shk files", {
 
   shk_files <- fs::path_ext_set(iphs, "shk")
 
-  invalid_data <- tibble::tibble(TYPE = 1:2)
+  # No TYPE=4 row
   for (f in shk_files) {
-    readr::write_csv(invalid_data, f)
+    # Drop TYPE=4 value.
+    lines <- sub(" 4 ", " 1 ", readLines(f))
+    writeLines(lines, f)
   }
   expect_error(shrinkage(mod), "TYPE=4")
+
+  # No TYPE column found on second line
+  for (f in shk_files) {
+    lines <- readLines(f)
+    writeLines(lines[2:length(lines)], f)
+  }
+  expect_error(shrinkage(mod), "extract TYPE column")
+
+  # No TYPE column
+  for (f in shk_files) {
+    readr::write_delim(tibble::tibble(foo = 1:2, bar = 3:4), f, delim = " ")
+  }
+  expect_error(shrinkage(mod), "extract TYPE column")
 
   fs::file_delete(shk_files)
   expect_error(shrinkage(mod), "cannot calculate")
