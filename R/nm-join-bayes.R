@@ -35,7 +35,10 @@
 #'   [bbr::nm_join()], this function accepts only relative paths because the
 #'   paths need to be valid for each chain submodel.
 #' @param ... Additional arguments passed to [bbr::nm_join()].
-#' @param y_col The name of the dependent variable in `mod_mrgsolve`.
+#' @param dv_col Pass this data column as the dependent variable when
+#'   calculating EWRES and NPDE.
+#' @param y_col The name of the dependent variable in `mod_mrgsolve`. This is a
+#'   simulated quantity corresponding to `dv_col`.
 #' @param point_fn Function used to calculate point estimates of table values
 #'   across chains and of simulated EPRED and IPRED values (e.g., mean or
 #'   median).
@@ -73,6 +76,7 @@ nm_join_bayes <- function(.mod,
                           .files = NULL,
                           .superset = FALSE,
                           ...,
+                          dv_col = "DV",
                           y_col = "Y",
                           point_fn = stats::median,
                           probs = c(0.025, 0.975),
@@ -86,6 +90,7 @@ nm_join_bayes <- function(.mod,
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
   checkmate::assert_string(.join_col)
+  checkmate::assert_string(dv_col)
   checkmate::assert_string(y_col)
   checkmate::assert_string(ipred_path, null.ok = TRUE)
   checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
@@ -133,6 +138,14 @@ nm_join_bayes <- function(.mod,
     res <- call_presim(presim_fn, res, .join_col)
   }
 
+  if (isTRUE(ewres_npde) && !dv_col %in% names(res)) {
+    msg <- paste(dv_col, "not found in result.")
+    if (identical(dv_col, "DV")) {
+      msg <- paste0(msg, "\nUse `dv_col` to specify a column remapped to DV.")
+    }
+    stop(msg)
+  }
+
   ext <- sample_exts(.mod, n_post)
 
   if (!isTRUE(resid_var)) {
@@ -176,7 +189,7 @@ nm_join_bayes <- function(.mod,
 
   if (isTRUE(ewres_npde)) {
     en_res <- sim_ewres_npde(
-      res, epred_res, .join_col
+      res, epred_res, .join_col, dv_col
     )
     res <- dplyr::select(res, -any_of(c("EWRES", "NPDE"))) %>%
       dplyr::left_join(en_res, by = .join_col)
@@ -400,11 +413,11 @@ summarize_pred <- function(name, simdf, join_col, point_fn, probs) {
     )
 }
 
-sim_ewres_npde <- function(data, epred_res, join_col) {
+sim_ewres_npde <- function(data, epred_res, join_col, dv_col) {
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
     # Note: The downstream autonpde() call depends on the position of the ID,
     # TIME, and DV columns.
-    dplyr::select("ID", "TIME", "DV", all_of(join_col))
+    dplyr::select("ID", "TIME", all_of(c(dv_col, join_col)))
   df_sim <- dplyr::left_join(epred_res, df_obs, by = join_col) %>%
     dplyr::select("ID", "TIME", DV = "DV_sim")
 

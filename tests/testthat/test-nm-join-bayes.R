@@ -74,6 +74,18 @@ test_that("nm_join_bayes() aborts: invalid presim_fn return", {
   )
 })
 
+test_that("nm_join_bayes() aborts: DV not present in result", {
+  expect_error(
+    nm_join_bayes(
+      NMBAYES_MOD1, MOD_MS,
+      presim_fn = function(d) {
+        dplyr::rename(d, LDV = "DV")
+      }
+    ),
+    "specify a column remapped to DV"
+  )
+})
+
 test_that("nm_join_bayes() aborts: join_col not in data", {
   expect_error(
     nm_join_bayes(NMBAYES_MOD1, MOD_MS, .join_col = "FOOBAR"),

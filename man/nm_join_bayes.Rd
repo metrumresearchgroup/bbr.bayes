@@ -11,6 +11,7 @@ nm_join_bayes(
   .files = NULL,
   .superset = FALSE,
   ...,
+  dv_col = "DV",
   y_col = "Y",
   point_fn = stats::median,
   probs = c(0.025, 0.975),
@@ -46,7 +47,11 @@ you have in the input data and NONMEM output columns like \code{PRED} and
 
 \item{...}{Additional arguments passed to \code{\link[bbr:nm_join]{bbr::nm_join()}}.}
 
-\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}
+\item{dv_col}{Pass this data column as the dependent variable when
+calculating EWRES and NPDE.}
+
+\item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}. This is a
+simulated quantity corresponding to \code{dv_col}.}
 
 \item{point_fn}{Function used to calculate point estimates of table values
 across chains and of simulated EPRED and IPRED values (e.g., mean or
