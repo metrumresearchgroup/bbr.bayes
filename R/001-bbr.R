@@ -39,6 +39,7 @@ model_diff_get_comp <- import_bbr("model_diff_get_comp")
 model_diff_impl <- import_bbr("model_diff_impl")
 register_model_type <- import_bbr("register_model_type")
 save_model_yaml <- import_bbr("save_model_yaml")
+verbose_msg <- import_bbr("verbose_msg")
 
 ABS_MOD_PATH <- import_bbr("ABS_MOD_PATH", mode = "character")
 BBI_PARENT_CLASS <- import_bbr("BBI_PARENT_CLASS", mode = "character")

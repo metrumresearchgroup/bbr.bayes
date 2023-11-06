@@ -125,6 +125,8 @@ run_chains <- function(.mod, ...) {
       # .overwrite=TRUE, so an unconditional .overwrite=FALSE is sufficient.
       .overwrite = FALSE
     )
+    # Note: Don't call update_model_id here so that callers don't need to worry
+    # chain in the base name of files (e.g., those specified for nm_join_bayes).
 
     return(chain_mod)
   })
