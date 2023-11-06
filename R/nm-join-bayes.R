@@ -297,10 +297,9 @@ sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
     stop("`ipred = TRUE` requires iph files")
   }
 
-  ipar <- purrr::map(iph_files, fread_chain_file) %>%
+  ipar <- purrr::map(iph_files, iph_reader(iph_files[1])) %>%
     dplyr::bind_rows(.id = "chain") %>%
-    dplyr::filter(.data$ITERATION > 0) %>%
-    dplyr::select("chain", "ITERATION", "ID", starts_with("ETA("))
+    dplyr::filter(.data$ITERATION > 0)
   ipar <- dplyr::left_join(dplyr::select(ext, -starts_with("OMEGA(")),
     ipar,
     by = c("chain", "ITERATION")
@@ -324,6 +323,20 @@ sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
   })
 
   return(tibble::as_tibble(dplyr::bind_rows(res)))
+}
+
+iph_reader <- function(iph_file) {
+  iph_cols <- fread_peek_at_columns(iph_file)
+  eta_cols <- grep("^ETA\\(", iph_cols, value = TRUE)
+  if (!length(eta_cols)) {
+    stop("iph file unexpectedly does not have `ETA` columns: ", iph_file)
+  }
+
+  fn <- function(f) {
+    fread_chain_file(f, select = c("ITERATION", "ID", eta_cols))
+  }
+
+  return(fn)
 }
 
 summarize_pred <- function(name, simdf, join_col, point_fn, probs) {
