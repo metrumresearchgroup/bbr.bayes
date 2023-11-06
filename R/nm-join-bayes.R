@@ -2,22 +2,29 @@
 #'
 #' @description
 #'
-#' `nm_join_bayes()` joins model output summaries to the input data. Underneath
-#' this calls [bbr::nm_join()] on each chain submodel and then combines the
-#' results, summarizing the table values across chains.
+#' `nm_join_bayes()` and `nm_join_bayes_quick()` both join model output
+#' summaries to the input data. Underneath this calls [bbr::nm_join()] on each
+#' chain submodel and then combines the results, summarizing the table values
+#' across chains.
 #'
 #' By default `nm_join_bayes()` replaces some table quantities with summaries of
 #' **simulated** values. It selects a subset of posterior samples and simulates
 #' EPRED and IPRED with specified \pkg{mrgsolve} model. It also feeds the
 #' simulated EPRED values to \pkg{npde} to calculate EWRES and NPDE values.
 #'
+#' `nm_join_bayes_quick()`, on the other hand, avoids the simulation; the
+#' reported values are calculated from the table values. **Warning**: these
+#' estimates should not be considered as reliable but may be useful in the early
+#' stages of model development.
+#'
 #' @details
 #'
 #' ## Messages
 #'
-#' `nm_join_bayes()` displays messages from [bbr::nm_join()] about the data and
-#' table files being joined for the first chain. Messages for the subsequent
-#' chains are omitted to avoid flooding the console with identical output.
+#' `nm_join_bayes()` and `nm_join_bayes_quick()` display messages from
+#' [bbr::nm_join()] about the data and table files being joined for the first
+#' chain. Messages for the subsequent chains are omitted to avoid flooding the
+#' console with identical output.
 #'
 #' As with [bbr::nm_join()], you can suppress these messages by setting the
 #' `bbr.verbose` option to `FALSE`.
@@ -93,6 +100,10 @@
 #'   with a simulated estimate, if requested by the corresponding argument.
 #' @seealso [bbr::nm_join()], [bbr_nmbayes] for a high-level description of how
 #'   NONMEM Bayes models are structured in bbr
+#' @name nm_join_bayes
+NULL
+
+#' @rdname nm_join_bayes
 #' @export
 nm_join_bayes <- function(.mod,
                           mod_mrgsolve,
@@ -113,8 +124,10 @@ nm_join_bayes <- function(.mod,
                           npde_decorr_method = c("cholesky", "inverse", "polar"),
                           presim_fn = NULL,
                           min_batch_size = 200) {
+  quick <- !(epred || ipred)
+
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
-  checkmate::assert_class(mod_mrgsolve, "mrgmod")
+  checkmate::assert_class(mod_mrgsolve, "mrgmod", null.ok = quick)
   checkmate::assert_string(.join_col)
   checkmate::assert_string(dv_col)
   checkmate::assert_string(y_col)
@@ -128,12 +141,14 @@ nm_join_bayes <- function(.mod,
     stop("`.files` must be relative paths.")
   }
 
-  if (!requireNamespace("future.apply", quietly = TRUE)) {
-    stop("nm_join_bayes() requires future.apply package.")
-  }
+  if (!quick) {
+    if (!requireNamespace("future.apply", quietly = TRUE)) {
+      stop("nm_join_bayes() requires future.apply package.")
+    }
 
-  if (!requireNamespace("mrgsolve", quietly = TRUE)) {
-    stop("nm_join_bayes() requires mrgsolve package.")
+    if (!requireNamespace("mrgsolve", quietly = TRUE)) {
+      stop("nm_join_bayes() requires mrgsolve package.")
+    }
   }
 
   if (isTRUE(ewres_npde)) {
@@ -148,6 +163,9 @@ nm_join_bayes <- function(.mod,
 
   join_info <- prepare_join(.mod, .join_col, .files, .superset, point_fn, ...)
   res <- dplyr::left_join(join_info$data, join_info$tab, by = .join_col)
+  if (quick) {
+    return(res)
+  }
 
   qstr <- paste(
     c("EPRED", "IPRED", "EWRES NPDE")[c(epred, ipred, ewres_npde)],
@@ -247,6 +265,28 @@ nm_join_bayes <- function(.mod,
   }
 
   return(res)
+}
+
+#' @rdname nm_join_bayes
+#' @export
+nm_join_bayes_quick <- function(.mod,
+                                .join_col = "NUM",
+                                .files = NULL,
+                                .superset = FALSE,
+                                ...,
+                                point_fn = stats::median) {
+  nm_join_bayes(
+    .mod = .mod,
+    mod_mrgsolve = NULL,
+    .join_col = .join_col,
+    .files = .files,
+    .superset = .superset,
+    ...,
+    point_fn = point_fn,
+    epred = FALSE,
+    ipred = FALSE,
+    ewres_npde = FALSE
+  )
 }
 
 #' Prepare for joining data to table results from submodels

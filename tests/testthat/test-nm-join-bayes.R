@@ -183,3 +183,73 @@ test_that("nm_join_bayes() works", {
   ipred <- readr::read_csv(ipred_path)
   expect_identical(names(ipred), c("NUM", "DV_sim", "sample"))
 })
+
+test_that("nm_join_bayes_quick() args are strict subset of nm_join_bayes()", {
+  args <- formals(nm_join_bayes)
+  args_quick <- formals(nm_join_bayes_quick)
+
+  arg_names <- names(args)
+  arg_names_quick <- names(args_quick)
+
+  expect_identical(
+    arg_names_quick,
+    intersect(arg_names, arg_names_quick)
+  )
+  expect_identical(
+    args_quick[arg_names_quick],
+    args[arg_names_quick]
+  )
+})
+
+test_that("nm_join_bayes_quick() works", {
+  res <- nm_join_bayes_quick(NMBAYES_MOD1)
+
+  tabs <- purrr::map(chain_paths(NMBAYES_MOD1, "1100", ".tab"), fread_chain_file) %>%
+    dplyr::bind_rows(.id = "chain")
+
+  # A few random spot checks.
+  for (num in c(102, 2969, 3404, 4140)) {
+    expect_equal(
+      dplyr::filter(res, .data$NUM == num)$EPRED,
+      stats::median(tabs[tabs$NUM == num, ]$EPRED)
+    )
+    expect_equal(
+      dplyr::filter(res, .data$NUM == num)$EPRED,
+      stats::median(tabs[tabs$NUM == num, ]$EPRED)
+    )
+  }
+
+  expect_s3_class(res, "tbl_df")
+
+  data <- read_mod_data()
+
+  expect_length(setdiff(names(data), names(res)), 0)
+  tab_cols <- table_columns()
+  expect_setequal(
+    names(res),
+    c(tab_cols, names(data), "DV.DATA")
+  )
+
+  expect_equal(nrow(res), sum(data$BLQ == 0))
+
+  expect_equal(sum(is.na(res$NUM)), 0)
+  expect_equal(dplyr::n_distinct(res$ID), 160)
+
+  res2 <- nm_join_bayes_quick(NMBAYES_MOD1,
+    point_fn = function(x) 10 * stats::median(x)
+  )
+  expect_identical(names(res), names(res2))
+  expect_equal(
+    dplyr::select(res, -any_of(tab_cols)),
+    dplyr::select(res2, -any_of(tab_cols))
+  )
+  expect_equal(res2$IPRED, 10 * res$IPRED)
+})
+
+test_that("nm_join_bayes_quick() supports .superset=TRUE", {
+  res <- nm_join_bayes_quick(NMBAYES_MOD1, .superset = TRUE)
+  data <- read_mod_data()
+
+  expect_equal(res$NUM, data$NUM)
+  expect_in(names(data), names(res))
+})

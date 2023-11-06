@@ -2,6 +2,7 @@
 % Please edit documentation in R/nm-join-bayes.R
 \name{nm_join_bayes}
 \alias{nm_join_bayes}
+\alias{nm_join_bayes_quick}
 \title{Join Bayesian model output summaries to input data}
 \usage{
 nm_join_bayes(
@@ -24,6 +25,15 @@ nm_join_bayes(
   npde_decorr_method = c("cholesky", "inverse", "polar"),
   presim_fn = NULL,
   min_batch_size = 200
+)
+
+nm_join_bayes_quick(
+  .mod,
+  .join_col = "NUM",
+  .files = NULL,
+  .superset = FALSE,
+  ...,
+  point_fn = stats::median
 )
 }
 \arguments{
@@ -109,21 +119,28 @@ with \code{point_fn}. \code{EPRED}, \code{IPRED}, \code{EWRES}, and \code{NPDE} 
 with a simulated estimate, if requested by the corresponding argument.
 }
 \description{
-\code{nm_join_bayes()} joins model output summaries to the input data. Underneath
-this calls \code{\link[bbr:nm_join]{bbr::nm_join()}} on each chain submodel and then combines the
-results, summarizing the table values across chains.
+\code{nm_join_bayes()} and \code{nm_join_bayes_quick()} both join model output
+summaries to the input data. Underneath this calls \code{\link[bbr:nm_join]{bbr::nm_join()}} on each
+chain submodel and then combines the results, summarizing the table values
+across chains.
 
 By default \code{nm_join_bayes()} replaces some table quantities with summaries of
 \strong{simulated} values. It selects a subset of posterior samples and simulates
 EPRED and IPRED with specified \pkg{mrgsolve} model. It also feeds the
 simulated EPRED values to \pkg{npde} to calculate EWRES and NPDE values.
+
+\code{nm_join_bayes_quick()}, on the other hand, avoids the simulation; the
+reported values are calculated from the table values. \strong{Warning}: these
+estimates should not be considered as reliable but may be useful in the early
+stages of model development.
 }
 \details{
 \subsection{Messages}{
 
-\code{nm_join_bayes()} displays messages from \code{\link[bbr:nm_join]{bbr::nm_join()}} about the data and
-table files being joined for the first chain. Messages for the subsequent
-chains are omitted to avoid flooding the console with identical output.
+\code{nm_join_bayes()} and \code{nm_join_bayes_quick()} display messages from
+\code{\link[bbr:nm_join]{bbr::nm_join()}} about the data and table files being joined for the first
+chain. Messages for the subsequent chains are omitted to avoid flooding the
+console with identical output.
 
 As with \code{\link[bbr:nm_join]{bbr::nm_join()}}, you can suppress these messages by setting the
 \code{bbr.verbose} option to \code{FALSE}.
