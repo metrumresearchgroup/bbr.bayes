@@ -96,7 +96,7 @@ test_that("copy_model_as_nmbayes(): .update_model_file=FALSE disables model upda
 test_that("copy_model_as_nmbayes() keeps trailing comments", {
   tdir <- local_test_dir()
   file_parent <- file.path(tdir, "1.ctl")
-  lines_parent <- c("$prob one",
+  lines_parent <- c("$PROB one",
                     "$EST METHOD=SAEM",
                     "  abort",
                     "; comment1",
@@ -109,7 +109,7 @@ test_that("copy_model_as_nmbayes() keeps trailing comments", {
   mod_lines <- readLines(get_model_path(mod))
   expect_identical(
     setdiff(lines_parent, mod_lines),
-    c("$EST METHOD=SAEM", "  abort", "$EST METHOD=ITS")
+    c("$PROB one", "$EST METHOD=SAEM", "  abort", "$EST METHOD=ITS")
   )
   expect_match(mod_lines, "nmbayes models require", all = FALSE)
 })
