@@ -6,6 +6,8 @@ withr::local_options(list(
   bbr.verbose = FALSE
 ))
 
+testthat::skip_if_not_installed("future.apply")
+
 testthat::skip_if_not_installed("mrgsolve")
 if (packageVersion("mrgsolve") < "1.2.0") {
   testthat::skip("mrgsolve >= 1.2.0 required to get different draws for EPS")

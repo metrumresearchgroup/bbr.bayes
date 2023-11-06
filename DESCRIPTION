@@ -55,6 +55,8 @@ Imports:
 Suggests: 
     covr,
     devtools,
+    future,
+    future.apply,
     knitr,
     mrgsolve,
     nmrec,

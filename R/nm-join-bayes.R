@@ -22,6 +22,11 @@
 #' As with [bbr::nm_join()], you can suppress these messages by setting the
 #' `bbr.verbose` option to `FALSE`.
 #'
+#' ## Parallel processing
+#'
+#' To enable parallel processing for the EPRED and IPRED simulations, configure
+#' \pkg{future} ahead of calling this function via [future::plan()].
+#'
 #' ## Progress bar
 #'
 #' The EPRED and IPRED simulations support displaying a progress bar via the
@@ -70,6 +75,17 @@
 #'   that results from joining the input data and table values. The main purpose
 #'   of this argument is to provide a way to do any column renames that are
 #'   required for the mrgsolve simulation (e.g., renaming a column to "TIME").
+#' @param min_batch_size To simulate EPRED and IPRED values, posterior samples
+#'   are split into batches and sent as items to \pkg{future} `*apply`
+#'   functions. The number of batches is chosen so that each batch has at least
+#'   the number of samples specified by this argument.
+#'
+#'   **Note:** You may be able to tune this value to get better performance for
+#'   a particular case (considering factors such as the model, targeted future
+#'   backend, and machine). However, the results across runs with the same
+#'   initial seed will differ if you change this value. To avoid the results
+#'   varying across different machines and future backends, do not dynamically
+#'   set this value based on the number of available workers.
 #'
 #' @return A data frame. The base data frame is the result combining the
 #'   [bbr::nm_join()] results for each chain submodel, collapsing across chains
@@ -95,7 +111,8 @@ nm_join_bayes <- function(.mod,
                           ipred_path = NULL,
                           ewres_npde = TRUE,
                           npde_decorr_method = c("cholesky", "inverse", "polar"),
-                          presim_fn = NULL) {
+                          presim_fn = NULL,
+                          min_batch_size = 200) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
   checkmate::assert_string(.join_col)
@@ -105,9 +122,14 @@ nm_join_bayes <- function(.mod,
   checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
   checkmate::assert_int(n_post)
   npde_decorr_method <- match.arg(npde_decorr_method)
+  checkmate::assert_int(min_batch_size)
 
   if (!is.null(.files) && any(fs::is_absolute_path(.files))) {
     stop("`.files` must be relative paths.")
+  }
+
+  if (!requireNamespace("future.apply", quietly = TRUE)) {
+    stop("nm_join_bayes() requires future.apply package.")
   }
 
   if (!requireNamespace("mrgsolve", quietly = TRUE)) {
@@ -156,8 +178,8 @@ nm_join_bayes <- function(.mod,
     stop(msg)
   }
 
-  ext <- sample_exts(.mod, n_post)
-  pbar <- sim_pbar_maybe(ext, epred, ipred)
+  exts <- sample_exts(.mod, n_post, min_batch_size)
+  pbar <- sim_pbar_maybe(exts, epred, ipred)
 
   if (!isTRUE(resid_var)) {
     mod_mrgsolve <- mrgsolve::zero_re(mod_mrgsolve, "sigma")
@@ -169,7 +191,7 @@ nm_join_bayes <- function(.mod,
   if (isTRUE(epred)) {
     epred_res <- sim_epred(
       mod_mrgsolve,
-      ext, res,
+      exts, res,
       .join_col, y_col,
       pbar
     )
@@ -183,7 +205,7 @@ nm_join_bayes <- function(.mod,
   if (isTRUE(ipred)) {
     ipred_res <- sim_ipred(
       .mod, mod_mrgsolve,
-      ext, res,
+      exts, res,
       .join_col, y_col,
       pbar
     )
@@ -327,9 +349,13 @@ call_presim <- function(fn, x, join_col) {
 #'
 #' @param mod A `bbi_nmbayes_model` object.
 #' @param n_post Number of posterior samples to select.
-#' @return Data frame with ext samples.
+#' @param min_batch_size Split the samples into a list of data frames so that
+#'   each element has at least this number of samples.
+#'
+#' @return List of data frames with ext samples, split for sending into `future`
+#'   map functions.
 #' @noRd
-sample_exts <- function(mod, n_post) {
+sample_exts <- function(mod, n_post, min_batch_size) {
   # Note: Downstream mrgsolve wants a data frame in the same form as the ext
   # data files. Read these directly rather than using as_draws_df() to avoid
   # needing to do extra work to get back to this same place.
@@ -343,28 +369,38 @@ sample_exts <- function(mod, n_post) {
     ext <- ext[sort(sample(nrow(ext), n_post)), ]
   }
 
-  return(ext)
+  nrows <- nrow(ext)
+  nsplits <- max(nrows %/% min_batch_size, 1)
+  purrr::map(parallel::splitIndices(nrows, nsplits), function(i) ext[i, ])
 }
 
-sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col, pbar) {
-  theta_cols <- grep("^THETA[0-9]+$", colnames(ext))
+sim_epred <- function(mod_mrgsolve, exts, data, join_col, y_col, pbar) {
+  theta_cols <- grep("^THETA[0-9]+$", colnames(exts[[1]]))
   mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
-  res <- purrr::map(seq_len(nrow(ext)), function(n) {
-    pbar("EPRED")
-    ext_row <- ext[n, ]
-    theta <- ext_row[theta_cols]
-    mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
-      mrgsolve::omat(mrgsolve::as_bmat(ext_row, "OMEGA")) %>%
-      mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
-      mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
-      dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
-      dplyr::mutate(sample = n)
-  })
+  res <- future.apply::future_lapply(
+    exts,
+    function(ext) {
+      `%>%` <- magrittr::`%>%` # Make pipe available in other sessions.
+      purrr::map(seq_len(nrow(ext)), function(n) {
+        pbar("EPRED")
+        ext_row <- ext[n, ]
+        theta <- ext_row[theta_cols]
+        mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
+          mrgsolve::omat(mrgsolve::as_bmat(ext_row, "OMEGA")) %>%
+          mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
+          mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
+          dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
+          dplyr::mutate(sample = n)
+      })
+    },
+    future.seed = TRUE,
+    future.globals = FALSE
+  )
 
   return(tibble::as_tibble(dplyr::bind_rows(res)))
 }
 
-sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col, pbar) {
+sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   # Note: Read these directly rather than using as_draws_df() to avoid
   # unnecessary reshaping. See ext note above.
   iph_files <- chain_paths_impl(mod,
@@ -375,31 +411,42 @@ sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col, pbar) {
     stop("`ipred = TRUE` requires iph files")
   }
 
-  ipar <- purrr::map(iph_files, iph_reader(iph_files[1])) %>%
+  ipar_full <- purrr::map(iph_files, iph_reader(iph_files[1])) %>%
     dplyr::bind_rows(.id = "chain") %>%
     dplyr::filter(.data$ITERATION > 0)
-  ipar <- dplyr::left_join(dplyr::select(ext, -starts_with("OMEGA(")),
-    ipar,
-    by = c("chain", "ITERATION")
-  ) %>%
-    dplyr::rename_with(
-      function(x) gsub("\\(([0-9]+)\\)$", "\\1", x),
-      starts_with("ETA(")
-    )
+  ipars <- purrr::map(exts, function(ext) {
+    dplyr::left_join(dplyr::select(ext, -starts_with("OMEGA(")),
+      ipar_full,
+      by = c("chain", "ITERATION")
+    ) %>%
+      dplyr::rename_with(
+        function(x) gsub("\\(([0-9]+)\\)$", "\\1", x),
+        starts_with("ETA(")
+      )
+  })
+  rm(ipar_full)
 
   mod_sim <- mrgsolve::zero_re(mod_mrgsolve, "omega") %>%
     mrgsolve::data_set(data)
 
-  res <- purrr::map(seq_len(nrow(ext)), function(n) {
-    pbar("IPRED")
-    ext_row <- ext[n, ]
-    ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
-    mrgsolve::idata_set(mod_sim, ipar_n) %>%
-      mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
-      mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
-      dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
-      dplyr::mutate(sample = n)
-  })
+  res <- future.apply::future_Map(
+    function(ext, ipar) {
+      `%>%` <- magrittr::`%>%`
+      purrr::map(seq_len(nrow(ext)), function(n) {
+        pbar("IPRED")
+        ext_row <- ext[n, ]
+        ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
+        mrgsolve::idata_set(mod_sim, ipar_n) %>%
+          mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
+          mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
+          dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
+          dplyr::mutate(sample = n)
+      })
+    },
+    exts, ipars,
+    future.seed = TRUE,
+    future.globals = FALSE
+  )
 
   return(tibble::as_tibble(dplyr::bind_rows(res)))
 }
@@ -483,9 +530,9 @@ sim_ewres_npde <- function(data, epred_res, join_col, dv_col, decorr_method) {
     dplyr::select(all_of(join_col), EWRES = "ydobs", NPDE = "npde")
 }
 
-sim_pbar_maybe <- function(ext, epred, ipred, envir = parent.frame()) {
+sim_pbar_maybe <- function(exts, epred, ipred, envir = parent.frame()) {
   if (requireNamespace("progressr", quietly = TRUE)) {
-    ndraws <- nrow(ext)
+    ndraws <- sum(purrr::map_int(exts, nrow))
     nrep <- isTRUE(epred) + isTRUE(ipred)
     fn <- progressr::progressor(steps = ndraws * nrep, envir = envir)
   } else {

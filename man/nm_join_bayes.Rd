@@ -22,7 +22,8 @@ nm_join_bayes(
   ipred_path = NULL,
   ewres_npde = TRUE,
   npde_decorr_method = c("cholesky", "inverse", "polar"),
-  presim_fn = NULL
+  presim_fn = NULL,
+  min_batch_size = 200
 )
 }
 \arguments{
@@ -88,6 +89,18 @@ table with ones generated with \pkg{npde}.}
 that results from joining the input data and table values. The main purpose
 of this argument is to provide a way to do any column renames that are
 required for the mrgsolve simulation (e.g., renaming a column to "TIME").}
+
+\item{min_batch_size}{To simulate EPRED and IPRED values, posterior samples
+are split into batches and sent as items to \pkg{future} \verb{*apply}
+functions. The number of batches is chosen so that each batch has at least
+the number of samples specified by this argument.
+
+\strong{Note:} You may be able to tune this value to get better performance for
+a particular case (considering factors such as the model, targeted future
+backend, and machine). However, the results across runs with the same
+initial seed will differ if you change this value. To avoid the results
+varying across different machines and future backends, do not dynamically
+set this value based on the number of available workers.}
 }
 \value{
 A data frame. The base data frame is the result combining the
@@ -114,6 +127,12 @@ chains are omitted to avoid flooding the console with identical output.
 
 As with \code{\link[bbr:nm_join]{bbr::nm_join()}}, you can suppress these messages by setting the
 \code{bbr.verbose} option to \code{FALSE}.
+}
+
+\subsection{Parallel processing}{
+
+To enable parallel processing for the EPRED and IPRED simulations, configure
+\pkg{future} ahead of calling this function via \code{\link[future:plan]{future::plan()}}.
 }
 
 \subsection{Progress bar}{
