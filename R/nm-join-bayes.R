@@ -22,6 +22,8 @@
 #' As with [bbr::nm_join()], you can suppress these messages by setting the
 #' `bbr.verbose` option to `FALSE`.
 #'
+#' @inheritParams bbr::nm_join
+#'
 #' @param .mod A `bbi_nmbayes_model` object.
 #' @param mod_mrgsolve An mrgsolve model object, potentially updated to be
 #'   optimized for simulation from the data set and model (e.g., ODE solver
@@ -107,7 +109,7 @@ nm_join_bayes <- function(.mod,
     }
   }
 
-  join_info <- prepare_join(.mod, .join_col, .files, point_fn, ...)
+  join_info <- prepare_join(.mod, .join_col, .files, .superset, point_fn, ...)
   res <- dplyr::left_join(join_info$data, join_info$tab, by = .join_col)
 
   qstr <- paste(
@@ -116,8 +118,15 @@ nm_join_bayes <- function(.mod,
   )
   verbose_msg(paste("Simulating requested quantities:", qstr))
 
+  # A .superset=TRUE result will fail if passed as the data for mrgsolve
+  # simulations. Drop the extra rows, and add them back at the end.
+  in_super_only <- FALSE
   if (isTRUE(.superset)) {
-    stop("nm_join_bayes() simulation is not compatible with .superset=TRUE")
+    n_tab_only <- ncol(join_info$tab) - 1 # -1 for join_col
+    in_super_only <- rowSums(is.na(join_info$tab)) == n_tab_only
+    if (any(in_super_only)) {
+      res <- res[!in_super_only, ]
+    }
   }
 
   if (!is.null(presim_fn)) {
@@ -173,6 +182,21 @@ nm_join_bayes <- function(.mod,
       dplyr::left_join(en_res, by = .join_col)
   }
 
+  if (any(in_super_only)) {
+    # Intersect with res names because presim_fn may have renamed some data
+    # columns.
+    res_cols <- names(res)
+    data_cols <- intersect(names(join_info$data), res_cols)
+    res <- dplyr::left_join(
+      join_info$data[, data_cols],
+      dplyr::select(res, all_of(.join_col) | -any_of(data_cols)),
+      by = .join_col
+    )
+    # Restore column order because it may be different if presim_fn renamed a
+    # column.
+    res <- res[, res_cols]
+  }
+
   return(res)
 }
 
@@ -187,8 +211,8 @@ nm_join_bayes <- function(.mod,
 #' code doesn't need to do extra work to figure out what the data columns are.
 #'
 #' @noRd
-prepare_join <- function(mod, join_col, files, point_fn, ...) {
-  join_args <- list(.join_col = join_col, ...)
+prepare_join <- function(mod, join_col, files, superset, point_fn, ...) {
+  join_args <- list(.join_col = join_col, .superset = superset, ...)
   if (!is.null(files)) {
     join_args <- c(join_args, .files = files)
   }

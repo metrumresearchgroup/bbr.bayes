@@ -38,6 +38,12 @@ blocks of the control stream will be used. Note that, unlike
 \code{\link[bbr:nm_join]{bbr::nm_join()}}, this function accepts only relative paths because the
 paths need to be valid for each chain submodel.}
 
+\item{.superset}{If \code{FALSE}, the default, the data will be joined to the
+NONMEM output and if \code{TRUE}, the NONMEM output will be joined to the data;
+that is, if you use \code{.superset}, you will get the same number of rows as
+you have in the input data and NONMEM output columns like \code{PRED} and
+\code{CWRES} will be filled with \code{NA}.}
+
 \item{...}{Additional arguments passed to \code{\link[bbr:nm_join]{bbr::nm_join()}}.}
 
 \item{y_col}{The name of the dependent variable in \code{mod_mrgsolve}.}

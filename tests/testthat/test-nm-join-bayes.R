@@ -126,9 +126,10 @@ test_that("nm_join_bayes() works", {
 
   ipred_path <- withr::local_tempfile()
   withr::with_seed(3012, {
-    res2 <- nm_join_bayes(
+    res2_full <- nm_join_bayes(
       NMBAYES_MOD1, MOD_MS,
       .files = paste0(get_model_id(NMBAYES_MOD1), ".tab"),
+      .superset = TRUE,
       .bbi_args = list(no_grd_file = TRUE),
       probs = c(0.2, 0.8),
       n_post = N_POST,
@@ -139,6 +140,10 @@ test_that("nm_join_bayes() works", {
       }
     )
   })
+
+  expect_identical(as.integer(res2_full$NUM), data$NUM)
+
+  res2 <- dplyr::filter(res2_full, .data$BLQ == 0)
 
   changed_cols <- c(
     "EPRED_lo", "EPRED_hi", "IPRED_lo", "IPRED_hi",
