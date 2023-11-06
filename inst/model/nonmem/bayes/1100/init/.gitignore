@@ -62,3 +62,4 @@ init.msf
 init_ETAS.msf
 init_RMAT.msf
 init_SMAT.msf
+WK_[0-9]*
