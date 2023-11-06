@@ -58,6 +58,8 @@
 #'   function.
 #' @param ewres_npde Whether to replace EWRES and NPDE values obtained from
 #'   table with ones generated with \pkg{npde}.
+#' @param npde_decorr_method Pass this value to `decorr.method` of
+#'   [npde::autonpde()].
 #' @param presim_fn Before simulating, apply this function to the data frame
 #'   that results from joining the input data and table values. The main purpose
 #'   of this argument is to provide a way to do any column renames that are
@@ -86,6 +88,7 @@ nm_join_bayes <- function(.mod,
                           ipred = TRUE,
                           ipred_path = NULL,
                           ewres_npde = TRUE,
+                          npde_decorr_method = c("cholesky", "inverse", "polar"),
                           presim_fn = NULL) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
@@ -95,6 +98,7 @@ nm_join_bayes <- function(.mod,
   checkmate::assert_string(ipred_path, null.ok = TRUE)
   checkmate::assert_numeric(probs, lower = 0, upper = 1, len = 2)
   checkmate::assert_int(n_post)
+  npde_decorr_method <- match.arg(npde_decorr_method)
 
   if (!is.null(.files) && any(fs::is_absolute_path(.files))) {
     stop("`.files` must be relative paths.")
@@ -189,7 +193,8 @@ nm_join_bayes <- function(.mod,
 
   if (isTRUE(ewres_npde)) {
     en_res <- sim_ewres_npde(
-      res, epred_res, .join_col, dv_col
+      res, epred_res, .join_col, dv_col,
+      npde_decorr_method
     )
     res <- dplyr::select(res, -any_of(c("EWRES", "NPDE"))) %>%
       dplyr::left_join(en_res, by = .join_col)
@@ -413,7 +418,7 @@ summarize_pred <- function(name, simdf, join_col, point_fn, probs) {
     )
 }
 
-sim_ewres_npde <- function(data, epred_res, join_col, dv_col) {
+sim_ewres_npde <- function(data, epred_res, join_col, dv_col, decorr_method) {
   df_obs <- dplyr::filter(data, .data$EVID == 0) %>%
     # Note: The downstream autonpde() call depends on the position of the ID,
     # TIME, and DV columns.
@@ -443,6 +448,7 @@ sim_ewres_npde <- function(data, epred_res, join_col, dv_col) {
         # coercion" warnings, so use integers.
         iid = 1L, ix = 2L, iy = 3L,
         calc.npd = TRUE, calc.npde = TRUE,
+        decorr.method = decorr_method,
         verbose = FALSE,
         boolsave = FALSE
       ),

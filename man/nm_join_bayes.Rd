@@ -21,6 +21,7 @@ nm_join_bayes(
   ipred = TRUE,
   ipred_path = NULL,
   ewres_npde = TRUE,
+  npde_decorr_method = c("cholesky", "inverse", "polar"),
   presim_fn = NULL
 )
 }
@@ -79,6 +80,9 @@ function.}
 
 \item{ewres_npde}{Whether to replace EWRES and NPDE values obtained from
 table with ones generated with \pkg{npde}.}
+
+\item{npde_decorr_method}{Pass this value to \code{decorr.method} of
+\code{\link[npde:autonpde]{npde::autonpde()}}.}
 
 \item{presim_fn}{Before simulating, apply this function to the data frame
 that results from joining the input data and table values. The main purpose
