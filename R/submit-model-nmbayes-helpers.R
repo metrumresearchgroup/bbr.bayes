@@ -125,8 +125,7 @@ run_chains <- function(.mod, ...) {
       # .overwrite=TRUE, so an unconditional .overwrite=FALSE is sufficient.
       .overwrite = FALSE
     )
-    # Suppress "replacing ..." message.
-    chain_mod <- suppressMessages(bbr::update_model_id(chain_mod))
+
     return(chain_mod)
   })
   bbr::submit_models(mods, ...)
