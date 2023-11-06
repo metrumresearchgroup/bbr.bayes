@@ -19,7 +19,8 @@ nm_join_bayes(
   epred = TRUE,
   ipred = TRUE,
   ipred_path = NULL,
-  ewres_npde = TRUE
+  ewres_npde = TRUE,
+  presim_fn = NULL
 )
 }
 \arguments{
@@ -67,6 +68,11 @@ function.}
 
 \item{ewres_npde}{Whether to replace EWRES and NPDE values obtained from
 table with ones generated with \pkg{npde}.}
+
+\item{presim_fn}{Before simulating, apply this function to the data frame
+that results from joining the input data and table values. The main purpose
+of this argument is to provide a way to do any column renames that are
+required for the mrgsolve simulation (e.g., renaming a column to "TIME").}
 }
 \value{
 A data frame. The base data frame is the result combining the

@@ -56,6 +56,24 @@ test_that("nm_join_bayes() aborts: ewres_npde=TRUE without epred=TRUE", {
   )
 })
 
+test_that("nm_join_bayes() aborts: invalid presim_fn return", {
+  expect_error(
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, presim_fn = function(...) 1),
+    "must return a data frame"
+  )
+  expect_error(
+    nm_join_bayes(NMBAYES_MOD1, MOD_MS, presim_fn = function(d) d[-1, ]),
+    "had .* rows"
+  )
+  expect_error(
+    nm_join_bayes(
+      NMBAYES_MOD1, MOD_MS,
+      presim_fn = function(d) dplyr::select(d, -"NUM")
+    ),
+    "must retain join column"
+  )
+})
+
 test_that("nm_join_bayes() aborts: join_col not in data", {
   expect_error(
     nm_join_bayes(NMBAYES_MOD1, MOD_MS, .join_col = "FOOBAR"),
@@ -115,7 +133,10 @@ test_that("nm_join_bayes() works", {
       probs = c(0.2, 0.8),
       n_post = N_POST,
       ipred_path = ipred_path,
-      ewres_npde = TRUE
+      ewres_npde = TRUE,
+      presim_fn = function(d) {
+        dplyr::rename(d, H = "HT")
+      }
     )
   })
 
@@ -126,7 +147,8 @@ test_that("nm_join_bayes() works", {
 
   expect_equal(
     dplyr::select(res, -all_of(changed_cols)),
-    dplyr::select(res2, -all_of(changed_cols))
+    dplyr::select(res2, -all_of(changed_cols)) %>%
+      dplyr::rename(HT = "H")
   )
 
   # Narrower intervals were specified for res2.

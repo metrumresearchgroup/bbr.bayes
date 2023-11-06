@@ -53,6 +53,10 @@
 #'   function.
 #' @param ewres_npde Whether to replace EWRES and NPDE values obtained from
 #'   table with ones generated with \pkg{npde}.
+#' @param presim_fn Before simulating, apply this function to the data frame
+#'   that results from joining the input data and table values. The main purpose
+#'   of this argument is to provide a way to do any column renames that are
+#'   required for the mrgsolve simulation (e.g., renaming a column to "TIME").
 #'
 #' @return A data frame. The base data frame is the result combining the
 #'   [bbr::nm_join()] results for each chain submodel, collapsing across chains
@@ -75,7 +79,8 @@ nm_join_bayes <- function(.mod,
                           epred = TRUE,
                           ipred = TRUE,
                           ipred_path = NULL,
-                          ewres_npde = TRUE) {
+                          ewres_npde = TRUE,
+                          presim_fn = NULL) {
   checkmate::assert_class(.mod, NMBAYES_MOD_CLASS)
   checkmate::assert_class(mod_mrgsolve, "mrgmod")
   checkmate::assert_string(.join_col)
@@ -113,6 +118,10 @@ nm_join_bayes <- function(.mod,
 
   if (isTRUE(.superset)) {
     stop("nm_join_bayes() simulation is not compatible with .superset=TRUE")
+  }
+
+  if (!is.null(presim_fn)) {
+    res <- call_presim(presim_fn, res, .join_col)
   }
 
   ext <- sample_exts(.mod, n_post)
@@ -244,6 +253,23 @@ prepare_join <- function(mod, join_col, files, point_fn, ...) {
   }
 
   return(list(data = data, tab = tab_sum))
+}
+
+call_presim <- function(fn, x, join_col) {
+  nrow_orig <- nrow(x)
+  x <- fn(x)
+
+  if (!inherits(x, "data.frame")) {
+    stop("presim_fn() must return a data frame")
+  }
+  if (!identical(nrow_orig, nrow(x))) {
+    stop("presim_fn() result had ", nrow(x), " rows but expected ", nrow_orig)
+  }
+  if (!join_col %in% names(x)) {
+    stop("presim_fn() must retain join column in the result.")
+  }
+
+  return(x)
 }
 
 #' Randomly select ext samples
