@@ -22,6 +22,12 @@
 #' As with [bbr::nm_join()], you can suppress these messages by setting the
 #' `bbr.verbose` option to `FALSE`.
 #'
+#' ## Progress bar
+#'
+#' The EPRED and IPRED simulations support displaying a progress bar via the
+#' \pkg{progressr} package. The simplest way to enable a progress bar is to wrap
+#' the `nm_join_bayes()` call inside a [progressr::with_progress()] call.
+#'
 #' @inheritParams bbr::nm_join
 #'
 #' @param .mod A `bbi_nmbayes_model` object.
@@ -151,6 +157,7 @@ nm_join_bayes <- function(.mod,
   }
 
   ext <- sample_exts(.mod, n_post)
+  pbar <- sim_pbar_maybe(ext, epred, ipred)
 
   if (!isTRUE(resid_var)) {
     mod_mrgsolve <- mrgsolve::zero_re(mod_mrgsolve, "sigma")
@@ -163,7 +170,8 @@ nm_join_bayes <- function(.mod,
     epred_res <- sim_epred(
       mod_mrgsolve,
       ext, res,
-      .join_col, y_col
+      .join_col, y_col,
+      pbar
     )
     epred_sum <- summarize_pred(
       "EPRED", epred_res, .join_col, point_fn, probs
@@ -176,7 +184,8 @@ nm_join_bayes <- function(.mod,
     ipred_res <- sim_ipred(
       .mod, mod_mrgsolve,
       ext, res,
-      .join_col, y_col
+      .join_col, y_col,
+      pbar
     )
 
     if (!is.null(ipred_path)) {
@@ -337,10 +346,11 @@ sample_exts <- function(mod, n_post) {
   return(ext)
 }
 
-sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col) {
+sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col, pbar) {
   theta_cols <- grep("^THETA[0-9]+$", colnames(ext))
   mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
   res <- purrr::map(seq_len(nrow(ext)), function(n) {
+    pbar("EPRED")
     ext_row <- ext[n, ]
     theta <- ext_row[theta_cols]
     mrgsolve::param(mod_sim, theta, .strict = TRUE) %>%
@@ -354,7 +364,7 @@ sim_epred <- function(mod_mrgsolve, ext, data, join_col, y_col) {
   return(tibble::as_tibble(dplyr::bind_rows(res)))
 }
 
-sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
+sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col, pbar) {
   # Note: Read these directly rather than using as_draws_df() to avoid
   # unnecessary reshaping. See ext note above.
   iph_files <- chain_paths_impl(mod,
@@ -381,6 +391,7 @@ sim_ipred <- function(mod, mod_mrgsolve, ext, data, join_col, y_col) {
     mrgsolve::data_set(data)
 
   res <- purrr::map(seq_len(nrow(ext)), function(n) {
+    pbar("IPRED")
     ext_row <- ext[n, ]
     ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
     mrgsolve::idata_set(mod_sim, ipar_n) %>%
@@ -467,4 +478,16 @@ sim_ewres_npde <- function(data, epred_res, join_col, dv_col, decorr_method) {
 
   dplyr::bind_cols(out@results@res, df_obs[, join_col]) %>%
     dplyr::select(all_of(join_col), EWRES = "ydobs", NPDE = "npde")
+}
+
+sim_pbar_maybe <- function(ext, epred, ipred, envir = parent.frame()) {
+  if (requireNamespace("progressr", quietly = TRUE)) {
+    ndraws <- nrow(ext)
+    nrep <- isTRUE(epred) + isTRUE(ipred)
+    fn <- progressr::progressor(steps = ndraws * nrep, envir = envir)
+  } else {
+    fn <- function(...) NULL
+  }
+
+  return(fn)
 }

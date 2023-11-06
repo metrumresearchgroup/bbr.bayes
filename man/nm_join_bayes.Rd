@@ -115,6 +115,13 @@ chains are omitted to avoid flooding the console with identical output.
 As with \code{\link[bbr:nm_join]{bbr::nm_join()}}, you can suppress these messages by setting the
 \code{bbr.verbose} option to \code{FALSE}.
 }
+
+\subsection{Progress bar}{
+
+The EPRED and IPRED simulations support displaying a progress bar via the
+\pkg{progressr} package. The simplest way to enable a progress bar is to wrap
+the \code{nm_join_bayes()} call inside a \code{\link[progressr:with_progress]{progressr::with_progress()}} call.
+}
 }
 \seealso{
 \code{\link[bbr:nm_join]{bbr::nm_join()}}, \link{bbr_nmbayes} for a high-level description of how
