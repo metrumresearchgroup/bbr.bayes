@@ -129,7 +129,8 @@ test_that("nm_join_bayes() works", {
     )
   )
 
-  expect_equal(nrow(res), sum(data$BLQ == 0))
+  is_blq <- data$BLQ != 0
+  expect_equal(nrow(res), sum(!is_blq))
 
   expect_equal(sum(is.na(res$NUM)), 0)
   expect_equal(dplyr::n_distinct(res$ID), 160)
@@ -159,7 +160,7 @@ test_that("nm_join_bayes() works", {
 
   expect_identical(as.integer(res2_full$NUM), data$NUM)
 
-  res2 <- dplyr::filter(res2_full, .data$BLQ == 0)
+  res2 <- res2_full[!is_blq, ]
 
   # Most values are the same for the results of the first and second
   # nm_join_bayes() calls. The exceptions are
