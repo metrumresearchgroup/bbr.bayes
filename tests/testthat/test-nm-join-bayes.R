@@ -159,8 +159,11 @@ test_that("nm_join_bayes() works", {
   # .superset=TRUE gives all rows in data set, in same order.
 
   expect_identical(as.integer(res2_full$NUM), data$NUM)
+  expect_gt(sum(is_blq), 0)
+  expect_true(all(is.na(res2_full$IPRED[is_blq])))
 
   res2 <- res2_full[!is_blq, ]
+  expect_identical(dim(res2), dim(res))
 
   # Most values are the same for the results of the first and second
   # nm_join_bayes() calls. The exceptions are
