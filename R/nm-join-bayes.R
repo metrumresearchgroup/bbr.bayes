@@ -50,8 +50,9 @@
 #' @param .files Paths to table files to pass to [bbr::nm_join()] calls (one per
 #'   each chain submodel). By default, all tables specified in the `$TABLE`
 #'   blocks of the control stream will be used. Note that, unlike
-#'   [bbr::nm_join()], this function accepts only relative paths because the
-#'   paths need to be valid for each chain submodel.
+#'   [bbr::nm_join()], this function accepts only relative paths (which
+#'   `nm_join()` interprets as relative to submodel output directory) because
+#'   the paths need to be valid for each chain submodel.
 #' @param ... Additional arguments passed to [bbr::nm_join()].
 #' @param dv_col Pass this data column as the dependent variable when
 #'   calculating EWRES and NPDE.

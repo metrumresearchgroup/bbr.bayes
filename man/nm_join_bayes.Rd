@@ -48,8 +48,9 @@ tolerance). This must capture \code{y_col}.}
 \item{.files}{Paths to table files to pass to \code{\link[bbr:nm_join]{bbr::nm_join()}} calls (one per
 each chain submodel). By default, all tables specified in the \verb{$TABLE}
 blocks of the control stream will be used. Note that, unlike
-\code{\link[bbr:nm_join]{bbr::nm_join()}}, this function accepts only relative paths because the
-paths need to be valid for each chain submodel.}
+\code{\link[bbr:nm_join]{bbr::nm_join()}}, this function accepts only relative paths (which
+\code{nm_join()} interprets as relative to submodel output directory) because
+the paths need to be valid for each chain submodel.}
 
 \item{.superset}{If \code{FALSE}, the default, the data will be joined to the
 NONMEM output and if \code{TRUE}, the NONMEM output will be joined to the data;
