@@ -55,8 +55,13 @@ Imports:
 Suggests: 
     covr,
     devtools,
+    future,
+    future.apply,
     knitr,
+    mrgsolve,
     nmrec,
+    npde,
+    progressr,
     rmarkdown,
     testthat (>= 2.1.0),
     withr

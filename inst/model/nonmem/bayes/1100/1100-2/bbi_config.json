@@ -1,11 +1,11 @@
 {
-    "bbi_version": "v3.2.2",
+    "bbi_version": "v3.3.0",
     "model_name": "1100-2.ctl",
     "original_model": "1100-2.ctl",
     "model_path": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/nonmem/bayes/1100/1100-2.ctl",
     "data_path": "../../../../../extdata/analysis3.csv",
     "data_md5": "84a596d0fd81c2d187a64bc62d96b433",
-    "model_md5": "1f74232508d183ac10421a463a4d7e0c",
+    "model_md5": "89cddc4c386ff678407c71aaead220a4",
     "model_filename": "1100-2",
     "model_extension": "ctl",
     "original_path": "/data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/nonmem/bayes/1100",

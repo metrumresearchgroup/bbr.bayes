@@ -1,1 +1,9 @@
 bbi.yaml
+*.clt
+*.coi
+*.msf
+*.out
+*.phi
+*.sh
+*.shm
+*.xml
