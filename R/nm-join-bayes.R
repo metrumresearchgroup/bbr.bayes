@@ -95,9 +95,10 @@
 #'   set this value based on the number of available workers.
 #'
 #' @return A data frame. The base data frame is the result of combining the
-#'   [bbr::nm_join()] results for each chain submodel, collapsing across chains
-#'   with `point_fn`. `EPRED`, `IPRED`, `EWRES`, and `NPDE` values are replaced
-#'   with a simulated estimate, if requested by the corresponding argument.
+#'   [bbr::nm_join()] results for each chain submodel and collapsing across
+#'   chains with `point_fn`. `EPRED`, `IPRED`, `EWRES`, and `NPDE` values are
+#'   replaced with a simulated estimate, if requested by the corresponding
+#'   argument.
 #' @seealso [bbr::nm_join()], [bbr_nmbayes] for a high-level description of how
 #'   NONMEM Bayes models are structured in bbr
 #' @name nm_join_bayes

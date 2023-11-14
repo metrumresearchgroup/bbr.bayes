@@ -114,9 +114,10 @@ set this value based on the number of available workers.}
 }
 \value{
 A data frame. The base data frame is the result of combining the
-\code{\link[bbr:nm_join]{bbr::nm_join()}} results for each chain submodel, collapsing across chains
-with \code{point_fn}. \code{EPRED}, \code{IPRED}, \code{EWRES}, and \code{NPDE} values are replaced
-with a simulated estimate, if requested by the corresponding argument.
+\code{\link[bbr:nm_join]{bbr::nm_join()}} results for each chain submodel and collapsing across
+chains with \code{point_fn}. \code{EPRED}, \code{IPRED}, \code{EWRES}, and \code{NPDE} values are
+replaced with a simulated estimate, if requested by the corresponding
+argument.
 }
 \description{
 \code{nm_join_bayes()} and \code{nm_join_bayes_quick()} both join model output
