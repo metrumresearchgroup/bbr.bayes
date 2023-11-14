@@ -155,10 +155,21 @@ test_that("nm_join_bayes() works", {
     )
   })
 
+  # .superset=TRUE gives all rows in data set, in same order.
+
   expect_identical(as.integer(res2_full$NUM), data$NUM)
 
   res2 <- dplyr::filter(res2_full, .data$BLQ == 0)
 
+  # Most values are the same for the results of the first and second
+  # nm_join_bayes() calls. The exceptions are
+  #
+  #  * the EPRED and IPRED bounds change due to the non-default probs in the
+  #    second call
+  #
+  #  * presim_fn in the second call renamed HT to H
+  #
+  #  * EWRES/NPDE differ due to the different ewres_npde values
   changed_cols <- c(
     "EPRED_lo", "EPRED_hi", "IPRED_lo", "IPRED_hi",
     "EWRES", "NPDE"
@@ -170,16 +181,19 @@ test_that("nm_join_bayes() works", {
       dplyr::rename(HT = "H")
   )
 
-  # Narrower intervals were specified for res2.
+  # Narrower intervals were specified (via probs) for res2.
   notna <- !is.na(res$EPRED)
   expect_true(all(res$EPRED_lo[notna] < res2$EPRED_lo[notna]))
   expect_true(all(res$EPRED_hi[notna] > res2$EPRED_hi[notna]))
   expect_true(all(res$IPRED_lo[notna] < res2$IPRED_lo[notna]))
   expect_true(all(res$IPRED_hi[notna] > res2$IPRED_hi[notna]))
 
+  # res used ewres_npde=FALSE, while res2 used ewres_npde=TRUE, so the values
+  # should not match.
   expect_false(all(dplyr::near(res$EWRES, res2$EWRES)))
   expect_false(all(dplyr::near(res$NPDE, res2$NPDE)))
 
+  # Simulated IPRED values written to the path passed to ipred_path.
   ipred <- readr::read_csv(ipred_path)
   expect_identical(names(ipred), c("NUM", "DV_sim", "sample"))
 })
