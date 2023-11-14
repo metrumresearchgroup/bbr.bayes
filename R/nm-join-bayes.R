@@ -157,7 +157,7 @@ nm_join_bayes <- function(.mod,
     }
 
     if (!requireNamespace("npde", quietly = TRUE)) {
-      stop("`npde = TRUE` requires npde package.")
+      stop("`ewres_npde = TRUE` requires npde package.")
     }
   }
 
