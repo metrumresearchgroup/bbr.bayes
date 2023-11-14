@@ -47,7 +47,7 @@
 #'   optimized for simulation from the data set and model (e.g., ODE solver
 #'   tolerance). This must capture `y_col`.
 #' @param .join_col Use this column to join tables files to the input data.
-#' @param .files Paths to table files to pass to [bbr::nm_join()] calls (on per
+#' @param .files Paths to table files to pass to [bbr::nm_join()] calls (one per
 #'   each chain submodel). By default, all tables specified in the `$TABLE`
 #'   blocks of the control stream will be used. Note that, unlike
 #'   [bbr::nm_join()], this function accepts only relative paths because the
@@ -94,7 +94,7 @@
 #'   varying across different machines and future backends, do not dynamically
 #'   set this value based on the number of available workers.
 #'
-#' @return A data frame. The base data frame is the result combining the
+#' @return A data frame. The base data frame is the result of combining the
 #'   [bbr::nm_join()] results for each chain submodel, collapsing across chains
 #'   with `point_fn`. `EPRED`, `IPRED`, `EWRES`, and `NPDE` values are replaced
 #'   with a simulated estimate, if requested by the corresponding argument.

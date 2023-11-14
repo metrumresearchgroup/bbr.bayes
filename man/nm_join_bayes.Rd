@@ -45,7 +45,7 @@ tolerance). This must capture \code{y_col}.}
 
 \item{.join_col}{Use this column to join tables files to the input data.}
 
-\item{.files}{Paths to table files to pass to \code{\link[bbr:nm_join]{bbr::nm_join()}} calls (on per
+\item{.files}{Paths to table files to pass to \code{\link[bbr:nm_join]{bbr::nm_join()}} calls (one per
 each chain submodel). By default, all tables specified in the \verb{$TABLE}
 blocks of the control stream will be used. Note that, unlike
 \code{\link[bbr:nm_join]{bbr::nm_join()}}, this function accepts only relative paths because the
@@ -113,7 +113,7 @@ varying across different machines and future backends, do not dynamically
 set this value based on the number of available workers.}
 }
 \value{
-A data frame. The base data frame is the result combining the
+A data frame. The base data frame is the result of combining the
 \code{\link[bbr:nm_join]{bbr::nm_join()}} results for each chain submodel, collapsing across chains
 with \code{point_fn}. \code{EPRED}, \code{IPRED}, \code{EWRES}, and \code{NPDE} values are replaced
 with a simulated estimate, if requested by the corresponding argument.
