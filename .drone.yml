@@ -28,7 +28,7 @@ steps:
     - /ephemeral/bbi version
 
   environment:
-    BBI_VERSION: v3.2.2
+    BBI_VERSION: v3.3.0
     BBI_URL: https://github.com/metrumresearchgroup/bbi/releases/download
   volumes:
   - name: cache
@@ -89,7 +89,7 @@ steps:
     - /ephemeral/bbi version
 
   environment:
-    BBI_VERSION: v3.2.2
+    BBI_VERSION: v3.3.0
     BBI_URL: https://github.com/metrumresearchgroup/bbi/releases/download
   volumes:
   - name: cache
