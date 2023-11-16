@@ -1,7 +1,7 @@
 Type: Package
 Package: bbr.bayes
 Title: Bayesian modeling with BBR
-Version: 0.1.1
+Version: 0.1.1.8000
 Authors@R: 
     c(person(given = "Seth",
              family = "Green",
