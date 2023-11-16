@@ -32,7 +32,6 @@ submit_model.bbi_nmbayes_model <- function(
     stop("nmrec package is required to submit nmbayes model.")
   }
 
-  nmbayes_warn()
   .config_path <- if (is.null(.config_path)) {
     # Explicitly pass the default value because it's needed for the
     # METHOD={BAYES,NUTS} runs, which happen one level deeper.

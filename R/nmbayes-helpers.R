@@ -1,11 +1,3 @@
-
-nmbayes_warn <- function() {
-  if (!identical(Sys.getenv("TESTTHAT"), "true")) {
-    warning("NONMEM Bayes support is incomplete, ",
-            "and backward incompatible changes are planned.")
-  }
-}
-
 #' Return a nmbayes model's submodel directories
 #'
 #' Each directory corresponds to a chain and is expected to be named in the
