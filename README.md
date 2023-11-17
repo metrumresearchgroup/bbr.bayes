@@ -1,4 +1,12 @@
 
+# bbr.bayes <a href='https://metrumresearchgroup.github.io/bbr.bayes'><img src = "man/figures/logo.png" align="right" /></a>
+
+<!-- badges: start -->
+
+[![Build Status](https://github-drone.metrumrg.com/api/badges/metrumresearchgroup/bbr.bayes/status.svg)](https://github-drone.metrumrg.com/metrumresearchgroup/bbr.bayes)
+<!-- badges: end -->
+
+
 `bbr.bayes` is an extension to the [bbr] package for Bayesian
 modeling.  The package is in the early stages of development.  Initial
 support has been added for [Stan] models (powered by [cmdstanr]).
