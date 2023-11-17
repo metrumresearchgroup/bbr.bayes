@@ -32,6 +32,9 @@ reference:
   - find_stan_gq_children
   - get_stan_gq_parent
   - modify_stan_gq_parent
+- subtitle: Miscellaneous
+  contents:
+  - install_torsten
 
 - title: NONMEM Bayes
   desc: >
@@ -43,6 +46,8 @@ reference:
   - model_summary.bbi_nmbayes_model
   - copy_model_as_nmbayes
   - nmbayes_submit_model
+  - chain_paths
+  - nm_join_bayes
 
 - title: Shared utilities
   contents:
