@@ -418,6 +418,8 @@ sample_exts <- function(mod, n_post, min_batch_size) {
 
 sim_epred <- function(mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   theta_cols <- grep("^THETA[0-9]+$", colnames(exts[[1]]))
+  # Drop post-hoc ETAs so that ETAs are randomly generated within model.
+  data <- data[grep("^ETA[0-9]+$", colnames(data), invert = TRUE)]
   mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
   res <- future.apply::future_lapply(
     exts,
