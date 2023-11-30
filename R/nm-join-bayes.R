@@ -481,7 +481,7 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
         mrgsolve::idata_set(mod_sim, ipar_n) %>%
           mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
           mrgsolve::mrgsim_df(
-            obsonly = TRUE, carry_out = join_col, etasrc = "data.all"
+            obsonly = TRUE, carry_out = join_col, etasrc = "idata.all"
           ) %>%
           dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
           dplyr::mutate(sample = n)
