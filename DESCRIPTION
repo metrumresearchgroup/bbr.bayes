@@ -58,7 +58,7 @@ Suggests:
     future,
     future.apply,
     knitr,
-    mrgsolve (>= 1.0.8),
+    mrgsolve (>= 1.2.0),
     nmrec,
     npde,
     progressr,
