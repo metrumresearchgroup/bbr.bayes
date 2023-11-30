@@ -8,11 +8,6 @@ WT   = 70
 EGFR = 90
 AGE  = 35
 ALB  = 4.5
-ETA1 = 0
-ETA2 = 0
-ETA3 = 0
-ETA4 = 0
-ETA5 = 0
 
 [ nmext ]
 run = "1100-1"
@@ -29,11 +24,11 @@ double CLWT   = log(WT/70) * 0.75;
 double V3WT   = log(WT/70);
 double QWT    = log(WT/70) * 0.75;
 
-capture KA = exp(THETA1 + ETA1 + ETA(1));
-capture V2 = exp(THETA2 + V2WT + ETA2 + ETA(2));
-capture CL = exp(THETA3 + CLWT + CLEGFR + CLAGE + CLALB + ETA3 + ETA(3));
-capture V3 = exp(THETA4 + V3WT + ETA4 + ETA(4));
-capture Q  = exp(THETA5 + QWT + ETA5 + ETA(5));
+capture KA = exp(THETA1 + ETA(1));
+capture V2 = exp(THETA2 + V2WT + ETA(2));
+capture CL = exp(THETA3 + CLWT + CLEGFR + CLAGE + CLALB + ETA(3));
+capture V3 = exp(THETA4 + V3WT + ETA(4));
+capture Q  = exp(THETA5 + QWT + ETA(5));
 
 double S2 = V2/1000; //; dose in mcg, conc in mcg/mL
 
