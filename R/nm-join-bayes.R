@@ -445,6 +445,7 @@ sim_epred <- function(mod_mrgsolve, exts, data, join_col, y_col, pbar) {
 sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   # Note: Read these directly rather than using as_draws_df() to avoid
   # unnecessary reshaping. See ext note above.
+  data <- data[grep("^ETA?[0-9]+$", colnames(data), invert = TRUE)]
   iph_files <- chain_paths_impl(mod,
     extension = "iph",
     check_exists = "all_or_none"
