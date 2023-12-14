@@ -473,8 +473,7 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   # Purge post-hoc ETAs just in case there is logic written into mrgsolve model
   # (see gh-117).
   data <- data[grep("^ETA?[0-9]+$", colnames(data), invert = TRUE)]
-  mod_sim <- mrgsolve::zero_re(mod_mrgsolve, "omega") %>%
-    mrgsolve::data_set(data)
+  mod_sim <- mrgsolve::data_set(mod_mrgsolve, data)
 
   res <- future.apply::future_Map(
     function(ext, ipar) {
