@@ -18,7 +18,11 @@ Authors@R:
       person(given = "Jonathan",
              family = "French",
              role = "aut",
-             email = "jonathanf@metrumrg.com"))
+             email = "jonathanf@metrumrg.com"),
+      person(given = "Kyle T", family = "Baron",
+             role = "aut",
+             email = "kyleb@metrumrg.com",
+             comment = c(ORCID = "0000-0001-7252-5656")))
 Description: This package extends the BBR package for Bayesian modeling.
     The current focus is on supporting 'Stan' via the 'CmdStanR'
     interface.
