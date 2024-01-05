@@ -470,8 +470,7 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   })
   rm(ipar_full)
 
-  # Purge post-hoc ETAs just in case there is logic written into mrgsolve model
-  # (see gh-117).
+  # Drop post-hoc ETAs so that ETAs are randomly generated within model.
   data <- data[grep("^ETA?[0-9]+$", colnames(data), invert = TRUE)]
 
   res <- future.apply::future_Map(
