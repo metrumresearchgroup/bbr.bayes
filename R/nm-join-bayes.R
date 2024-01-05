@@ -470,7 +470,7 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
   })
   rm(ipar_full)
 
-  # Drop post-hoc ETAs so that ETAs are randomly generated within model.
+  # Drop post-hoc ETAs so that ETAs are taken from posterior
   data <- data[grep("^ETA?[0-9]+$", colnames(data), invert = TRUE)]
   mod_sim <- mrgsolve::zero_re(mod_mrgsolve, "omega") %>%
     mrgsolve::data_set(data)
