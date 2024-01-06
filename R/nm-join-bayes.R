@@ -472,8 +472,6 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
 
   # Drop post-hoc ETAs so that ETAs are taken from posterior via idata
   data <- data[grep("^ETA?[0-9]+$", colnames(data), invert = TRUE)]
-  mod_sim <- mrgsolve::zero_re(mod_mrgsolve, "omega") %>%
-    mrgsolve::data_set(data)
 
   res <- future.apply::future_Map(
     function(ext, ipar) {
@@ -482,9 +480,13 @@ sim_ipred <- function(mod, mod_mrgsolve, exts, data, join_col, y_col, pbar) {
         pbar("IPRED")
         ext_row <- ext[n, ]
         ipar_n <- dplyr::filter(ipar, .data$draw == ext_row$draw)
-        mrgsolve::idata_set(mod_sim, ipar_n) %>%
-          mrgsolve::smat(mrgsolve::as_bmat(ext_row, "SIGMA")) %>%
-          mrgsolve::mrgsim_df(obsonly = TRUE, carry_out = join_col) %>%
+        mrgsolve::mrgsim_df(
+          mod_mrgsolve,
+          data = data, idata = ipar_n,
+          sigma = mrgsolve::as_bmat(ext_row, "SIGMA"),
+          obsonly = TRUE, carry_out = join_col,
+          etasrc = "idata.all"
+        ) %>%
           dplyr::select(all_of(join_col), DV_sim = all_of(y_col)) %>%
           dplyr::mutate(sample = n)
       })

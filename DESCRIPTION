@@ -1,7 +1,7 @@
 Type: Package
 Package: bbr.bayes
 Title: Bayesian modeling with BBR
-Version: 0.1.1.8000
+Version: 0.1.1.8001
 Authors@R: 
     c(person(given = "Seth",
              family = "Green",
@@ -18,7 +18,11 @@ Authors@R:
       person(given = "Jonathan",
              family = "French",
              role = "aut",
-             email = "jonathanf@metrumrg.com"))
+             email = "jonathanf@metrumrg.com"),
+      person(given = "Kyle T", family = "Baron",
+             role = "aut",
+             email = "kyleb@metrumrg.com",
+             comment = c(ORCID = "0000-0001-7252-5656")))
 Description: This package extends the BBR package for Bayesian modeling.
     The current focus is on supporting 'Stan' via the 'CmdStanR'
     interface.
@@ -58,7 +62,7 @@ Suggests:
     future,
     future.apply,
     knitr,
-    mrgsolve,
+    mrgsolve (>= 1.2.0),
     nmrec,
     npde,
     progressr,
