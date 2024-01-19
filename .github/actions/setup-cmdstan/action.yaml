@@ -1,0 +1,13 @@
+# TODO: Investigate whether it's worthwhile to implement caching.
+name: Setup cmdstan
+description: Install cmdstan
+runs:
+  using: composite
+  steps:
+    - name: Set CMDSTAN_PATH
+      shell: bash
+      run: |
+        echo "CMDSTAN_PATH=${HOME}/.cmdstan" >>"$GITHUB_ENV"
+    - name: Install cmdstan
+      shell: Rscript {0}
+      run: cmdstanr::install_cmdstan()
