@@ -82,8 +82,7 @@ test_that("nmbayes: submit_model() checks for existing model", {
 })
 
 test_that("nmbayes: run_log() captures runs correctly", {
-  skip("FIXME: submodels confuse run_log()")
-  log_df <- run_log(".")
+  log_df <- run_log(".", .recurse = TRUE)
   expect_identical(nrow(log_df), 3L)
   expect_identical(ncol(log_df), 10L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
