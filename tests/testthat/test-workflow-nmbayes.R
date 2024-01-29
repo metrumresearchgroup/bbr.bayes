@@ -90,9 +90,8 @@ test_that("nmbayes: run_log() captures runs correctly", {
 })
 
 test_that("nmbayes: summary_log() captures runs correctly", {
-  skip("FIXME: submodels confuse summary_log()")
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
-    log_df <- summary_log(".")
+    log_df <- summary_log(".", .recurse = TRUE)
   })
   expect_identical(nrow(log_df), 3L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
