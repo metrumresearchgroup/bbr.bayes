@@ -1,3 +1,15 @@
+#' @export
+config_log_make_entry.bbi_nmbayes_model <- function(.mod, config, fields) {
+  outdir <- get_output_dir(.mod, .check_exists = FALSE)
+  mod_init <- read_model(file.path(outdir, "init"))
+  res <- config_log_make_entry(mod_init, config, fields)
+  # Replace data path because mod_init's is one level too deep.
+  res[["config"]][["data_path"]] <- fs::path_rel(
+    get_data_path(.mod),
+    start = outdir
+  )
+  return(res)
+}
 
 #' @export
 config_log_make_entry.bbi_stan_model <- function(.mod, config, fields) {
