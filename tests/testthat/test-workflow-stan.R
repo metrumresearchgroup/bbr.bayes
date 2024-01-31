@@ -100,9 +100,12 @@ test_that("stan: summary_log() captures runs correctly", {
   skip_if_no_bbi()
 
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
-    log_df <- summary_log(MODEL_DIR_STAN_TEST)
+    expect_warning(
+      log_df <- summary_log(MODEL_DIR_STAN_TEST),
+      "all .* model summaries failed",
+      ignore.case = TRUE
+    )
   })
   expect_equal(nrow(log_df), 2)
   expect_identical(basename(log_df[[ABS_MOD_PATH]]), c(STAN_MOD_ID, STAN_MOD_ID2))
-  expect_true(all(purrr::map_lgl(log_df[[SL_SUMMARY]], ~inherits(.x, STAN_FIT_CLASS))))
 })

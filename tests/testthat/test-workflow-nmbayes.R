@@ -91,7 +91,11 @@ test_that("nmbayes: run_log() captures runs correctly", {
 
 test_that("nmbayes: summary_log() captures runs correctly", {
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
-    log_df <- summary_log(".", .recurse = TRUE)
+    expect_warning(
+      log_df <- summary_log(".", .recurse = TRUE),
+      "all .* model summaries failed",
+      ignore.case = TRUE
+    )
   })
   expect_identical(nrow(log_df), 3L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),

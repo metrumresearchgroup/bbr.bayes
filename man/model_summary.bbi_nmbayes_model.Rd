@@ -17,6 +17,7 @@ See \code{\link[bbr:print_bbi_args]{print_bbi_args()}} for full list of options.
 \item{.dry_run}{show what the command would be without actually running it}
 }
 \description{
-This method will eventually provide a tailored summary for NONMEM Bayes
-output; for now, it the same draws object that \code{\link[=read_fit_model]{read_fit_model()}} does.
+There is currently no \code{\link[bbr:model_summary]{bbr::model_summary()}} method for summarizing NONMEM
+Bayes outputs. Call \code{\link[=read_fit_model]{read_fit_model()}} to return a \pkg{posterior} draws
+object, which has various methods for summarizing the posteriors.
 }

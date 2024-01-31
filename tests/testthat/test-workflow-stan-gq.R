@@ -63,18 +63,15 @@ test_that("stan gq: summary_log() captures runs correctly", {
   skip_if_no_bbi()
 
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
-    log_df <- summary_log(file.path("model", "stan"))
+    expect_warning(
+      log_df <- summary_log(file.path("model", "stan")),
+      "all .* model summaries failed",
+      ignore.case = TRUE
+    )
   })
   expect_identical(nrow(log_df), 2L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
                   c("bern", "bern_gq"))
-
-  n_class <- function(cls) {
-    sum(purrr::map_lgl(log_df[[SL_SUMMARY]], ~ inherits(.x, cls)))
-  }
-
-  expect_identical(n_class(STAN_FIT_CLASS), 1L)
-  expect_identical(n_class(STAN_GQ_FIT_CLASS), 1L)
 })
 
 test_that("stan gq: make_fitted_params() can return draws object", {

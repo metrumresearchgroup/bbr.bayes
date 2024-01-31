@@ -1,8 +1,9 @@
 
 #' Summarize a `bbi_nmbayes_model` object
 #'
-#' This method will eventually provide a tailored summary for NONMEM Bayes
-#' output; for now, it the same draws object that [read_fit_model()] does.
+#' There is currently no [bbr::model_summary()] method for summarizing NONMEM
+#' Bayes outputs. Call [read_fit_model()] to return a \pkg{posterior} draws
+#' object, which has various methods for summarizing the posteriors.
 #'
 #' @inheritParams bbr::model_summary
 #'
@@ -14,22 +15,19 @@ model_summary.bbi_nmbayes_model <- function(
   .dry_run = FALSE
 ) {
   # TODO: Implement. See issue 27 for design discussion.
-  warning(
+  stop(
     "model_summary.bbi_nmbayes_model() is not implemented.\n",
-    glue("A draws object will be returned for {.mod[[ABS_MOD_PATH]]}\n\n"),
-    "Consider calling `read_fit_model()` directly instead.",
-    call. = FALSE)
-  read_fit_model(.mod)
+    "Call `read_fit_model()` to get a draws object.",
+    call. = FALSE
+  )
 }
 
 #' Summarize a `bbi_stan_model`
 #'
-#' There is currently no functionality for summarizing Stan outputs with `bbr`.
-#' Calling `model_summary()` on a `bbi_stan_model` instead calls
-#' [read_fit_model()] and return the resulting fit object, which has various
-#' methods for summarizing the outputs. See the `?cmdstanr::CmdStanMCMC` docs
-#' for methods and information on this object. A warning will also be printed to
-#' notify the user of this.
+#' There is currently no [bbr::model_summary()] method for summarizing Stan
+#' outputs. Call [read_fit_model()] to return the resulting fit object, which
+#' has various methods for summarizing the outputs. See the
+#' `?cmdstanr::CmdStanMCMC` docs for methods and information on this object.
 #'
 #' @inheritParams bbr::model_summary
 #'
@@ -40,11 +38,9 @@ model_summary.bbi_stan_model <- function(
   ...,
   .dry_run = FALSE
 ) {
-  warning(paste(
-    "model_summary.bbi_stan_model() is not fully implemented.",
-    glue("A `cmdstanr::CmdStanMCMC` object will be returned for {.mod[[ABS_MOD_PATH]]}"),
-    "Consider calling `read_fit_model()` directly instead.",
-    sep = "\n"
-  ), call. = FALSE)
-  read_fit_model(.mod)
+  stop(
+    "model_summary.bbi_stan_model() is not implemented.\n",
+    "Call `read_fit_model()` to get a `cmdstanr::CmdStanMCMC` object.",
+    call. = FALSE
+  )
 }
