@@ -82,8 +82,7 @@ test_that("nmbayes: submit_model() checks for existing model", {
 })
 
 test_that("nmbayes: run_log() captures runs correctly", {
-  skip("FIXME: submodels confuse run_log()")
-  log_df <- run_log(".")
+  log_df <- run_log(".", .recurse = TRUE)
   expect_identical(nrow(log_df), 3L)
   expect_identical(ncol(log_df), 10L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
@@ -91,9 +90,12 @@ test_that("nmbayes: run_log() captures runs correctly", {
 })
 
 test_that("nmbayes: summary_log() captures runs correctly", {
-  skip("FIXME: submodels confuse summary_log()")
   withr::with_options(list(bbr.bbi_exe_path = bbr::read_bbi_path()), {
-    log_df <- summary_log(".")
+    expect_warning(
+      log_df <- summary_log(".", .recurse = TRUE),
+      "all .* model summaries failed",
+      ignore.case = TRUE
+    )
   })
   expect_identical(nrow(log_df), 3L)
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),

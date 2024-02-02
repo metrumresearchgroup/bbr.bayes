@@ -347,23 +347,7 @@ new_res$sampler_diagnostics() %>% str()
 
 ### `model_summary()` function
 
-We have **not yet implemented** `model_summary()` for `bbi_stan_model` objects. This is a work in progress, but until it is done, `model_summary()` currently returns the same fit object that was just discussed, and warns you to that effect.
-
-```{r model_summary}
-sum1 <- fxa %>% model_summary()
-class(sum1)
-```
-
-```{r, eval = FALSE}
-sum1$summary() %>%
-  slice_head(n = 5) %>%
-  knitr::kable()
-```
-```{r, echo = FALSE, results = "asis"}
-fake_summary_df %>%
-  slice_head(n = 5) %>%
-  knitr::kable()
-```
+We have **not yet implemented** `model_summary()` for `bbi_stan_model` objects. This is a work in progress, but the `?cmdstanr::CmdStanMCMC` returned by `read_fit_model()` has various methods for summarizing the outputs.
 
 
 ## Model annotation

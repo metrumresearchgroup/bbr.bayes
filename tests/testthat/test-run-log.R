@@ -9,6 +9,11 @@ test_that("run_log() works", {
   expect_identical(nrow(nmbayes_df), 1L)
   expect_identical(nmbayes_df[[RUN_ID_COL]], NMBAYES_MOD_ID)
 
+  # No nmbayes submodels show up in run_log().
+  nonmem_df <- dplyr::filter(log_df, model_type == "nonmem")
+  expect_identical(nrow(nonmem_df), 1L)
+  expect_identical(nonmem_df[[RUN_ID_COL]], NM_MOD_ID)
+
   stan_df <- dplyr::filter(log_df, model_type == "stan")
   expect_equal(nrow(stan_df), 2L)
   expect_identical(stan_df[[RUN_ID_COL]],

@@ -17,10 +17,8 @@ See \code{\link[bbr:print_bbi_args]{print_bbi_args()}} for full list of options.
 \item{.dry_run}{show what the command would be without actually running it}
 }
 \description{
-There is currently no functionality for summarizing Stan outputs with \code{bbr}.
-Calling \code{model_summary()} on a \code{bbi_stan_model} instead calls
-\code{\link[=read_fit_model]{read_fit_model()}} and return the resulting fit object, which has various
-methods for summarizing the outputs. See the \code{?cmdstanr::CmdStanMCMC} docs
-for methods and information on this object. A warning will also be printed to
-notify the user of this.
+There is currently no \code{\link[bbr:model_summary]{bbr::model_summary()}} method for summarizing Stan
+outputs. Call \code{\link[=read_fit_model]{read_fit_model()}} to return the resulting fit object, which
+has various methods for summarizing the outputs. See the
+\code{?cmdstanr::CmdStanMCMC} docs for methods and information on this object.
 }
