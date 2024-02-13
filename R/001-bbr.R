@@ -4,11 +4,13 @@
 #' @importFrom bbr check_up_to_date
 #' @importFrom bbr config_log_make_entry
 #' @importFrom bbr copy_model_from
+#' @importFrom bbr cov_cor
 #' @importFrom bbr create_model_hook
 #' @importFrom bbr get_model_path
 #' @importFrom bbr get_output_dir
 #' @importFrom bbr model_diff
 #' @importFrom bbr model_summary
+#' @importFrom bbr nm_file
 #' @importFrom bbr print_model_files
 #' @importFrom bbr submit_model
 NULL
