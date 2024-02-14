@@ -11,6 +11,8 @@
 #' @importFrom bbr model_summary
 #' @importFrom bbr print_model_files
 #' @importFrom bbr submit_model
+#' @importFrom bbr tail_lst
+#' @importFrom bbr tail_output
 NULL
 
 # Functions exported by bbr
