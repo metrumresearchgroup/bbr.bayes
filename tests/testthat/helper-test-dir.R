@@ -29,3 +29,40 @@ local_stan_bern_model <- function(clean = TRUE, .local_envir = parent.frame()) {
   copy_model_from(STAN_MOD3, file.path(mdir, "bern"))
   withr::local_dir(tdir, .local_envir = .local_envir)
 }
+
+#' Create temporary directory with a dummy nmbayes model
+#'
+#' Call `local_test_dir()` and create a non-functional nmbayes model. The
+#' temporary directory will have the following structure:
+#'
+#'     |-- bbi.yaml
+#'     |-- {name}.ctl
+#'     |-- {name}.yaml
+#'     `-- {name}/
+#'         |-- {name}-1/     (empty)
+#'         |-- {name}-1.ctl
+#'         |-- {name}-1.yaml
+#'         |-- ...
+#'         `-- {name}-{chains}.yaml
+#'
+#' @param name Model ID.
+#' @param chains Number of chain submodels to create.
+#' @param clean,.local_envir Arguments passed to `withr::local_tempdir()`.
+local_dummy_nmbayes <- function(name, chains = 2,
+                                clean = TRUE, .local_envir = parent.frame()) {
+  tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)
+  cat("", file = file.path(tdir, "bbi.yaml"))
+
+  fake_mod <- function(path, mtype) {
+    cat("", file = paste0(path, ".ctl"))
+    new_model(path, .model_type = mtype)
+    fs::dir_create(path)
+  }
+
+  fake_mod(file.path(tdir, name), "nmbayes")
+  for (i in seq_len(chains)) {
+    fake_mod(file.path(tdir, name, paste0(name, "-", i)), "nonmem")
+  }
+
+  withr::local_dir(tdir, .local_envir = .local_envir)
+}
