@@ -47,6 +47,7 @@ reference:
   - copy_model_as_nmbayes
   - nmbayes_submit_model
   - chain_paths
+  - nmbayes_tail
   - nm_join_bayes
 
 - title: Shared utilities
