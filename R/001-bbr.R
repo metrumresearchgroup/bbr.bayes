@@ -1,6 +1,7 @@
 
 # Generics
 
+#' @importFrom bbr build_path_from_model
 #' @importFrom bbr check_up_to_date
 #' @importFrom bbr config_log_make_entry
 #' @importFrom bbr copy_model_from

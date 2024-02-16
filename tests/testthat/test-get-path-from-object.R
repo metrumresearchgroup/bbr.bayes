@@ -1,6 +1,18 @@
 
 ### NONMEM Bayes
 
+test_that("nmbayes: build_path_from_model points caller to chain_paths", {
+  rlang::reset_message_verbosity("bbr.bayes/build_path_from_model->chain_paths")
+  expect_message(
+    res <- build_path_from_model(NMBAYES_MOD1, ".foo"),
+    "chain_paths"
+  )
+  expect_identical(
+    res,
+    file.path(NMBAYES_MOD1[[ABS_MOD_PATH]], paste0(NMBAYES_MOD_ID, ".foo"))
+  )
+})
+
 test_that("nmbayes: get_model_path() builds the right path", {
   expect_identical(get_model_path(NMBAYES_MOD1),
                    paste0(file.path(NMBAYES_ABS_MODEL_DIR, NMBAYES_MOD_ID),

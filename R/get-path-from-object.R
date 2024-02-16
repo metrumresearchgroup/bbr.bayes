@@ -1,3 +1,15 @@
+#' @export
+build_path_from_model.bbi_nmbayes_model <- function(...) {
+  rlang::inform(
+    c(
+      "build_path_from_model() does not build paths to files in chain directories.",
+      i = "Consider using chain_paths() instead."
+    ),
+    .frequency = "once",
+    .frequency_id = "bbr.bayes/build_path_from_model->chain_paths"
+  )
+  NextMethod()
+}
 
 #' @export
 get_config_path.bbi_nmbayes_model <- function(.bbi_object, .check_exists = TRUE) {
