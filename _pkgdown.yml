@@ -46,6 +46,7 @@ reference:
   - model_summary.bbi_nmbayes_model
   - copy_model_as_nmbayes
   - nmbayes_submit_model
+  - nmbayes_check_nonmem_finished
   - chain_paths
   - nmbayes_tail
   - nm_join_bayes
