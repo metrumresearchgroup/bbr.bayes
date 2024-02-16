@@ -6,12 +6,27 @@
 \alias{submit_model.bbi_stan_gq_model}
 \title{Submit model based on a \code{bbi_stan_model} object}
 \usage{
-\method{submit_model}{bbi_stan_model}(.mod, .mode = c("local"), ..., .overwrite = NULL)
+\method{submit_model}{bbi_stan_model}(
+  .mod,
+  .bbi_args = NULL,
+  .mode = c("local"),
+  ...,
+  .overwrite = NULL
+)
 
-\method{submit_model}{bbi_stan_gq_model}(.mod, .mode = c("local"), ..., .overwrite = NULL)
+\method{submit_model}{bbi_stan_gq_model}(
+  .mod,
+  .bbi_args = NULL,
+  .mode = c("local"),
+  ...,
+  .overwrite = NULL
+)
 }
 \arguments{
 \item{.mod}{The model object to submit.}
+
+\item{.bbi_args}{Unused argument (present for compatibility with
+\code{\link[bbr:submit_model]{bbr::submit_model()}}).}
 
 \item{.mode}{Mode of model submission. Stan models currently only support
 local execution.}

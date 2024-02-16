@@ -102,6 +102,8 @@ submit_model.bbi_nmbayes_model <- function(
 #'
 #' @name stan_submit_model
 #' @inheritParams bbr::submit_model
+#' @param .bbi_args Unused argument (present for compatibility with
+#'   [bbr::submit_model()]).
 #' @param .mode Mode of model submission. Stan models currently only support
 #'   local execution.
 #' @param ... Additional arguments (ignored for all Stan models).
@@ -113,11 +115,15 @@ NULL
 #' @export
 submit_model.bbi_stan_model <- function(
   .mod,
+  .bbi_args = NULL,
   .mode = c("local"),
   ...,
   .overwrite = NULL
 ) {
   rlang::check_dots_empty()
+  if (!is.null(.bbi_args)) {
+    stop(".bbi_args must be NULL for model_type=stan")
+  }
   res <- submit_stan_model_cmdstanr(
     .mod,
     "sample",
@@ -129,9 +135,12 @@ submit_model.bbi_stan_model <- function(
 
 #' @rdname stan_submit_model
 #' @export
-submit_model.bbi_stan_gq_model <- function(.mod, .mode = c("local"),
+submit_model.bbi_stan_gq_model <- function(.mod, .bbi_args = NULL, .mode = c("local"),
                                            ..., .overwrite = NULL) {
   rlang::check_dots_empty()
+  if (!is.null(.bbi_args)) {
+    stop(".bbi_args must be NULL for model_type=stan_gq")
+  }
 
   # Note: get_stan_gq_parent() will abort if any gq_parent lacks a YAML.
   gq_parent <- get_stan_gq_parent(.mod)
