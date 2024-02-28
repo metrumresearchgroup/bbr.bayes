@@ -32,7 +32,7 @@ BugReports: https://github.com/metrumresearchgroup/bbr.bayes/issues
 Depends:
     R (>= 3.5)
 Imports: 
-    bbr (>= 1.7.0),
+    bbr (>= 1.10.0),
     checkmate,
     cli,
     cmdstanr,
