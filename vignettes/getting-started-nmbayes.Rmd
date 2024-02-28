@@ -1,0 +1,343 @@
+---
+title: "Getting Started with bbr.bayes and NONMEM Bayes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with bbr.bayes and NONMEM Bayes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette takes you through some basic scenarios for modeling with
+NONMEM Bayes using `bbr.bayes`, introducing you to its standard
+workflow and functionality.
+
+```{r, include = FALSE}
+# NOTE: if running chunks interactively we need to load the package first
+#   because renv isolation prevents us from finding a bbr.bayes installation
+if (interactive() || (isTRUE(getOption("knitr.in.progress") && Sys.getenv("DRONE") != "true"))) {
+  devtools::load_all()
+}
+```
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+library(bbr)
+library(bbr.bayes)
+library(dplyr)
+```
+
+`bbr.bayes` is an extension to `{bbr}` which focuses on traceable and
+reproducible modeling using Bayesian methods.  Note that you will also
+need to load `bbr` to use most `bbr.bayes` functionality.
+
+The `bbr` ["Getting Started with bbr and NONMEM"][gsb] vignette
+provides an introduction to modeling with NONMEM using `bbr`.  This
+vignette covers modeling in NONMEM using Bayesian estimation methods,
+highlighting ways NONMEM Bayes models in `bbr.bayes` extend or are
+different from NONMEM models in `bbr`.
+
+See the ["Getting Started with bbr.bayes and Stan"][gss] vignette for
+an introduction to modeling with [Stan](https://mc-stan.org/).
+
+```{r, include = FALSE}
+options(
+  "bbr.bbi_exe_path" = read_bbi_path(),
+  "bbr.verbose" = FALSE
+)
+
+# Call normalizePath() to match bbr's handling (which matters if
+# tempdir(), e.g., includes a symlink).  See commit 13c2053 for more info.
+TMP_DIR <- normalizePath(withr::local_tempdir("nmbayes-vignette-"))
+
+REF_DIR <- system.file(
+  "model", "nonmem",
+  package = "bbr.bayes", mustWork = TRUE
+)
+
+MODEL_DIR <- file.path(TMP_DIR, "model", "nonmem", "bayes")
+fs::dir_create(MODEL_DIR)
+
+DATA_DIR <- file.path(TMP_DIR, "extdata")
+fs::dir_create(DATA_DIR)
+fs::file_copy(
+  system.file(
+    "extdata", "analysis3.csv",
+    package = "bbr.bayes", mustWork = TRUE
+  ),
+  DATA_DIR
+)
+```
+
+# Installing and configuring bbi
+
+[bbi][] is required to work with NONMEM Bayes models.  Below is a
+high-level overview, but please see the
+["Installing bbi" section][gsbi] of `bbr`'s "Getting Started with bbr
+and NONMEM" vignette for detailed instructions.
+
+First, point the `bbr.bbi_exe_path` option to a path where `bbi` is or
+should be installed.  This should be done for each R session, so you
+likely want to include it in your project's `.Rprofile`.
+
+```{r, eval = FALSE}
+options("bbr.bbi_exe_path" = file.path(getwd(), "bin", "bbi"))
+```
+
+Then, if `bbi` is not already installed at the above location, call
+`use_bbi()` to install it.
+
+```{r, eval = FALSE}
+use_bbi()
+```
+
+Finally, use `bbi_init()` to initialize a directory in which you plan
+to store models.
+
+```{r, eval = FALSE}
+MODEL_DIR <- "model/nonmem"
+bbi_init(
+  .dir = MODEL_DIR,
+  .nonmem_dir = "/opt/NONMEM",
+  .nonmem_version = "nm75"
+)
+```
+
+This needs to be done only once for a given directory.
+
+# Creating a NONMEM Bayes model object
+
+As in `bbr`, the `bbr.bayes` workflow is organized around the concept
+of [model objects][gsbm].  These are S3 objects which you will pass to
+`bbr` and `bbr.bayes` functions that submit, summarize, or manipulate
+models.  A model object points to a path on disk; the set of files
+that define a model is derived from this path.
+
+A NONMEM Bayes model is similar to the "regular" NONMEM model from
+`bbr`, but it has a more complex structure underneath that is used to
+represent each MCMC chain.  See the [NONMEM Bayes models in`bbr`][nb]
+reference page for more details.
+
+## Creating a model object *de novo*
+
+A NONMEM bbr.bayes can be created by calling `new_model()` with the
+path to your control stream _without the file extension_, in the same
+way you would create a standard NONMEM model with `bbr`, as described
+in the ["Getting Started with bbr and NONMEM"][gsb] vignette.  To tell
+`new_model()` to create a NONMEM Bayes model, pass "nmbayes" as its
+`.model_type` argument.
+
+```{r, include = FALSE}
+fs::file_copy(
+  file.path(REF_DIR, "bayes", "1100.ctl"),
+  file.path(MODEL_DIR, "1000.ctl")
+)
+```
+
+```{r}
+mod1000 <- new_model(file.path(MODEL_DIR, 1000), .model_type = "nmbayes")
+mod1000$model_type
+```
+
+## Creating a model object from an existing model
+
+While you can create a fresh NONMEM Bayes model with `new_model()`,
+more commonly you will create a new NONMEM Bayes model from an
+existing model, either a regular NONMEM model (`bbi_nonmem_model`) or
+a NONMEM Bayes model (`bbi_nmbayes_model`).
+
+### From a regular NONMEM model
+
+```{r, include = FALSE}
+copy_model_from(
+  read_model(
+    system.file(
+      "model", "nonmem", "basic", "1",
+      package = "bbr.bayes", mustWork = TRUE
+    )
+  ),
+  file.path(MODEL_DIR, "100")
+) %>% replace_all_tags(c("two-compartment + absorption", "FOCE"))
+```
+
+To create a NONMEM Bayes model from a regular NONMEM model, use
+`copy_model_as_nmbayes()`.
+
+```{r}
+mod100 <- read_model(file.path(MODEL_DIR, 100))
+mod1100 <- copy_model_as_nmbayes(mod100, 1100, .inherit_tags = TRUE) %>%
+  update_model_id() %>%
+  replace_tag("FOCE", "BAYES")
+
+mod100$model_type
+mod1100$model_type
+```
+
+That will copy over the control stream and YAML , like
+`copy_model_from()`, and then switch the model type to "nmbayes".  In
+addition, it will replace the estimation methods with two estimation
+records that serve as a template for defining a NONMEM Bayes run.
+
+```{r, echo = FALSE, message = FALSE, comment = ""}
+glue::glue_data_safe(
+  list(model_id = get_model_id(mod1100)),
+  bbr.bayes:::NMBAYES_HELP,
+  .trim = FALSE
+)
+```
+
+### From a NONMEM Bayes model
+
+To create a NONMEM Bayes from another one, use `copy_model_from()`,
+just as you would in `bbr` to [copy and iterate on a model][gsbc].
+
+```{r}
+mod1101 <- copy_model_from(mod1100) %>%
+  update_model_id()
+
+# Edit control stream...
+
+mod1101 <- add_notes(mod1101, "Switched from foo to bar")
+```
+
+# Submitting a model
+
+To execute a model, pass it to [`submit_model()`][].
+
+```{r, eval = FALSE}
+submit_model(mod1100)
+```
+
+Underneath the [`submit_model()`][] method of `bbi_nmbayes_model`
+objects creates several sub-models, one for generating the initial
+values and one for each MCMC chain.
+
+```{r, include = FALSE}
+fs::dir_copy(
+  file.path(REF_DIR, "bayes", "1100"),
+  file.path(MODEL_DIR, "1100"),
+  overwrite = TRUE
+)
+mod1100 <- read_model(file.path(MODEL_DIR, "1100"))
+```
+
+```{r}
+dir(get_output_dir(mod1100))
+```
+
+You shouldn't often need to directly access these sub-models because
+`bbr.bayes` implements custom methods and functions to work with them
+behind the scenes.  For example, to monitor running models, you can
+use `tail_lst()` and `tail_output()` in the same way as you would with
+regular NONMEM models.  They will print the result for each chain.
+
+# Summarizing a model
+
+## `read_fit_model()`
+
+Once a model finishes running, an important entry point to summarizing
+the result is the `?posterior::draws_array` object returned by
+`read_fit_model()`.
+
+```{r}
+fit <- read_fit_model(mod1100)
+dim(fit)
+
+# Note that real models should use more chains and iterations!
+posterior::niterations(fit)
+posterior::nchains(fit)
+posterior::nvariables(fit)
+```
+
+`{posterior}` provides various functions for inspecting and
+summarizing posterior draws.  For example, you can use
+`posterior::summarize_draws()` to generate a table of summary
+statistics and diagnostics:
+
+```{r}
+posterior::subset_draws(fit, "THETA") %>%
+  posterior::summarize_draws()
+```
+
+## `nm_join_bayes()`
+
+`nm_join_bayes()` and `nm_join_bayes_quick()` are functions for
+joining model output summaries to the input data, in a similar way
+that `bbr::nm_join` does for non-Bayesian NONMEM models.
+
+`nm_join_bayes()` selects a subset of the posterior samples.  It uses
+these as input to a user-defined [mrgsolve][] model to simulate
+`EPRED` and `IPRED` and then summarizes the simulated values in the
+result.  In addition, it feeds the simulated `EPRED` values to
+[npde][] to calculate EWRES and NPDE values.
+
+`nm_join_bayes_quick()` does _not_ simulate quantities from the
+posterior samples.  It instead summarizes the reported values from the
+table files.  As the name suggests, this is useful for taking an
+initial look at the results, though simulation-based values should be
+used for more reliable estimates.
+
+```{r}
+nm_join_bayes_quick(mod1100) %>%
+  select(NUM, TIME, EPRED, IPRED, NPDE, EWRES)
+```
+
+## Accessing other information
+
+If you need access to output files in the chain submodels, you can use
+the `chain_paths()` helper.
+
+```{r}
+lst_files <- chain_paths(mod1100, extension = ".lst")
+tab_files <- chain_paths(
+  mod1100,
+  name = get_model_id(mod1100), extension = ".tab"
+)
+
+fs::path_rel(lst_files, get_output_dir(mod1100))
+file.size(lst_files)
+fs::path_rel(tab_files, get_output_dir(mod1100))
+file.size(tab_files)
+```
+
+## `model_summary()`
+
+We have **not yet implemented** `model_summary()` for
+`bbi_nmbayes_model` objects.  This is a work in progress, but the
+`?posterior::draws_array` object returned by `read_fit_model()` has
+[various methods][ps] for summarizing the outputs.
+
+# Run log and friends
+
+`run_log()`, `config_log()`, and `summary_log()` will all find and
+list NONMEM Bayes models.
+
+```{r}
+run_log(MODEL_DIR) %>%
+  select(run, model_type, tags, notes) %>%
+  collapse_to_string(tags, notes)
+```
+
+Note, however, that `summary_log()` does not currently include include
+any useful summary statistics or diagnostics for NONMEM Bayes models.
+This will be revisited once `model_summary()` is implemented (see
+above).
+
+[`submit_model()`]: ../reference/nmbayes_submit_model.html
+[bbi]: https://github.com/metrumresearchgroup/bbi
+[gsb]: https://metrumresearchgroup.github.io/bbr/articles/getting-started.html
+[gsbc]: https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#iteration
+[gsbi]: https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi
+[gsbm]: https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#create-model-object
+[gss]: ./getting-started-stan.html
+[mrgsolve]: https://mrgsolve.org/
+[nb]: ../reference/bbr_nmbayes.html
+[npde]: https://cran.r-project.org/web/packages/npde/index.html
+[ps]: https://mc-stan.org/posterior/reference/index.html#summarizing-and-diagnosing-draws-objects

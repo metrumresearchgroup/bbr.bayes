@@ -39,8 +39,9 @@ available from other CRAN-like repos:
 
 ## Documentation
 
-Documentation, including a ["Getting Started with bbr.bayes and
-Stan"][gss] vignette, is available at
+Documentation, including a ["Getting Started with bbr.bayes and Stan"][gss]
+and ["Getting Started with bbr.bayes and NONMEM Bayes"][gsn]
+vignettes, is available at
 <https://metrumresearchgroup.github.io/bbr.bayes/>.
 
 ### Cheat Sheet
@@ -60,6 +61,7 @@ to provide isolation. To set up an environment with pkgr and renv:
 
 [bbr]: https://metrumresearchgroup.github.io/bbr
 [cmdstanr]: https://mc-stan.org/cmdstanr/
+[gsn]: https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-nmbayes.html
 [gss]: https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html
 [MPN]: https://mpn.metworx.com/docs/snapshots
 [nmrec]: https://metrumresearchgroup.github.io/nmrec
