@@ -39,13 +39,19 @@ reference:
 - title: NONMEM Bayes
   contents:
   - bbr_nmbayes
-  - model_summary.bbi_nmbayes_model
+- subtitle: Preparing and submitting models
+  contents:
   - copy_model_as_nmbayes
   - nmbayes_submit_model
-  - nmbayes_check_nonmem_finished
+- subtitle: Model inspection
+  contents:
   - chain_paths
-  - nmbayes_tail
+  - model_summary.bbi_nmbayes_model
   - nm_join_bayes
+  - nmbayes_tail
+- subtitle: Miscellaneous
+  contents:
+  - nmbayes_check_nonmem_finished
 
 - title: Shared utilities
   contents:
