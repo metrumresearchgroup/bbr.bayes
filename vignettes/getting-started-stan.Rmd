@@ -20,7 +20,7 @@ This vignette takes you through some basic scenarios for modeling with Stan usin
 
 ```{r setup, include=FALSE}
 # NOTE: if running chunks interactively we need to load the package first
-#   because renv isolation prevents us from finding an bbr.bayes installation
+#   because renv isolation prevents us from finding a bbr.bayes installation
 if (interactive() || (isTRUE(getOption('knitr.in.progress') && Sys.getenv("DRONE") != "true"))) {
   devtools::load_all()
 }
@@ -33,9 +33,9 @@ library(dplyr)
 
 `bbr.bayes` is an extension to [`bbr`](https://metrumresearchgroup.github.io/bbr) which focuses on traceable and reproducible modeling using Bayesian methods. Note that you will also need to load `bbr` to use most `bbr.bayes` functionality.
 
-This vignette focuses on models defined in [Stan](https://mc-stan.org/). 
+This vignette focuses on models defined in [Stan](https://mc-stan.org/). The ["Getting Started with bbr.bayes and NONMEM Bayes"](./getting-started-nmbayes.html) vignette focuses on modeling in NONMEM using Bayesian estimation methods.
 
-A future `bbr.bayes` vignette will focus on modeling in NONMEM using Bayesian estimation methods. For details on modeling in NONMEM with non-Bayesian estimation methods, see the ["Getting Started with bbr and NONMEM"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html) vignette.
+For details on modeling in NONMEM with non-Bayesian estimation methods, see the ["Getting Started with bbr and NONMEM"](https://metrumresearchgroup.github.io/bbr/articles/getting-started.html) vignette.
 
 # Setup
 
