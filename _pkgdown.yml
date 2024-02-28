@@ -37,10 +37,6 @@ reference:
   - install_torsten
 
 - title: NONMEM Bayes
-  desc: >
-    Warning: NONMEM Bayes support is incomplete, and backward
-    incompatible changes are planned.  Please use only for
-    experimentation and development.
   contents:
   - bbr_nmbayes
   - model_summary.bbi_nmbayes_model
