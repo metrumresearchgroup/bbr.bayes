@@ -1,3 +1,44 @@
+# bbr.bayes 0.2.0
+
+## New features and changes
+
+* `bbr.bayes` now requires `bbr` 1.10.0 or later.  (#134)
+
+### NONMEM Bayes
+
+* Initial support has been added for NONMEM Bayes models via the
+  `bbi_nmbayes_model` model type.  **Compatibility note:** the 0.1.0
+  release included a `bbi_nmbayes_model` model type that was marked as
+  experimental and is not compatible with the new design.  (#84, #108,
+  #133)
+
+* New `copy_model_as_nmbayes()` function for creating a
+  `bbi_nmbayes_model` model from a parent `bbi_nonmem_model` object.
+  (#84)
+
+* New `chain_paths()` helper for constructing paths to files within
+  chain sub-models.  (#104)
+
+* New `nm_join_bayes()` and `nm_join_bayes_quick()` functions provide
+  an interface for joining model output summaries to input data.
+  (#106, #116, #118, #120, #122)
+
+* Various tailored methods for `bbr` generics have been added.  (#84,
+  #123, #126, #127, #128).
+
+### Stan
+
+* New `install_torsten()` function for downloading and installing
+  [Torsten](https://github.com/metrumresearchgroup/Torsten).  (#95)
+
+* The bundled `bern-gq.stan` model has been updated to use syntax
+  compatible with Stan 2.33.  (#99)
+
+* The signature of the `submit_model()` method for Stan models did not
+  match the positional arguments of the generic.  `.bbi_args` (unused
+  for Stan models) has been added as the second argument.  (#132)
+
+
 # bbr.bayes 0.1.1
 
 ## Changes
