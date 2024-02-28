@@ -339,20 +339,9 @@ prepare_join <- function(mod, join_col, files, superset, point_fn, ...) {
   # nm_join_origin records the source of different columns.
   origin <- attr(dfs[[1]], "nm_join_origin")
   if (is.null(origin)) {
-    # For older bbr versions, fall back to peeking at the header and making the
-    # same transformations as nm_join/nm_data/nm_file.
-    #
-    # TODO: Remove when minimum bbr version is above 1.7.0.
-    smod1_data <- bbr::get_data_path(read_model(get_chain_dirs(mod)[1]))
-    data_cols <- toupper(fread_peek_at_columns(smod1_data, skip = join_col))
-
-    dv <- data_cols == "DV"
-    if (any(dv)) {
-      data_cols[dv] <- "DV.DATA"
-    }
-  } else {
-    data_cols <- origin$data
+    stop("bug: nm_join() result should have nm_join_origin attribute")
   }
+  data_cols <- origin$data
 
   data <- dfs[[1]][data_cols]
 
