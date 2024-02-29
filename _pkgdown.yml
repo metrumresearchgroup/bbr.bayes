@@ -37,19 +37,21 @@ reference:
   - install_torsten
 
 - title: NONMEM Bayes
-  desc: >
-    Warning: NONMEM Bayes support is incomplete, and backward
-    incompatible changes are planned.  Please use only for
-    experimentation and development.
   contents:
   - bbr_nmbayes
-  - model_summary.bbi_nmbayes_model
+- subtitle: Preparing and submitting models
+  contents:
   - copy_model_as_nmbayes
   - nmbayes_submit_model
-  - nmbayes_check_nonmem_finished
+- subtitle: Model inspection
+  contents:
   - chain_paths
-  - nmbayes_tail
+  - model_summary.bbi_nmbayes_model
   - nm_join_bayes
+  - nmbayes_tail
+- subtitle: Miscellaneous
+  contents:
+  - nmbayes_check_nonmem_finished
 
 - title: Shared utilities
   contents:

@@ -9,9 +9,8 @@
 
 `bbr.bayes` is an extension to the [bbr] package for Bayesian
 modeling.  The package is in the early stages of development.  Initial
-support has been added for [Stan] models (powered by [cmdstanr]).
-Upcoming releases will extend Stan support and add support for NONMEM
-Bayes models.
+support has been added for [Stan] models (powered by [cmdstanr]) and
+for NONMEM Bayes models.
 
 ## Installation
 
