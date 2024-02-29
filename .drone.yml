@@ -152,6 +152,9 @@ steps:
   - git config --global user.name Drony
   - git fetch --tags
   - R -s -e 'devtools::install_dev_deps(upgrade = "never")'
+  # TODO: Use bbr from MPN once >= 1.9.0 is available.
+  - git clone --depth 1 https://github.com/metrumresearchgroup/bbr.git /tmp/bbr
+  - R -s -e 'devtools::install("/tmp/bbr")'
   - R -s -e 'pkgpub::create_tagged_repo(.dir = "/ephemeral")'
   environment:
     NOT_CRAN: true
