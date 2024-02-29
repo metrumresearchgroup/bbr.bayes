@@ -19,6 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with bbr.bayes and Stan">
 <meta property="og:description" content="bbr.bayes">
+<meta property="og:image" content="https://metrumresearchgroup.github.io/bbr.bayes/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -39,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bbr.bayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -56,6 +57,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/getting-started-nmbayes.html">Getting Started with bbr.bayes and NONMEM Bayes</a>
+    </li>
+    <li>
       <a href="../articles/getting-started-stan.html">Getting Started with bbr.bayes and Stan</a>
     </li>
   </ul>
@@ -97,22 +101,14 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette takes you through some basic scenarios for modeling
-with Stan using <code>bbr.bayes</code>, introducing you to its standard
-workflow and functionality.</p>
+<p>This vignette takes you through some basic scenarios for modeling with Stan using <code>bbr.bayes</code>, introducing you to its standard workflow and functionality.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://metrumresearchgroup.github.io/bbr" class="external-link">bbr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://metrumresearchgroup.github.io/bbr.bayes">bbr.bayes</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p><code>bbr.bayes</code> is an extension to <a href="https://metrumresearchgroup.github.io/bbr" class="external-link"><code>bbr</code></a>
-which focuses on traceable and reproducible modeling using Bayesian
-methods. Note that you will also need to load <code>bbr</code> to use
-most <code>bbr.bayes</code> functionality.</p>
-<p>This vignette focuses on models defined in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
-<p>A future <code>bbr.bayes</code> vignette will focus on modeling in
-NONMEM using Bayesian estimation methods. For details on modeling in
-NONMEM with non-Bayesian estimation methods, see the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting
-Started with bbr and NONMEM”</a> vignette.</p>
+<p><code>bbr.bayes</code> is an extension to <a href="https://metrumresearchgroup.github.io/bbr" class="external-link"><code>bbr</code></a> which focuses on traceable and reproducible modeling using Bayesian methods. Note that you will also need to load <code>bbr</code> to use most <code>bbr.bayes</code> functionality.</p>
+<p>This vignette focuses on models defined in <a href="https://mc-stan.org/" class="external-link">Stan</a>. The <a href="./getting-started-nmbayes.html">“Getting Started with bbr.bayes and NONMEM Bayes”</a> vignette focuses on modeling in NONMEM using Bayesian estimation methods.</p>
+<p>For details on modeling in NONMEM with non-Bayesian estimation methods, see the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting Started with bbr and NONMEM”</a> vignette.</p>
 </div>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
@@ -120,57 +116,27 @@ Started with bbr and NONMEM”</a> vignette.</p>
 <div class="section level3">
 <h3 id="installing-cmdstan">Installing cmdstan<a class="anchor" aria-label="anchor" href="#installing-cmdstan"></a>
 </h3>
-<p><code>bbr.bayes</code> uses cmdstan and the R package
-<code>cmdstanr</code> to run Stan models. Please see <a href="http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan" class="external-link">the
-cmdstanr docs</a> for instructions on installing cmdstan. (Note that,
-when modeling with Stan rather than NONMEM, <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi" class="external-link"><code>bbi</code></a>
-is not required.)</p>
+<p><code>bbr.bayes</code> uses cmdstan and the R package <code>cmdstanr</code> to run Stan models. Please see <a href="http://mc-stan.org/cmdstanr/articles/cmdstanr.html#Installing_CmdStan" class="external-link">the cmdstanr docs</a> for instructions on installing cmdstan. (Note that, when modeling with Stan rather than NONMEM, <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi" class="external-link"><code>bbi</code></a> is not required.)</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="creating-a-model-object">Creating a model object<a class="anchor" aria-label="anchor" href="#creating-a-model-object"></a>
 </h2>
-<p>The <code>bbr.bayes</code> workflow is organized around the concept
-of <strong>model objects</strong>. These are S3 objects which you will
-pass to <code>bbr</code> and <code>bbr.bayes</code> functions that
-submit, summarize, or manipulate models. A model object points to a path
-on disk; the set of files that define a model is derived from this path.
-For a Stan model, the basic files are:</p>
+<p>The <code>bbr.bayes</code> workflow is organized around the concept of <strong>model objects</strong>. These are S3 objects which you will pass to <code>bbr</code> and <code>bbr.bayes</code> functions that submit, summarize, or manipulate models. A model object points to a path on disk; the set of files that define a model is derived from this path. For a Stan model, the basic files are:</p>
 <ul>
-<li><p><code>&lt;run&gt;.yml</code> - The <code>bbr</code> YAML file
-which stores model metadata like a description and tags.</p></li>
-<li><p><code>&lt;run&gt;/&lt;run&gt;.stan</code> - The Stan
-file.</p></li>
-<li><p><code>&lt;run&gt;/&lt;run&gt;-stanargs.R</code> - Contains a
-named list with all of the arguments that will be passed through to the
-<a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link"><code>$sample()</code></a>
-method of <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanModel.html" class="external-link">?cmdstanr::CmdStanModel</a></code>.</p></li>
-<li><p><code>&lt;run&gt;/&lt;run&gt;-standata.R</code> - Contains all
-necessary R code to read in any source data and transform them to a
-Stan-ready data object (list).</p></li>
-<li><p><code>&lt;run&gt;/&lt;run&gt;-init.R</code> - This file contains
-all necessary R code to create the initial values passed to the
-cmdstanr’s <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link"><code>$sample()</code></a>
-method.</p></li>
+<li><p><code>&lt;run&gt;.yml</code> - The <code>bbr</code> YAML file which stores model metadata like a description and tags.</p></li>
+<li><p><code>&lt;run&gt;/&lt;run&gt;.stan</code> - The Stan file.</p></li>
+<li><p><code>&lt;run&gt;/&lt;run&gt;-stanargs.R</code> - Contains a named list with all of the arguments that will be passed through to the <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link"><code>$sample()</code></a> method of <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanModel.html" class="external-link">?cmdstanr::CmdStanModel</a></code>.</p></li>
+<li><p><code>&lt;run&gt;/&lt;run&gt;-standata.R</code> - Contains all necessary R code to read in any source data and transform them to a Stan-ready data object (list).</p></li>
+<li><p><code>&lt;run&gt;/&lt;run&gt;-init.R</code> - This file contains all necessary R code to create the initial values passed to the cmdstanr’s <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link"><code>$sample()</code></a> method.</p></li>
 </ul>
-<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html">Stan
-models in <code>bbr</code></a> reference page provides detailed
-information about the files necessary for running a Stan model using
-<code>bbr</code>.</p>
-<p><code>bbr</code> model objects can either be created <em>de novo</em>
-or copied from an existing model object. We outline the differences
-between these two approaches below.</p>
+<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html">Stan models in <code>bbr</code></a> reference page provides detailed information about the files necessary for running a Stan model using <code>bbr</code>.</p>
+<p><code>bbr</code> model objects can either be created <em>de novo</em> or copied from an existing model object. We outline the differences between these two approaches below.</p>
 <div class="section level3">
 <h3 id="creating-a-model-object-de-novo">Creating a model object <em>de novo</em><a class="anchor" aria-label="anchor" href="#creating-a-model-object-de-novo"></a>
 </h3>
-<p>To create a model object <em>de novo</em>, you use the
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> function.</p>
-<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> function will look for (and, if not
-found, create) the files necessary to run a Stan model. The first
-argument (<code>.path</code>) must be the path to the directory where
-you want to write these files. For Stan models, you will also have to
-add <code>.model_type = "stan"</code> to the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>
-call.</p>
+<p>To create a model object <em>de novo</em>, you use the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> function.</p>
+<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> function will look for (and, if not found, create) the files necessary to run a Stan model. The first argument (<code>.path</code>) must be the path to the directory where you want to write these files. For Stan models, you will also have to add <code>.model_type = "stan"</code> to the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> call.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, <span class="st">"mod1"</span><span class="op">)</span>, .model_type <span class="op">=</span> <span class="st">"stan"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -184,17 +150,9 @@ call.</p>
 <span><span class="co">#&gt; Automatically adding scaffolded -standata.R file</span></span>
 <span><span class="co">#&gt; Automatically adding scaffolded -init.R file</span></span>
 <span><span class="co">#&gt; Automatically adding scaffolded -stanargs.R file</span></span></code></pre></div>
-<p>The call above will look for a directory called
-<code>{MODEL_DIR}/mod1</code>. <em>Inside</em> this directory it will
-expect to find the files <code>mod1.stan</code> and
-<code>mod1-standata.R</code>. These “required files” will be discussed
-below, and you can find even more detail in <code><a href="../reference/bbr_stan.html">?bbr_stan</a></code>.</p>
-<p>For now notice that, if any of them are <em>not</em> found when you
-initialize the model, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> will create scaffolds
-(files with boilerplate, non-working code) of the missing files, and
-print a message to the console telling you it has done so.</p>
-<p>You can use the helpers described in <code><a href="../reference/open_stan_file.html">?open_stan_file</a></code> to
-open any of these scaffolded files for editing.</p>
+<p>The call above will look for a directory called <code>{MODEL_DIR}/mod1</code>. <em>Inside</em> this directory it will expect to find the files <code>mod1.stan</code> and <code>mod1-standata.R</code>. These “required files” will be discussed below, and you can find even more detail in <code><a href="../reference/bbr_stan.html">?bbr_stan</a></code>.</p>
+<p>For now notice that, if any of them are <em>not</em> found when you initialize the model, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> will create scaffolds (files with boilerplate, non-working code) of the missing files, and print a message to the console telling you it has done so.</p>
+<p>You can use the helpers described in <code><a href="../reference/open_stan_file.html">?open_stan_file</a></code> to open any of these scaffolded files for editing.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/open_stan_file.html">open_standata_file</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co"># Create Stan data</span></span>
@@ -213,33 +171,17 @@ open any of these scaffolded files for editing.</p>
 <span>  <span class="co"># do any transformations</span></span>
 <span>  <span class="co"># return the list that can be passed to cmdstanr</span></span>
 <span><span class="op">}</span></span></code></pre>
-<p>The purpose of this scaffold is to provide a helpful framework to
-begin writing the necessary code for submitting a model with
-<code>bbr.bayes</code>. Below (in the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>
-section) you will see how, once you have defined a model, you can use
-that model as your starting point for new models, instead of relying on
-writing new code from scaffolds.</p>
-<p>If you already have the relevant code for your new model, you can
-manually create these files in the output directory <em>before</em>
-calling <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>. In that case, you won’t see any of the
-messages shown above and the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> call will simply
-create the <code>.yaml</code> file (described below) next to your
-directory.</p>
-<p>Alternatively, you can create the model with the scaffolds and use
-helpers like <code><a href="../reference/add_file_to_model_dir.html">add_stanmod_file()</a></code> to add your files to the
-model directory.</p>
+<p>The purpose of this scaffold is to provide a helpful framework to begin writing the necessary code for submitting a model with <code>bbr.bayes</code>. Below (in the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> section) you will see how, once you have defined a model, you can use that model as your starting point for new models, instead of relying on writing new code from scaffolds.</p>
+<p>If you already have the relevant code for your new model, you can manually create these files in the output directory <em>before</em> calling <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>. In that case, you won’t see any of the messages shown above and the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> call will simply create the <code>.yaml</code> file (described below) next to your directory.</p>
+<p>Alternatively, you can create the model with the scaffolds and use helpers like <code><a href="../reference/add_file_to_model_dir.html">add_stanmod_file()</a></code> to add your files to the model directory.</p>
 </div>
 <div class="section level3">
 <h3 id="reading-in-an-existing-model">Reading in an existing model<a class="anchor" aria-label="anchor" href="#reading-in-an-existing-model"></a>
 </h3>
-<p>Now assume that you have previously created a model and written all
-the necessary code. You can read this model into memory with
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model()</a></code>.</p>
+<p>Now assume that you have previously created a model and written all the necessary code. You can read this model into memory with <code><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model()</a></code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, <span class="st">"fxa"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>If you take a look at <em>this model’s</em> <code>-standata.R</code>
-file, you can see an example of how this script might look in a real
-model.</p>
+<p>If you take a look at <em>this model’s</em> <code>-standata.R</code> file, you can see an example of how this script might look in a real model.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/open_stan_file.html">open_standata_file</a></span><span class="op">(</span><span class="va">fxa</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="va">make_standata</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">.dir</span><span class="op">)</span> <span class="op">{</span></span>
@@ -265,17 +207,8 @@ model.</p>
 <div class="section level3">
 <h3 id="creating-a-model-by-copy_model_from">Creating a model by copy_model_from()<a class="anchor" aria-label="anchor" href="#creating-a-model-by-copy_model_from"></a>
 </h3>
-<p>Much of the benefit of <code>bbr</code> is leveraged in the model
-iteration workflow, and the run log summaries that can be created
-afterwards.</p>
-<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> function creates a new model
-object based on a parent model, copying and renaming the necessary files
-in the process. The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> call below will
-create an <code>fxaNew</code> directory and fill it as described in the
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> section above. <em>However,</em> instead of
-filling it with scaffolds, it will copy (and rename) all of the
-necessary files <em>from the parent model’s directory</em> into the new
-directory.</p>
+<p>Much of the benefit of <code>bbr</code> is leveraged in the model iteration workflow, and the run log summaries that can be created afterwards.</p>
+<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> function creates a new model object based on a parent model, copying and renaming the necessary files in the process. The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> call below will create an <code>fxaNew</code> directory and fill it as described in the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> section above. <em>However,</em> instead of filling it with scaffolds, it will copy (and rename) all of the necessary files <em>from the parent model’s directory</em> into the new directory.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxaNew</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from</a></span><span class="op">(</span></span>
 <span>  .parent_mod <span class="op">=</span> <span class="va">fxa</span>,</span>
@@ -283,28 +216,16 @@ directory.</p>
 <span>  .inherit_tags <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <blockquote>
-<p>Note that, while the <code>.path</code> argument in
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model()</a></code> is relative to
-your working directory, the <code>.new_model</code> argument of
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> is <em>relative to the directory
-containing the parent model.</em> This means that, assuming you would
-like to create the new model in the same directory as its parent, you
-only have to pass a filename (without extension) for the new model.</p>
+<p>Note that, while the <code>.path</code> argument in <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model()</a></code> is relative to your working directory, the <code>.new_model</code> argument of <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> is <em>relative to the directory containing the parent model.</em> This means that, assuming you would like to create the new model in the same directory as its parent, you only have to pass a filename (without extension) for the new model.</p>
 </blockquote>
-<p>You can now open the relevant files and edit them with the desired
-changes, starting from where you left off with the parent model.</p>
+<p>You can now open the relevant files and edit them with the desired changes, starting from where you left off with the parent model.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/open_stan_file.html">open_stanmod_file</a></span><span class="op">(</span><span class="va">fxaNew</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="comparing-model-files">Comparing model files<a class="anchor" aria-label="anchor" href="#comparing-model-files"></a>
 </h3>
-<p>Imagine that, after opening the <code>fxaNew.stan</code> file above,
-you decided to change the <code>emax</code> parameter from a uniform to
-a Cauchy distribution. The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">model_diff()</a></code> function makes it
-easy to compare models to each other. For Stan models,
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">model_diff()</a></code> defaults to comparing the
-<code>&lt;run&gt;.stan</code> files.</p>
+<p>Imagine that, after opening the <code>fxaNew.stan</code> file above, you decided to change the <code>emax</code> parameter from a uniform to a Cauchy distribution. The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">model_diff()</a></code> function makes it easy to compare models to each other. For Stan models, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">model_diff()</a></code> defaults to comparing the <code>&lt;run&gt;.stan</code> files.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/model_diff.html" class="external-link">model_diff</a></span><span class="op">(</span><span class="va">fxa</span>, <span class="va">fxaNew</span><span class="op">)</span></span></code></pre></div>
 <style type="text/css">
@@ -590,9 +511,7 @@ DIV.diffobj-container.light.yb DIV.diffobj-line {
 </div></div>
 </div></pre>
 </div>
-<p>You can also pass any of
-<code>c("standata", "init", "stanargs")</code> to have it compare the
-specified file instead.</p>
+<p>You can also pass any of <code>c("standata", "init", "stanargs")</code> to have it compare the specified file instead.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># modify the iter_sampling arg and see the difference</span></span>
 <span><span class="fu"><a href="../reference/stanargs.html">set_stanargs</a></span><span class="op">(</span><span class="va">fxaNew</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iter_sampling <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
@@ -816,36 +735,23 @@ DIV.diffobj-container.light.yb DIV.diffobj-line {
 <div class="section level3">
 <h3 id="the-bbr-yaml-file">The <code>bbr</code> YAML file<a class="anchor" aria-label="anchor" href="#the-bbr-yaml-file"></a>
 </h3>
-<p>This <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>
-calls will create the YAML file associated with the model object (e.g.,
-<code>mod1.yaml</code>). This YAML file stores model metadata like the
-description, notes, and tags (discussed below). The YAML file from a
-model created using <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> will be very bare, while
-the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> call will copy the YAML file from the
-parent model. The purpose of the YAML file will become more clear when
-we begin comparing models and generating model run logs.</p>
+<p>This <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> calls will create the YAML file associated with the model object (e.g., <code>mod1.yaml</code>). This YAML file stores model metadata like the description, notes, and tags (discussed below). The YAML file from a model created using <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> will be very bare, while the <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> call will copy the YAML file from the parent model. The purpose of the YAML file will become more clear when we begin comparing models and generating model run logs.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="submitting-a-model">Submitting a model<a class="anchor" aria-label="anchor" href="#submitting-a-model"></a>
 </h2>
-<p>For Stan models, model submission wraps the <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a>
-method.</p>
+<p>For Stan models, model submission wraps the <a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a> method.</p>
 <div class="section level4">
 <h4 id="passing-arguments-to-sample">Passing arguments to <code>$sample()</code><a class="anchor" aria-label="anchor" href="#passing-arguments-to-sample"></a>
 </h4>
-<p>You can use <code>set_stanargs</code> to control which arguments are
-passed to <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code>.</p>
+<p>You can use <code>set_stanargs</code> to control which arguments are passed to <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxa</span> <span class="op">&lt;-</span> <span class="va">fxa</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/stanargs.html">set_stanargs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">123456</span>,</span>
 <span>                    iter_warmup <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>                    iter_sampling <span class="op">=</span> <span class="fl">300</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code>bbr.bayes</code> stores these arguments with the model files,
-making it easy to reproduce your results later, by ensuring that you can
-run your model with the same arguments that were previously used. You
-can use <code><a href="../reference/stanargs.html">get_stanargs()</a></code> at any time to inspect the currently
-set arguments.</p>
+<p><code>bbr.bayes</code> stores these arguments with the model files, making it easy to reproduce your results later, by ensuring that you can run your model with the same arguments that were previously used. You can use <code><a href="../reference/stanargs.html">get_stanargs()</a></code> at any time to inspect the currently set arguments.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanargs.html">get_stanargs</a></span><span class="op">(</span><span class="va">fxa</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> <span style="color: #0000BB;">iter_sampling</span> = 300</span></span>
@@ -855,10 +761,7 @@ set arguments.</p>
 <div class="section level4">
 <h4 id="using-check_stan_model">Using <code>check_stan_model()</code><a class="anchor" aria-label="anchor" href="#using-check_stan_model"></a>
 </h4>
-<p>You can check whether all the required files are present at any time
-by calling the <code><a href="../reference/check_stan_model.html">check_stan_model()</a></code> function. By default this
-will also check the syntax of your <code>.stan</code> file, so that you
-can correct any errors before actually submitting the model.</p>
+<p>You can check whether all the required files are present at any time by calling the <code><a href="../reference/check_stan_model.html">check_stan_model()</a></code> function. By default this will also check the syntax of your <code>.stan</code> file, so that you can correct any errors before actually submitting the model.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_stan_model.html">check_stan_model</a></span><span class="op">(</span><span class="va">fxa</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -918,27 +821,18 @@ can correct any errors before actually submitting the model.</p>
 <span><span class="co">#&gt; All 4 chains finished successfully.</span></span>
 <span><span class="co">#&gt; Mean chain execution time: 15.9 seconds.</span></span>
 <span><span class="co">#&gt; Total execution time: 64.4 seconds.</span></span></code></pre>
-<p>As you can see, this also prints all of the diagnostic output from
-<code>$sample()</code> as it runs.</p>
+<p>As you can see, this also prints all of the diagnostic output from <code>$sample()</code> as it runs.</p>
 </div>
 <div class="section level4">
 <h4 id="overwriting-output-from-a-previously-run-model">Overwriting output from a previously run model<a class="anchor" aria-label="anchor" href="#overwriting-output-from-a-previously-run-model"></a>
 </h4>
-<p>It is common to run a model, make some tweaks to it, and then run it
-again. However, to avoid accidentally deleting model outputs,
-<code>bbr</code> will error by default if it sees existing output when
-trying to submit a model. To automatically overwrite any previous model
-output, just pass <code>.overwrite = TRUE</code> to <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a>.</p>
+<p>It is common to run a model, make some tweaks to it, and then run it again. However, to avoid accidentally deleting model outputs, <code>bbr</code> will error by default if it sees existing output when trying to submit a model. To automatically overwrite any previous model output, just pass <code>.overwrite = TRUE</code> to <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a>.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="summarizing-model-output">Summarizing model output<a class="anchor" aria-label="anchor" href="#summarizing-model-output"></a>
 </h2>
-<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a>
-call will return the fit model object from <code>cmdstanr</code>. You
-can read all about this object in the
-<code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object docs. It has several methods
-for diagnostics and model summaries.</p>
+<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a> call will return the fit model object from <code>cmdstanr</code>. You can read all about this object in the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object docs. It has several methods for diagnostics and model summaries.</p>
 <div class="section level4">
 <h4 id="diagnostics-from-cmdstanr">diagnostics from cmdstanr<a class="anchor" aria-label="anchor" href="#diagnostics-from-cmdstanr"></a>
 </h4>
@@ -1172,12 +1066,7 @@ for diagnostics and model summaries.</p>
 <h4 id="posteriordraws-methods">
 <code>posterior::draws</code> methods<a class="anchor" aria-label="anchor" href="#posteriordraws-methods"></a>
 </h4>
-<p>Many <a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a> users will also be familiar with the
-<a href="https://mc-stan.org/posterior/" class="external-link">posterior</a> package and its <a href="https://mc-stan.org/posterior/articles/posterior.html#draws-formats" class="external-link"><code>draws</code>
-objects and methods</a>. <code>bbr.bayes</code> has also implemented the
-<a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html"><code>as_draws()</code></a>
-method and its variants, which can be used on either a model object or
-the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object.</p>
+<p>Many <a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a> users will also be familiar with the <a href="https://mc-stan.org/posterior/" class="external-link">posterior</a> package and its <a href="https://mc-stan.org/posterior/articles/posterior.html#draws-formats" class="external-link"><code>draws</code> objects and methods</a>. <code>bbr.bayes</code> has also implemented the <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html"><code>as_draws()</code></a> method and its variants, which can be used on either a model object or the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d_array</span> <span class="op">&lt;-</span> <span class="fu">as_draws</span><span class="op">(</span><span class="va">fxa</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">d_array</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -1190,11 +1079,7 @@ the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" clas
 <div class="section level4">
 <h4 id="using-read_fit_model">Using <code>read_fit_model()</code><a class="anchor" aria-label="anchor" href="#using-read_fit_model"></a>
 </h4>
-<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a>
-call automatically saves this fit object to disk as well. You can pass
-either a path or model object to <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code> and it
-will re-load the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object into
-memory.</p>
+<p>The <a href="https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html"><code>submit_model()</code></a> call automatically saves this fit object to disk as well. You can pass either a path or model object to <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code> and it will re-load the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> object into memory.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">new_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_fit_model.html">read_fit_model</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, <span class="st">"fxa"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">new_res</span><span class="op">$</span><span class="fu">sampler_diagnostics</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -1208,140 +1093,28 @@ memory.</p>
 <h4 id="model_summary-function">
 <code>model_summary()</code> function<a class="anchor" aria-label="anchor" href="#model_summary-function"></a>
 </h4>
-<p>We have <strong>not yet implemented</strong>
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> for <code>bbi_stan_model</code> objects.
-This is a work in progress, but until it is done,
-<code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> currently returns the same fit object that
-was just discussed, and warns you to that effect.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sum1</span> <span class="op">&lt;-</span> <span class="va">fxa</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: model_summary.bbi_stan_model() is not fully implemented.</span></span>
-<span><span class="co">#&gt; A `cmdstanr::CmdStanMCMC` object will be returned for /data/home/kylem/src/github/metrumresearchgroup/bbr.bayes/inst/model/stan/fxa</span></span>
-<span><span class="co">#&gt; Consider calling `read_fit_model()` directly instead.</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">sum1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "CmdStanMCMC" "CmdStanFit"  "R6"</span></span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sum1</span><span class="op">$</span><span class="fu">summary</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="8%">
-<col width="12%">
-<col width="11%">
-<col width="8%">
-<col width="8%">
-<col width="12%">
-<col width="11%">
-<col width="8%">
-<col width="8%">
-<col width="8%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">variable</th>
-<th align="right">mean</th>
-<th align="right">median</th>
-<th align="right">sd</th>
-<th align="right">mad</th>
-<th align="right">q5</th>
-<th align="right">q95</th>
-<th align="right">rhat</th>
-<th align="right">ess_bulk</th>
-<th align="right">ess_tail</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">lp__</td>
-<td align="right">-3680.2814083</td>
-<td align="right">-3680.020000</td>
-<td align="right">8.6471405</td>
-<td align="right">8.6064930</td>
-<td align="right">-3694.8520000</td>
-<td align="right">-3666.465500</td>
-<td align="right">1.0105079</td>
-<td align="right">303.0671</td>
-<td align="right">486.5886</td>
-</tr>
-<tr class="even">
-<td align="left">emax</td>
-<td align="right">98.6297981</td>
-<td align="right">98.795750</td>
-<td align="right">0.9983639</td>
-<td align="right">0.9986052</td>
-<td align="right">96.6787050</td>
-<td align="right">99.874615</td>
-<td align="right">0.9999083</td>
-<td align="right">668.7926</td>
-<td align="right">708.7078</td>
-</tr>
-<tr class="odd">
-<td align="left">ec50Hat</td>
-<td align="right">98.1662662</td>
-<td align="right">98.192400</td>
-<td align="right">3.8890264</td>
-<td align="right">3.9245905</td>
-<td align="right">91.8921650</td>
-<td align="right">104.670850</td>
-<td align="right">1.0031086</td>
-<td align="right">595.0784</td>
-<td align="right">777.1432</td>
-</tr>
-<tr class="even">
-<td align="left">gamma</td>
-<td align="right">0.9891423</td>
-<td align="right">0.986894</td>
-<td align="right">0.0252873</td>
-<td align="right">0.0243814</td>
-<td align="right">0.9514651</td>
-<td align="right">1.033912</td>
-<td align="right">1.0062567</td>
-<td align="right">781.3768</td>
-<td align="right">805.9938</td>
-</tr>
-<tr class="odd">
-<td align="left">sigma</td>
-<td align="right">10.4642216</td>
-<td align="right">10.456450</td>
-<td align="right">0.2041405</td>
-<td align="right">0.2097138</td>
-<td align="right">10.1424650</td>
-<td align="right">10.799060</td>
-<td align="right">1.0014663</td>
-<td align="right">2031.5236</td>
-<td align="right">988.9422</td>
-</tr>
-</tbody>
-</table>
+<p>We have <strong>not yet implemented</strong> <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> for <code>bbi_stan_model</code> objects. This is a work in progress, but the <code><a href="https://mc-stan.org/cmdstanr/reference/CmdStanMCMC.html" class="external-link">?cmdstanr::CmdStanMCMC</a></code> returned by <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code> has various methods for summarizing the outputs.</p>
 </div>
 <div class="section level3">
 <h3 id="model-annotation">Model annotation<a class="anchor" aria-label="anchor" href="#model-annotation"></a>
 </h3>
-<p>Another useful feature of <code>bbr</code> is that it allows you to
-easily annotate and organize your models, for increased traceability and
-reproducibilty of your analysis. We demonstrate this a bit in this
-section, but it is described in more detail in both the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-management-demo.html#annotating-your-model" class="external-link">“Model
-Management” page of MeRGE Expo 1</a> and the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#adding-tags-and-notes" class="external-link">“Getting
-Started with <code>bbr</code>”</a> vignette.</p>
+<p>Another useful feature of <code>bbr</code> is that it allows you to easily annotate and organize your models, for increased traceability and reproducibilty of your analysis. We demonstrate this a bit in this section, but it is described in more detail in both the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-management-demo.html#annotating-your-model" class="external-link">“Model Management” page of MeRGE Expo 1</a> and the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#adding-tags-and-notes" class="external-link">“Getting Started with <code>bbr</code>”</a> vignette.</p>
 <div class="section level4">
 <h4 id="tags">Tags<a class="anchor" aria-label="anchor" href="#tags"></a>
 </h4>
 <p>Our first model already had two tags attached to it.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxa</span><span class="op">$</span><span class="va">tags</span></span>
 <span><span class="co">#&gt; [1] "fxaInhibit1Ncp" "unif emax"</span></span></code></pre></div>
-<p>Note in the call above that we told <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> to
-inherit the tags from the parent model and automatically add them to the
-new model. You can use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag()</a></code> (or any of the other
-helpers in <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">?modify_tags</a></code>) to modify these at any time.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<p>Note in the call above that we told <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code> to inherit the tags from the parent model and automatically add them to the new model. You can use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag()</a></code> (or any of the other helpers in <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">?modify_tags</a></code>) to modify these at any time.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxaNew</span> <span class="op">&lt;-</span> <span class="va">fxaNew</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>        <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag</a></span><span class="op">(</span><span class="st">"unif emax"</span>, <span class="st">"cauchy emax"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fxaNew</span><span class="op">$</span><span class="va">tags</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "fxaInhibit1Ncp" "cauchy emax"</span></span></code></pre></div>
-<p>You can also use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/tags_diff.html" class="external-link">tags_diff()</a></code> to quickly compare two
-models.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<p>You can also use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/tags_diff.html" class="external-link">tags_diff()</a></code> to quickly compare two models.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/tags_diff.html" class="external-link">tags_diff</a></span><span class="op">(</span><span class="va">fxa</span>, <span class="va">fxaNew</span><span class="op">)</span></span>
 <span><span class="co">#&gt; In fxa but not fxaNew:   unif emax</span></span>
 <span><span class="co">#&gt; In fxaNew but not fxa:   cauchy emax</span></span></code></pre></div>
@@ -1349,18 +1122,12 @@ models.</p>
 <div class="section level4">
 <h4 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
 </h4>
-<p>In addition to tags, you can add notes that can be referenced later.
-While tags are intended to be structured and consistent, such that you
-can filter or organize models based on them (shown below), notes can be
-more “free form” narrative comments.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<p>In addition to tags, you can add notes that can be referenced later. While tags are intended to be structured and consistent, such that you can filter or organize models based on them (shown below), notes can be more “free form” narrative comments.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxaNew</span> <span class="op">&lt;-</span> <span class="va">fxaNew</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html" class="external-link">add_notes</a></span><span class="op">(</span><span class="st">"Changed emax from uniform to cauchy distribution"</span><span class="op">)</span></span></code></pre></div>
-<p>While both annotations can be easily accessed from the model object
-with <code>fxaNew$tags</code> or <code>fxaNew$notes</code>, notice that
-they are also displayed, along with other information, when you print
-the model object in your console</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p>While both annotations can be easily accessed from the model object with <code>fxaNew$tags</code> or <code>fxaNew$notes</code>, notice that they are also displayed, along with other information, when you print the model object in your console</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fxaNew</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Status ──────────────────────────────────────────────────────────────────────</span></span>
@@ -1385,29 +1152,16 @@ the model object in your console</p>
 <div class="section level4">
 <h4 id="aside-on-reassignment">Aside on reassignment<a class="anchor" aria-label="anchor" href="#aside-on-reassignment"></a>
 </h4>
-<p>Importantly, <strong>you must reassign to the model object</strong>
-when calling any of these functions that modify it (notice the
-<code>fxaNew &lt;- fxaNew ...</code> above). You can see a list of
-similar functions in the “See Also” section of <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">?modify_tags</a></code>
-or <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html" class="external-link">?modify_notes</a></code>.</p>
+<p>Importantly, <strong>you must reassign to the model object</strong> when calling any of these functions that modify it (notice the <code>fxaNew &lt;- fxaNew ...</code> above). You can see a list of similar functions in the “See Also” section of <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">?modify_tags</a></code> or <code><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html" class="external-link">?modify_notes</a></code>.</p>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="run-log">Run log<a class="anchor" aria-label="anchor" href="#run-log"></a>
 </h2>
-<p>At any point, you can easily construct a “run log” tibble to
-summarize all models run up to this point. You can see much more detail
-about using run logs in both the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#create-a-run-log" class="external-link">“Model
-Summary” page of MeRGE Expo 1</a> and the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#run-log" class="external-link">“Getting
-Started with <code>bbr</code>”</a> vignette.</p>
-<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log()</a></code> returns a tibble which can be manipulated
-like any other tibble. You can also use the <code>.include</code>
-argument to filter to only specific tags or run names, and use
-formatting functions like <code><a href="https://metrumresearchgroup.github.io/bbr/reference/collapse_to_string.html" class="external-link">collapse_to_string()</a></code>,
-<code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">knitr::kable()</a></code>, or many of the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table" class="external-link">functions
-in <code>pmtables</code></a>.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<p>At any point, you can easily construct a “run log” tibble to summarize all models run up to this point. You can see much more detail about using run logs in both the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#create-a-run-log" class="external-link">“Model Summary” page of MeRGE Expo 1</a> and the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#run-log" class="external-link">“Getting Started with <code>bbr</code>”</a> vignette.</p>
+<p>The <code><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log()</a></code> returns a tibble which can be manipulated like any other tibble. You can also use the <code>.include</code> argument to filter to only specific tags or run names, and use formatting functions like <code><a href="https://metrumresearchgroup.github.io/bbr/reference/collapse_to_string.html" class="external-link">collapse_to_string()</a></code>, <code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">knitr::kable()</a></code>, or many of the <a href="https://merge.metrumrg.com/expo/expo1-nonmem-foce/posts/model-summary.html#creating-a-report-ready-run-log-table" class="external-link">functions in <code>pmtables</code></a>.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, .include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fxa"</span>, <span class="st">"fxaNew"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">log_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -1441,29 +1195,22 @@ in <code>pmtables</code></a>.</p>
 <div class="section level3">
 <h3 id="summary-log">Summary log<a class="anchor" aria-label="anchor" href="#summary-log"></a>
 </h3>
-<p>It is often useful to add some basic diagnostic information to a run
-log table. For Stan models, this can be done with
-<code><a href="../reference/stan_summary_log.html">stan_summary_log()</a></code> or <code><a href="../reference/stan_summary_log.html">stan_add_summary()</a></code>. In
-addition to some sampling diagnostics and metadata, this function will
-summarize the specified variables.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<p>It is often useful to add some basic diagnostic information to a run log table. For Stan models, this can be done with <code><a href="../reference/stan_summary_log.html">stan_summary_log()</a></code> or <code><a href="../reference/stan_summary_log.html">stan_add_summary()</a></code>. In addition to some sampling diagnostics and metadata, this function will summarize the specified variables.</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log_df</span> <span class="op">&lt;-</span> <span class="va">log_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/stan_summary_log.html">stan_add_summary</a></span><span class="op">(</span>variables <span class="op">=</span> <span class="st">"emax"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(log_df)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a> [<span class="dv">1</span>] <span class="st">"absolute_model_path"</span> <span class="st">"run"</span>                 <span class="st">"yaml_md5"</span>           </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a> [<span class="dv">4</span>] <span class="st">"model_type"</span>          <span class="st">"description"</span>         <span class="st">"bbi_args"</span>           </span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> [<span class="dv">7</span>] <span class="st">"based_on"</span>            <span class="st">"tags"</span>                <span class="st">"notes"</span>              </span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">10</span>] <span class="st">"star"</span>                <span class="st">"method"</span>              <span class="st">"stan_version"</span>       </span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">13</span>] <span class="st">"nchains"</span>             <span class="st">"iter_warmup"</span>         <span class="st">"iter_sampling"</span>      </span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">16</span>] <span class="st">"num_divergent"</span>       <span class="st">"num_max_treedepth"</span>   <span class="st">"bad_ebfmi"</span>          </span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>[<span class="dv">19</span>] <span class="st">"emax_mean"</span>           <span class="st">"emax_median"</span>         <span class="st">"emax_q5"</span>            </span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">22</span>] <span class="st">"emax_q95"</span>            <span class="st">"emax_rhat"</span>           <span class="st">"emax_ess_bulk"</span>      </span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>[<span class="dv">25</span>] <span class="st">"emax_ess_tail"</span>      </span></code></pre></div>
-<p>There are default functions used for the summarization, which are
-shown below. You can also pass your own summarization functions via the
-<code>summary_fns</code> argument. See <code><a href="../reference/stan_summary_log.html">?stan_summary_log</a></code>
-for more details.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(log_df)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a> [<span class="dv">1</span>] <span class="st">"absolute_model_path"</span> <span class="st">"run"</span>                 <span class="st">"yaml_md5"</span>           </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a> [<span class="dv">4</span>] <span class="st">"model_type"</span>          <span class="st">"description"</span>         <span class="st">"bbi_args"</span>           </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a> [<span class="dv">7</span>] <span class="st">"based_on"</span>            <span class="st">"tags"</span>                <span class="st">"notes"</span>              </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">10</span>] <span class="st">"star"</span>                <span class="st">"method"</span>              <span class="st">"stan_version"</span>       </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>[<span class="dv">13</span>] <span class="st">"nchains"</span>             <span class="st">"iter_warmup"</span>         <span class="st">"iter_sampling"</span>      </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">16</span>] <span class="st">"num_divergent"</span>       <span class="st">"num_max_treedepth"</span>   <span class="st">"bad_ebfmi"</span>          </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>[<span class="dv">19</span>] <span class="st">"emax_mean"</span>           <span class="st">"emax_median"</span>         <span class="st">"emax_q5"</span>            </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">22</span>] <span class="st">"emax_q95"</span>            <span class="st">"emax_rhat"</span>           <span class="st">"emax_ess_bulk"</span>      </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>[<span class="dv">25</span>] <span class="st">"emax_ess_tail"</span>      </span></code></pre></div>
+<p>There are default functions used for the summarization, which are shown below. You can also pass your own summarization functions via the <code>summary_fns</code> argument. See <code><a href="../reference/stan_summary_log.html">?stan_summary_log</a></code> for more details.</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">log_df</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">run</span>, <span class="va">num_divergent</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"emax"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1531,7 +1278,7 @@ for more details.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Seth Green, Kyle Meyer, Tim Waterhouse, Jonathan French.</p>
+<p>Developed by Seth Green, Kyle Meyer, Tim Waterhouse, Jonathan French, Kyle T Baron.</p>
 </div>
 
 <div class="pkgdown">
