@@ -25,8 +25,8 @@ get_config_path.bbi_nmbayes_model <- function(.bbi_object, .check_exists = TRUE)
 }
 
 #' @export
-get_data_path.bbi_nmbayes_model <- function(.mod, ...) {
-  mod_init_path <- file.path(get_output_dir(.mod), "init")
+get_data_path.bbi_nmbayes_model <- function(.bbi_object, ...) {
+  mod_init_path <- file.path(get_output_dir(.bbi_object), "init")
   if (!fs::file_exists(paste0(mod_init_path, ".yaml"))) {
     stop("Cannot extract data path because init submodel doesn't exist.",
          "\nThis is expected if the model has not been executed yet.")
