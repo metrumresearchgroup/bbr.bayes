@@ -27,7 +27,7 @@ remotes::install_github("metrumresearchgroup/bbr.bayes")
 Note that a few `bbr.bayes` dependencies are not on CRAN but are
 available from other CRAN-like repos:
 
- * [bbr] is available on [MPN].  Use snapshot 2023-05-14 or later to
+ * [bbr] is available on [MPN].  Use snapshot 2024-03-01 or later to
    get the minimum version required by `bbr.bayes`.
 
  * [nmrec] is available on [MPN] as of the 2023-09-19 snapshot.
