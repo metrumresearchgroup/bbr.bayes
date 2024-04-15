@@ -43,9 +43,11 @@ and ["Getting Started with bbr.bayes and NONMEM Bayes"][gsn]
 vignettes, is available at
 <https://metrumresearchgroup.github.io/bbr.bayes/>.
 
-### Cheat Sheet
+### Cheat Sheets
 
 <a href="https://metrumresearchgroup.github.io/cheatsheets/bbr_bayes_stan_cheat_sheet.pdf"><img src="https://metrumresearchgroup.github.io/cheatsheets/thumbnails/bbr_bayes_stan_cheat_sheet_thumbnail.png" width="700" height="395"/></a>
+
+<a href="https://metrumresearchgroup.github.io/cheatsheets/bbr_bayes_nonmem_cheat_sheet.pdf"><img src="https://metrumresearchgroup.github.io/cheatsheets/thumbnails/bbr_bayes_nonmem_cheat_sheet_thumbnail.png" width="700" height="395"/></a>
 
 ## Development
 
