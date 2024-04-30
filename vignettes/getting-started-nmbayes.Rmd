@@ -23,7 +23,7 @@ workflow and functionality.
 ```{r, include = FALSE}
 # NOTE: if running chunks interactively we need to load the package first
 #   because renv isolation prevents us from finding a bbr.bayes installation
-if (interactive() || (isTRUE(getOption("knitr.in.progress") && Sys.getenv("DRONE") != "true"))) {
+if (interactive() || (isTRUE(getOption("knitr.in.progress") && Sys.getenv("CI") != "true"))) {
   devtools::load_all()
 }
 ```
