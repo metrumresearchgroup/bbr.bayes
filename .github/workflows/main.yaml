@@ -51,12 +51,16 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
+            any::pkgdown
             any::rcmdcheck
             ${{ env.BBR_PKG }}
           upgrade: 'TRUE'
       - name: Install cmdstan
         uses: ./.github/actions/setup-cmdstan
       - uses: r-lib/actions/check-r-package@v2
+      - name: Check pkgdown
+        shell: Rscript {0}
+        run: pkgdown::check_pkgdown()
   release:
     if: github.ref_type == 'tag'
     name: Upload release
