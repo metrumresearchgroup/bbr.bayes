@@ -1,7 +1,5 @@
 ## Adapted from test-install.R from the cmdstanr package
 
-skip_if_over_rate_limit()
-
 torsten_test_tarball_url_default <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
@@ -13,6 +11,16 @@ reset_cmdstan_path <- function(envir = parent.frame()) {
   withr::defer(cmdstanr::set_cmdstan_path(oldpath), envir = envir)
 }
 
+install_torsten_maybe_skip <- function(...) {
+  skip_if_over_rate_limit()
+  install_torsten(...)
+}
+
+get_torsten_download_url_maybe_skip <- function(...) {
+  skip_if_over_rate_limit()
+  get_torsten_download_url(...)
+}
+
 test_that("install_torsten() successfully installs torsten", {
   skip_long_tests("long-running install_torsten() test")
   reset_cmdstan_path()
@@ -21,7 +29,7 @@ test_that("install_torsten() successfully installs torsten", {
   withr::local_envvar(c("R_USER_DATA_DIR" = dir))
 
   expect_message(
-    install_torsten(quiet = TRUE, release_url = torsten_test_tarball_url),
+    install_torsten_maybe_skip(quiet = TRUE, release_url = torsten_test_tarball_url),
     "* Finished installing Torsten",
     fixed = TRUE
   )
@@ -45,25 +53,25 @@ test_that("install_torsten() errors if invalid version or URL", {
   tdir <- local_test_dir()
 
   expect_error(
-    install_torsten(dir = tdir, quiet = TRUE, version = "0.89.2"),
+    install_torsten_maybe_skip(dir = tdir, quiet = TRUE, version = "0.89.2"),
     "Available Torsten versions do not include 0.89.2"
   )
   expect_error(
-    install_torsten(
+    install_torsten_maybe_skip(
       dir = tdir, quiet = TRUE,
       release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.2.tar.gz")
     ),
     "Download of Torsten failed. Please check if the supplied release URL is valid."
   )
   expect_error(
-    install_torsten(
+    install_torsten_maybe_skip(
       dir = tdir, quiet = TRUE,
       release_url = paste0(TORSTEN_URL_BASE, "0.89.2")
     ),
     "cmdstanr supports installing from .tar.gz archives only"
   )
   expect_error(
-    install_torsten(dir = tdir, quiet = TRUE, version = "0"),
+    install_torsten_maybe_skip(dir = tdir, quiet = TRUE, version = "0"),
     "matches multiple"
   )
 })
@@ -77,12 +85,12 @@ test_that("install_torsten() overwrite check works", {
 
   fs::dir_create(file.path(tdir), "torsten_v0.89.2")
   expect_warning(
-    install_torsten(dir = tdir, release_url = url, quiet = TRUE),
+    install_torsten_maybe_skip(dir = tdir, release_url = url, quiet = TRUE),
     "installation already exists"
   )
   expect_error(
     expect_message(
-      install_torsten(
+      install_torsten_maybe_skip(
         dir = tdir, release_url = url, quiet = TRUE,
         overwrite = TRUE
       ),
@@ -96,17 +104,17 @@ test_that("install_torsten() overwrite check works", {
 
 test_that("install_torsten() works with version and release_url", {
   expect_identical(
-    get_torsten_download_url(version = "0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(version = "0.89.1", release_url = NULL),
     torsten_test_tarball_url_default
   )
 
   expect_identical(
-    get_torsten_download_url(version = "torsten_v0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(version = "torsten_v0.89.1", release_url = NULL),
     torsten_test_tarball_url_default
   )
 
   expect_warning(
-    res <- get_torsten_download_url(
+    res <- get_torsten_download_url_maybe_skip(
       version = "0.89.1",
       # the URL is intentionally invalid to test that the version has higher priority
       release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
@@ -126,7 +134,7 @@ test_that("install_torsten() works with version and release_url", {
   }
 
   v_latest <- url_to_version(
-    get_torsten_download_url(version = NULL, release_url = NULL)
+    get_torsten_download_url_maybe_skip(version = NULL, release_url = NULL)
   )
   expect_true(v_latest > url_to_version(torsten_test_tarball_url_default))
 })
