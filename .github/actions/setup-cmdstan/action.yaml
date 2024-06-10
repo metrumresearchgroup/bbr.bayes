@@ -10,4 +10,4 @@ runs:
         echo "CMDSTAN_PATH=${HOME}/.cmdstan" >>"$GITHUB_ENV"
     - name: Install cmdstan
       shell: Rscript {0}
-      run: cmdstanr::install_cmdstan()
+      run: cmdstanr::install_cmdstan(version = "2.34.1")
