@@ -9,6 +9,7 @@ test_that("check_nonmem_finished(): no output directory", {
 })
 
 test_that("check_nonmem_finished() works: sequence", {
+  testthat::skip("Needs update: gh-146")
   local_dummy_nmbayes("foo")
   mod <- read_model("foo")
 
