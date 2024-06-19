@@ -22,7 +22,6 @@ Bayes models. To decide if a model is finished, it runs
 \code{\link[bbr:check_nonmem_finished]{bbr::check_nonmem_finished()}} on each of the chain submodels.
 }
 \details{
-Note that, like the \code{bbi_nonmem_model} method, this method is intended to be
-called on models that have been submitted. It happens to also return \code{TRUE}
-for un-submitted models, but that should be considered undefined behavior.
+As with regular NONMEM models, the model is \emph{not} considered finished if the
+output directory does not exist.
 }

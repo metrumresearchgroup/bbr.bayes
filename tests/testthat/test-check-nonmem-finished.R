@@ -5,7 +5,7 @@ test_that("check_nonmem_finished(): finished nmbayes model", {
 test_that("check_nonmem_finished(): no output directory", {
   tdir <- local_test_dir()
   mod <- copy_model_from(NMBAYES_MOD1, file.path(tdir, "foo"))
-  expect_true(check_nonmem_finished(mod))
+  expect_false(check_nonmem_finished(mod))
 })
 
 test_that("check_nonmem_finished() works: sequence", {
