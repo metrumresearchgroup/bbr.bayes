@@ -10,7 +10,7 @@ chain_paths(.mod, name = NULL, extension = "")
 \item{.mod}{A \code{bbi_nmbayes_model} object.}
 
 \item{name}{Name of file, without leading path or extension. If unspecified,
-defaults to "{id}-{chain}".}
+defaults to "\{id\}-\{chain\}".}
 
 \item{extension}{File extension.}
 }
