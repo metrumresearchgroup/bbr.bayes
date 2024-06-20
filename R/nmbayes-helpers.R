@@ -36,7 +36,7 @@ get_chain_dirs <- function(.mod) {
 #'
 #' @param .mod A `bbi_nmbayes_model` object.
 #' @param name Name of file, without leading path or extension. If unspecified,
-#'   defaults to "{id}-{chain}".
+#'   defaults to "\{id\}-\{chain\}".
 #' @param extension File extension.
 #' @return Absolute file paths, one for each chain.
 #' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
