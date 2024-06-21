@@ -31,7 +31,7 @@ get_data_path.bbi_nmbayes_model <- function(.bbi_object, ...) {
     return(NextMethod())
   }
 
-  return(get_data_path(read_model(mod_init_path)))
+  return(get_data_path(read_model(mod_init_path), ...))
 }
 
 #' @export
