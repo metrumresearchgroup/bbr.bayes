@@ -41,6 +41,54 @@ test_that("nmbayes: get_data_path() parses model object", {
                                package = "bbr.bayes"))
 })
 
+test_that("nmbayes: get_data_path() supports .check_exists", {
+  tdir <- local_test_dir()
+
+  model_dir <- file.path(tdir, "model", "nonmem", "bayes")
+  fs::dir_create(model_dir)
+  fs::dir_copy(
+    system.file(
+      "model", "nonmem", "bayes", "1100",
+      package = "bbr.bayes", mustWork = TRUE
+    ),
+    model_dir
+  )
+  fs::file_copy(
+    system.file(
+      "model", "nonmem", "bayes", c("1100.ctl", "1100.yaml"),
+      package = "bbr.bayes", mustWork = TRUE
+    ),
+    model_dir
+  )
+
+  mod <- read_model(file.path(model_dir, "1100"))
+  expect_error(get_data_path(mod), "does not exist")
+
+  data_dir <- file.path(tdir, "extdata")
+  data_path <- file.path(data_dir, "analysis3.csv")
+  expect_identical(get_data_path(mod, .check_exists = FALSE), data_path)
+
+  fs::dir_create(data_dir)
+  cat("", file = data_path)
+  expect_identical(get_data_path(mod), data_path)
+})
+
+test_that("nmbayes: get_data_path() falls back to control stream path", {
+  tdir <- local_test_dir()
+  model_dir <- file.path(tdir, "model", "nonmem", "bayes")
+  fs::dir_create(model_dir)
+
+  mod <- copy_model_from(NMBAYES_MOD1, file.path(model_dir, get_model_id(NMBAYES_MOD1)))
+  data_path <- file.path(tdir, "extdata", "analysis3.csv")
+
+  expect_error(get_data_path(mod), "does not exist")
+  expect_identical(get_data_path(mod, .check_exists = FALSE), data_path)
+
+  fs::dir_create(file.path(tdir, "extdata"))
+  cat("", file = data_path)
+  expect_identical(get_data_path(mod), data_path)
+})
+
 ### Stan
 
 test_that("stan: get_model_path() builds the right path", {
