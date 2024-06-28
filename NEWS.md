@@ -1,3 +1,23 @@
+# bbr.bayes 0.2.1
+
+## Changes
+
+* `check_nonmem_finished.bbi_nmbayes_model()` now returns `FALSE` if
+  the output directory doesn't exist, following a `bbr` v1.11.0 change
+  in behavior. (#150)
+
+* The nmbayes `get_data_path()` method has been updated to follow
+  changes in `bbr` v1.10.0.
+
+  * The first argument has been renamed from `.mod` to `.bbi_object`.
+    (#138)
+
+  * The `.check_exists` argument is now supported.  (#152)
+
+  * A data path is now extracted from the control stream if the model
+    has not yet finished.  (#152)
+
+
 # bbr.bayes 0.2.0
 
 ## New features and changes
