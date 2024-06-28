@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bbr.bayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -88,7 +88,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Getting Started with bbr.bayes and NONMEM Bayes</h1>
+      <h1 data-toc-skip>Getting Started with bbr.bayes and NONMEM
+Bayes</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/metrumresearchgroup/bbr.bayes/blob/HEAD/vignettes/getting-started-nmbayes.Rmd" class="external-link"><code>vignettes/getting-started-nmbayes.Rmd</code></a></small>
@@ -101,26 +102,46 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette takes you through some basic scenarios for modeling with NONMEM Bayes using <code>bbr.bayes</code>, introducing you to its standard workflow and functionality.</p>
+<p>This vignette takes you through some basic scenarios for modeling
+with NONMEM Bayes using <code>bbr.bayes</code>, introducing you to its
+standard workflow and functionality.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://metrumresearchgroup.github.io/bbr" class="external-link">bbr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://metrumresearchgroup.github.io/bbr.bayes">bbr.bayes</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p><code>bbr.bayes</code> is an extension to <a href="https://metrumresearchgroup.github.io/bbr" class="external-link">bbr</a> which focuses on traceable and reproducible modeling using Bayesian methods. Note that you will also need to load <code>bbr</code> to use most <code>bbr.bayes</code> functionality.</p>
-<p>The <code>bbr</code> <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting Started with bbr and NONMEM”</a> vignette provides an introduction to modeling with NONMEM using <code>bbr</code>. This vignette covers modeling in NONMEM using Bayesian estimation methods, highlighting ways NONMEM Bayes models in <code>bbr.bayes</code> extend or are different from NONMEM models in <code>bbr</code>.</p>
-<p>See the <a href="./getting-started-stan.html">“Getting Started with bbr.bayes and Stan”</a> vignette for an introduction to modeling with <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
+<p><code>bbr.bayes</code> is an extension to <a href="https://metrumresearchgroup.github.io/bbr" class="external-link">bbr</a> which
+focuses on traceable and reproducible modeling using Bayesian methods.
+Note that you will also need to load <code>bbr</code> to use most
+<code>bbr.bayes</code> functionality.</p>
+<p>The <code>bbr</code> <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting
+Started with bbr and NONMEM”</a> vignette provides an introduction to
+modeling with NONMEM using <code>bbr</code>. This vignette covers
+modeling in NONMEM using Bayesian estimation methods, highlighting ways
+NONMEM Bayes models in <code>bbr.bayes</code> extend or are different
+from NONMEM models in <code>bbr</code>.</p>
+<p>See the <a href="./getting-started-stan.html">“Getting Started with
+bbr.bayes and Stan”</a> vignette for an introduction to modeling with <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installing-and-configuring-bbi">Installing and configuring bbi<a class="anchor" aria-label="anchor" href="#installing-and-configuring-bbi"></a>
 </h2>
-<p><a href="https://github.com/metrumresearchgroup/bbi" class="external-link">bbi</a> is required to work with NONMEM Bayes models. Below is a high-level overview, but please see the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi" class="external-link">“Installing bbi” section</a> of <code>bbr</code>’s “Getting Started with bbr and NONMEM” vignette for detailed instructions.</p>
-<p>First, point the <code>bbr.bbi_exe_path</code> option to a path where <code>bbi</code> is or should be installed. This should be done for each R session, so you likely want to include it in your project’s <code>.Rprofile</code>.</p>
+<p><a href="https://github.com/metrumresearchgroup/bbi" class="external-link">bbi</a> is
+required to work with NONMEM Bayes models. Below is a high-level
+overview, but please see the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#installing-bbi" class="external-link">“Installing
+bbi” section</a> of <code>bbr</code>’s “Getting Started with bbr and
+NONMEM” vignette for detailed instructions.</p>
+<p>First, point the <code>bbr.bbi_exe_path</code> option to a path where
+<code>bbi</code> is or should be installed. This should be done for each
+R session, so you likely want to include it in your project’s
+<code>.Rprofile</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"bbr.bbi_exe_path"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"bin"</span>, <span class="st">"bbi"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Then, if <code>bbi</code> is not already installed at the above location, call <code><a href="https://metrumresearchgroup.github.io/bbr/reference/use_bbi.html" class="external-link">use_bbi()</a></code> to install it.</p>
+<p>Then, if <code>bbi</code> is not already installed at the above
+location, call <code><a href="https://metrumresearchgroup.github.io/bbr/reference/use_bbi.html" class="external-link">use_bbi()</a></code> to install it.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/use_bbi.html" class="external-link">use_bbi</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Finally, use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/bbi_init.html" class="external-link">bbi_init()</a></code> to initialize a directory in which you plan to store models.</p>
+<p>Finally, use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/bbi_init.html" class="external-link">bbi_init()</a></code> to initialize a directory in
+which you plan to store models.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">MODEL_DIR</span> <span class="op">&lt;-</span> <span class="st">"model/nonmem"</span></span>
 <span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/bbi_init.html" class="external-link">bbi_init</a></span><span class="op">(</span></span>
@@ -133,12 +154,27 @@
 <div class="section level2">
 <h2 id="creating-a-nonmem-bayes-model-object">Creating a NONMEM Bayes model object<a class="anchor" aria-label="anchor" href="#creating-a-nonmem-bayes-model-object"></a>
 </h2>
-<p>As in <code>bbr</code>, the <code>bbr.bayes</code> workflow is organized around the concept of <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#create-model-object" class="external-link">model objects</a>. These are S3 objects which you will pass to <code>bbr</code> and <code>bbr.bayes</code> functions that submit, summarize, or manipulate models. A model object points to a path on disk; the set of files that define a model is derived from this path.</p>
-<p>A NONMEM Bayes model is similar to the “regular” NONMEM model from <code>bbr</code>, but it has a more complex structure underneath that is used to represent each MCMC chain. See the <a href="../reference/bbr_nmbayes.html">NONMEM Bayes models in<code>bbr</code></a> reference page for more details.</p>
+<p>As in <code>bbr</code>, the <code>bbr.bayes</code> workflow is
+organized around the concept of <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#create-model-object" class="external-link">model
+objects</a>. These are S3 objects which you will pass to
+<code>bbr</code> and <code>bbr.bayes</code> functions that submit,
+summarize, or manipulate models. A model object points to a path on
+disk; the set of files that define a model is derived from this
+path.</p>
+<p>A NONMEM Bayes model is similar to the “regular” NONMEM model from
+<code>bbr</code>, but it has a more complex structure underneath that is
+used to represent each MCMC chain. See the <a href="../reference/bbr_nmbayes.html">NONMEM Bayes models
+in<code>bbr</code></a> reference page for more details.</p>
 <div class="section level3">
 <h3 id="creating-a-model-object-de-novo">Creating a model object <em>de novo</em><a class="anchor" aria-label="anchor" href="#creating-a-model-object-de-novo"></a>
 </h3>
-<p>A NONMEM bbr.bayes can be created by calling <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> with the path to your control stream <em>without the file extension</em>, in the same way you would create a standard NONMEM model with <code>bbr</code>, as described in the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting Started with bbr and NONMEM”</a> vignette. To tell <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> to create a NONMEM Bayes model, pass “nmbayes” as its <code>.model_type</code> argument.</p>
+<p>A NONMEM bbr.bayes can be created by calling <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>
+with the path to your control stream <em>without the file
+extension</em>, in the same way you would create a standard NONMEM model
+with <code>bbr</code>, as described in the <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html" class="external-link">“Getting
+Started with bbr and NONMEM”</a> vignette. To tell
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code> to create a NONMEM Bayes model, pass “nmbayes”
+as its <code>.model_type</code> argument.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, <span class="fl">1000</span><span class="op">)</span>, .model_type <span class="op">=</span> <span class="st">"nmbayes"</span><span class="op">)</span></span>
 <span><span class="va">mod1000</span><span class="op">$</span><span class="va">model_type</span></span>
@@ -147,23 +183,34 @@
 <div class="section level3">
 <h3 id="creating-a-model-object-from-an-existing-model">Creating a model object from an existing model<a class="anchor" aria-label="anchor" href="#creating-a-model-object-from-an-existing-model"></a>
 </h3>
-<p>While you can create a fresh NONMEM Bayes model with <code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>, more commonly you will create a new NONMEM Bayes model from an existing model, either a regular NONMEM model (<code>bbi_nonmem_model</code>) or a NONMEM Bayes model (<code>bbi_nmbayes_model</code>).</p>
+<p>While you can create a fresh NONMEM Bayes model with
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/new_model.html" class="external-link">new_model()</a></code>, more commonly you will create a new NONMEM
+Bayes model from an existing model, either a regular NONMEM model
+(<code>bbi_nonmem_model</code>) or a NONMEM Bayes model
+(<code>bbi_nmbayes_model</code>).</p>
 <div class="section level4">
 <h4 id="from-a-regular-nonmem-model">From a regular NONMEM model<a class="anchor" aria-label="anchor" href="#from-a-regular-nonmem-model"></a>
 </h4>
-<p>To create a NONMEM Bayes model from a regular NONMEM model, use <code><a href="../reference/copy_model_as_nmbayes.html">copy_model_as_nmbayes()</a></code>.</p>
+<p>To create a NONMEM Bayes model from a regular NONMEM model, use
+<code><a href="../reference/copy_model_as_nmbayes.html">copy_model_as_nmbayes()</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod100</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/read_model.html" class="external-link">read_model</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">MODEL_DIR</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mod1100</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy_model_as_nmbayes.html">copy_model_as_nmbayes</a></span><span class="op">(</span><span class="va">mod100</span>, <span class="fl">1100</span>, .inherit_tags <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag</a></span><span class="op">(</span><span class="st">"FOCE"</span>, <span class="st">"BAYES"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/Rtmp0gF22R/nmbayes-vignette-1be418103fa9/model/nonmem/bayes/1100.ctl</span></span>
-<span></span>
+<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/RtmpvzWHhH/nmbayes-vignette-47f074b9e1d1/model/nonmem/bayes/1100.ctl</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">mod100</span><span class="op">$</span><span class="va">model_type</span></span>
-<span><span class="co">#&gt; [1] "nonmem"</span></span>
-<span><span class="va">mod1100</span><span class="op">$</span><span class="va">model_type</span></span>
+<span><span class="co">#&gt; [1] "nonmem"</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod1100</span><span class="op">$</span><span class="va">model_type</span></span>
 <span><span class="co">#&gt; [1] "nmbayes"</span></span></code></pre></div>
-<p>That will copy over the control stream and YAML , like <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>, and then switch the model type to “nmbayes”. In addition, it will replace the estimation methods with two estimation records that serve as a template for defining a NONMEM Bayes run.</p>
+<p>That will copy over the control stream and YAML , like
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>, and then switch the model type to
+“nmbayes”. In addition, it will replace the estimation methods with two
+estimation records that serve as a template for defining a NONMEM Bayes
+run.</p>
 <pre><code>
 ; TODO: This model was copied by bbr.bayes::copy_model_as_nmbayes().
 ;       nmbayes models require a METHOD=CHAIN estimation record and a
@@ -185,12 +232,16 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <div class="section level4">
 <h4 id="from-a-nonmem-bayes-model">From a NONMEM Bayes model<a class="anchor" aria-label="anchor" href="#from-a-nonmem-bayes-model"></a>
 </h4>
-<p>To create a NONMEM Bayes from another one, use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>, just as you would in <code>bbr</code> to <a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#iteration" class="external-link">copy and iterate on a model</a>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>To create a NONMEM Bayes from another one, use
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from()</a></code>, just as you would in <code>bbr</code> to
+<a href="https://metrumresearchgroup.github.io/bbr/articles/getting-started.html#iteration" class="external-link">copy
+and iterate on a model</a>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1101</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/Rtmp0gF22R/nmbayes-vignette-1be418103fa9/model/nonmem/bayes/1101.ctl</span></span>
-<span></span>
+<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/RtmpvzWHhH/nmbayes-vignette-47f074b9e1d1/model/nonmem/bayes/1101.ctl</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Edit control stream...</span></span>
 <span></span>
 <span><span class="va">mod1101</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_notes.html" class="external-link">add_notes</a></span><span class="op">(</span><span class="va">mod1101</span>, <span class="st">"Switched from foo to bar"</span><span class="op">)</span></span></code></pre></div>
@@ -201,15 +252,23 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <h2 id="submitting-a-model">Submitting a model<a class="anchor" aria-label="anchor" href="#submitting-a-model"></a>
 </h2>
 <p>To execute a model, pass it to <a href="../reference/nmbayes_submit_model.html"><code>submit_model()</code></a>.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/submit_model.html" class="external-link">submit_model</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span></span></code></pre></div>
-<p>Underneath the <a href="../reference/nmbayes_submit_model.html"><code>submit_model()</code></a> method of <code>bbi_nmbayes_model</code> objects creates several sub-models, one for generating the initial values and one for each MCMC chain.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>Underneath the <a href="../reference/nmbayes_submit_model.html"><code>submit_model()</code></a>
+method of <code>bbi_nmbayes_model</code> objects creates several
+sub-models, one for generating the initial values and one for each MCMC
+chain.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">dir</a></span><span class="op">(</span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">get_output_dir</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] "1100-1"       "1100-1.ctl"   "1100-1.yaml"  "1100-2"       "1100-2.ctl"  </span></span>
 <span><span class="co">#&gt;  [6] "1100-2.yaml"  "init"         "init.chn"     "init.ctl"     "init.yaml"   </span></span>
 <span><span class="co">#&gt; [11] "nmbayes.json"</span></span></code></pre></div>
-<p>You shouldn’t often need to directly access these sub-models because <code>bbr.bayes</code> implements custom methods and functions to work with them behind the scenes. For example, to monitor running models, you can use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/check_file.html" class="external-link">tail_lst()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/check_file.html" class="external-link">tail_output()</a></code> in the same way as you would with regular NONMEM models. They will print the result for each chain.</p>
+<p>You shouldn’t often need to directly access these sub-models because
+<code>bbr.bayes</code> implements custom methods and functions to work
+with them behind the scenes. For example, to monitor running models, you
+can use <code><a href="https://metrumresearchgroup.github.io/bbr/reference/check_file.html" class="external-link">tail_lst()</a></code> and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/check_file.html" class="external-link">tail_output()</a></code> in the
+same way as you would with regular NONMEM models. They will print the
+result for each chain.</p>
 </div>
 <div class="section level2">
 <h2 id="summarizing-a-model">Summarizing a model<a class="anchor" aria-label="anchor" href="#summarizing-a-model"></a>
@@ -218,21 +277,29 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <h3 id="read_fit_model">
 <code>read_fit_model()</code><a class="anchor" aria-label="anchor" href="#read_fit_model"></a>
 </h3>
-<p>Once a model finishes running, an important entry point to summarizing the result is the <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">?posterior::draws_array</a></code> object returned by <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>Once a model finishes running, an important entry point to
+summarizing the result is the <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">?posterior::draws_array</a></code>
+object returned by <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code>.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_fit_model.html">read_fit_model</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  50   2 985</span></span>
-<span></span>
+<span><span class="co">#&gt; [1]  50   2 985</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Note that real models should use more chains and iterations!</span></span>
 <span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws-index.html" class="external-link">niterations</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 50</span></span>
-<span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws-index.html" class="external-link">nchains</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
-<span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws-index.html" class="external-link">nvariables</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 50</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws-index.html" class="external-link">nchains</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws-index.html" class="external-link">nvariables</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 985</span></span></code></pre></div>
-<p><a href="https://mc-stan.org/posterior/" class="external-link">posterior</a> provides various functions for inspecting and summarizing posterior draws. For example, you can use <code><a href="https://mc-stan.org/posterior/reference/draws_summary.html" class="external-link">posterior::summarize_draws()</a></code> to generate a table of summary statistics and diagnostics:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><a href="https://mc-stan.org/posterior/" class="external-link">posterior</a> provides various functions for inspecting
+and summarizing posterior draws. For example, you can use
+<code><a href="https://mc-stan.org/posterior/reference/draws_summary.html" class="external-link">posterior::summarize_draws()</a></code> to generate a table of summary
+statistics and diagnostics:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/subset_draws.html" class="external-link">subset_draws</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"THETA"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">posterior</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/posterior/reference/draws_summary.html" class="external-link">summarize_draws</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 10</span></span></span>
@@ -251,10 +318,22 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <h3 id="nm_join_bayes">
 <code>nm_join_bayes()</code><a class="anchor" aria-label="anchor" href="#nm_join_bayes"></a>
 </h3>
-<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes()</a></code> and <code><a href="../reference/nm_join_bayes.html">nm_join_bayes_quick()</a></code> are functions for joining model output summaries to the input data, in a similar way that <code><a href="https://metrumresearchgroup.github.io/bbr/reference/nm_join.html" class="external-link">bbr::nm_join</a></code> does for non-Bayesian NONMEM models.</p>
-<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes()</a></code> selects a subset of the posterior samples. It uses these as input to a user-defined <a href="https://mrgsolve.org/" class="external-link">mrgsolve</a> model to simulate <code>EPRED</code> and <code>IPRED</code> and then summarizes the simulated values in the result. In addition, it feeds the simulated <code>EPRED</code> values to <a href="https://cran.r-project.org/web/packages/npde/index.html" class="external-link">npde</a> to calculate EWRES and NPDE values.</p>
-<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes_quick()</a></code> does <em>not</em> simulate quantities from the posterior samples. It instead summarizes the reported values from the table files. As the name suggests, this is useful for taking an initial look at the results, though simulation-based values should be used for more reliable estimates.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes()</a></code> and <code><a href="../reference/nm_join_bayes.html">nm_join_bayes_quick()</a></code>
+are functions for joining model output summaries to the input data, in a
+similar way that <code><a href="https://metrumresearchgroup.github.io/bbr/reference/nm_join.html" class="external-link">bbr::nm_join</a></code> does for non-Bayesian NONMEM
+models.</p>
+<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes()</a></code> selects a subset of the posterior
+samples. It uses these as input to a user-defined <a href="https://mrgsolve.org/" class="external-link">mrgsolve</a> model to simulate
+<code>EPRED</code> and <code>IPRED</code> and then summarizes the
+simulated values in the result. In addition, it feeds the simulated
+<code>EPRED</code> values to <a href="https://cran.r-project.org/web/packages/npde/index.html" class="external-link">npde</a>
+to calculate EWRES and NPDE values.</p>
+<p><code><a href="../reference/nm_join_bayes.html">nm_join_bayes_quick()</a></code> does <em>not</em> simulate
+quantities from the posterior samples. It instead summarizes the
+reported values from the table files. As the name suggests, this is
+useful for taking an initial look at the results, though
+simulation-based values should be used for more reliable estimates.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nm_join_bayes.html">nm_join_bayes_quick</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">NUM</span>, <span class="va">TIME</span>, <span class="va">EPRED</span>, <span class="va">IPRED</span>, <span class="va">NPDE</span>, <span class="va">EWRES</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4,292 × 6</span></span></span>
@@ -275,8 +354,9 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <div class="section level3">
 <h3 id="accessing-other-information">Accessing other information<a class="anchor" aria-label="anchor" href="#accessing-other-information"></a>
 </h3>
-<p>If you need access to output files in the chain submodels, you can use the <code><a href="../reference/chain_paths.html">chain_paths()</a></code> helper.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>If you need access to output files in the chain submodels, you can
+use the <code><a href="../reference/chain_paths.html">chain_paths()</a></code> helper.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lst_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_paths.html">chain_paths</a></span><span class="op">(</span><span class="va">mod1100</span>, extension <span class="op">=</span> <span class="st">".lst"</span><span class="op">)</span></span>
 <span><span class="va">tab_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chain_paths.html">chain_paths</a></span><span class="op">(</span></span>
 <span>  <span class="va">mod1100</span>,</span>
@@ -284,26 +364,35 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_math.html" class="external-link">path_rel</a></span><span class="op">(</span><span class="va">lst_files</span>, <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">get_output_dir</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1100-1/1100-1.lst 1100-2/1100-2.lst</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">lst_files</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 37211 37211</span></span>
-<span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_math.html" class="external-link">path_rel</a></span><span class="op">(</span><span class="va">tab_files</span>, <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">get_output_dir</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 1100-1/1100.tab 1100-2/1100.tab</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">tab_files</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 1100-1/1100-1.lst 1100-2/1100-2.lst</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">lst_files</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 37211 37211</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_math.html" class="external-link">path_rel</a></span><span class="op">(</span><span class="va">tab_files</span>, <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/get_path_from_object.html" class="external-link">get_output_dir</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 1100-1/1100.tab 1100-2/1100.tab</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.size</a></span><span class="op">(</span><span class="va">tab_files</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 983103 983103</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="model_summary">
 <code>model_summary()</code><a class="anchor" aria-label="anchor" href="#model_summary"></a>
 </h3>
-<p>We have <strong>not yet implemented</strong> <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> for <code>bbi_nmbayes_model</code> objects. This is a work in progress, but the <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">?posterior::draws_array</a></code> object returned by <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code> has <a href="https://mc-stan.org/posterior/reference/index.html#summarizing-and-diagnosing-draws-objects" class="external-link">various methods</a> for summarizing the outputs.</p>
+<p>We have <strong>not yet implemented</strong>
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> for <code>bbi_nmbayes_model</code> objects.
+This is a work in progress, but the <code><a href="https://mc-stan.org/posterior/reference/draws_array.html" class="external-link">?posterior::draws_array</a></code>
+object returned by <code><a href="../reference/read_fit_model.html">read_fit_model()</a></code> has <a href="https://mc-stan.org/posterior/reference/index.html#summarizing-and-diagnosing-draws-objects" class="external-link">various
+methods</a> for summarizing the outputs.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="run-log-and-friends">Run log and friends<a class="anchor" aria-label="anchor" href="#run-log-and-friends"></a>
 </h2>
-<p><code><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/config_log.html" class="external-link">config_log()</a></code>, and <code><a href="https://metrumresearchgroup.github.io/bbr/reference/summary_log.html" class="external-link">summary_log()</a></code> will all find and list NONMEM Bayes models.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p><code><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log()</a></code>, <code><a href="https://metrumresearchgroup.github.io/bbr/reference/config_log.html" class="external-link">config_log()</a></code>, and
+<code><a href="https://metrumresearchgroup.github.io/bbr/reference/summary_log.html" class="external-link">summary_log()</a></code> will all find and list NONMEM Bayes
+models.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/run_log.html" class="external-link">run_log</a></span><span class="op">(</span><span class="va">MODEL_DIR</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">run</span>, <span class="va">model_type</span>, <span class="va">tags</span>, <span class="va">notes</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/collapse_to_string.html" class="external-link">collapse_to_string</a></span><span class="op">(</span><span class="va">tags</span>, <span class="va">notes</span><span class="op">)</span></span>
@@ -314,7 +403,10 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 1000  nmbayes    <span style="color: #BB0000;">NA</span>                                  <span style="color: #BB0000;">NA</span>                      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 1100  nmbayes    two-compartment + absorption, BAYES <span style="color: #BB0000;">NA</span>                      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1101  nmbayes    <span style="color: #BB0000;">NA</span>                                  Switched from foo to bar</span></span></code></pre></div>
-<p>Note, however, that <code><a href="https://metrumresearchgroup.github.io/bbr/reference/summary_log.html" class="external-link">summary_log()</a></code> does not currently include include any useful summary statistics or diagnostics for NONMEM Bayes models. This will be revisited once <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code> is implemented (see above).</p>
+<p>Note, however, that <code><a href="https://metrumresearchgroup.github.io/bbr/reference/summary_log.html" class="external-link">summary_log()</a></code> does not currently
+include include any useful summary statistics or diagnostics for NONMEM
+Bayes models. This will be revisited once <code><a href="https://metrumresearchgroup.github.io/bbr/reference/model_summary.html" class="external-link">model_summary()</a></code>
+is implemented (see above).</p>
 </div>
   </div>
 
@@ -335,7 +427,7 @@ $EST METHOD=NUTS SEED=1 NBURN=250 NITER=NNNN
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
