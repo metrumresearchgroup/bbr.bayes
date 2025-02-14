@@ -162,7 +162,7 @@ get_torsten_download_url <- function(version, release_url) {
     }
 
     release_list <- get_torsten_release_list()
-    release <- release_list[grep(version, release_list, fixed = TRUE)]
+    release <- intersect(expand_torsten_version(version), release_list)
     if(length(release) < 1){
       stop("Available Torsten versions do not include ", version, call. = FALSE)
     }
@@ -185,6 +185,21 @@ get_torsten_download_url <- function(version, release_url) {
   }
 
   return(download_url)
+}
+
+# Expand a Torsten version, spelled as "torsten_vX.Y.Z*", "torsten_X.Y.Z*",
+# "vX.Y.Z*", or "X.Y.Z*", into a vector of all permitted variants.
+expand_torsten_version <- function(version) {
+  version <- stringr::str_remove(version, "^torsten_")
+  version <- stringr::str_remove(version, "^v")
+  return(
+    c(
+      paste0("torsten_v", version),
+      paste0("torsten_", version),
+      paste0("v", version),
+      version
+    )
+  )
 }
 
 check_install_dir <- function(dir_torsten, overwrite = FALSE) {

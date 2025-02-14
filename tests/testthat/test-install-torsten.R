@@ -70,10 +70,6 @@ test_that("install_torsten() errors if invalid version or URL", {
     ),
     "cmdstanr supports installing from .tar.gz archives only"
   )
-  expect_error(
-    install_torsten_maybe_skip(dir = tdir, quiet = TRUE, version = "0"),
-    "matches multiple"
-  )
 })
 
 test_that("install_torsten() overwrite check works", {
@@ -137,4 +133,29 @@ test_that("install_torsten() works with version and release_url", {
     get_torsten_download_url_maybe_skip(version = NULL, release_url = NULL)
   )
   expect_true(v_latest > url_to_version(torsten_test_tarball_url_default))
+})
+
+test_that("expand_torsten_version() works", {
+  for (v in c("torsten_v1.2.3", "torsten_1.2.3", "v1.2.3", "1.2.3")) {
+    expect_identical(
+      expand_torsten_version(!!v),
+      c(
+        "torsten_v1.2.3",
+        "torsten_1.2.3",
+        "v1.2.3",
+        "1.2.3"
+      )
+    )
+  }
+  for (v in c("torsten_v1.2.3rc0", "torsten_1.2.3rc0", "v1.2.3rc0", "1.2.3rc0")) {
+    expect_identical(
+      expand_torsten_version(!!v),
+      c(
+        "torsten_v1.2.3rc0",
+        "torsten_1.2.3rc0",
+        "v1.2.3rc0",
+        "1.2.3rc0"
+      )
+    )
+  }
 })
