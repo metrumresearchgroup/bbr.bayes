@@ -1,8 +1,8 @@
 ## Adapted from test-install.R from the cmdstanr package
 
-torsten_version <- "0.89.1" # version used for actual installation
+torsten_version <- "0.91.0" # version used for actual installation
 torsten_test_tarball_url_default <- paste0(
-  TORSTEN_URL_BASE, "torsten_v", torsten_version, ".tar.gz"
+  TORSTEN_URL_BASE, "v", torsten_version, ".tar.gz"
 )
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
@@ -138,7 +138,12 @@ test_that("install_torsten() works with version and release_url", {
   v_latest <- url_to_version(
     get_torsten_download_url_maybe_skip(version = NULL, release_url = NULL)
   )
-  expect_true(v_latest > url_to_version(torsten_test_tarball_url_default))
+  # Ideally the torsten_test_tarball_url_default version would not be the latest
+  # version so that get_torsten_download_url() and
+  # get_torsten_download_url(version = N) would return different results (i.e.
+  # we could use ">" rather than ">=" below). However, at the moment (2025-02),
+  # the latest version is 0.91.0 and earlier ones fail to build on ubuntu-24.04.
+  expect_true(v_latest >= url_to_version(torsten_test_tarball_url_default))
 })
 
 test_that("expand_torsten_version() works", {
