@@ -75,6 +75,9 @@ install_torsten <- function(dir = NULL,
   ##.  M1 Macs. Is this needed?
   ## * install_torsten does not provide support for WSL. Should it?
 
+  checkmate::assert_string(dir, null.ok = TRUE)
+  checkmate::assert_string(version, null.ok = TRUE)
+
   if (isTRUE(check_toolchain)) {
     cmdstanr::check_cmdstan_toolchain(fix = FALSE, quiet = quiet)
   }
