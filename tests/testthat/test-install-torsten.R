@@ -1,6 +1,9 @@
 ## Adapted from test-install.R from the cmdstanr package
 
-torsten_test_tarball_url_default <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
+torsten_version <- "0.89.1" # version used for actual installation
+torsten_test_tarball_url_default <- paste0(
+  TORSTEN_URL_BASE, "torsten_v", torsten_version, ".tar.gz"
+)
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
   torsten_test_tarball_url <- torsten_test_tarball_url_default
@@ -100,18 +103,21 @@ test_that("install_torsten() overwrite check works", {
 
 test_that("install_torsten() works with version and release_url", {
   expect_identical(
-    get_torsten_download_url_maybe_skip(version = "0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(version = torsten_version, release_url = NULL),
     torsten_test_tarball_url_default
   )
 
   expect_identical(
-    get_torsten_download_url_maybe_skip(version = "torsten_v0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(
+      version = paste0("torsten_v", torsten_version),
+      release_url = NULL
+    ),
     torsten_test_tarball_url_default
   )
 
   expect_warning(
     res <- get_torsten_download_url_maybe_skip(
-      version = "0.89.1",
+      version = torsten_version,
       # the URL is intentionally invalid to test that the version has higher priority
       release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
     ),
