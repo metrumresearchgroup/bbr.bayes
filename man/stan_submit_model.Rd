@@ -36,7 +36,11 @@ local execution.}
 \item{.overwrite}{Logical to specify whether or not to overwrite existing
 model output from a previous run. If \code{NULL}, the default, will defer to
 setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will override any
-settings in \code{.bbi_args} or \code{bbi.yaml}.}
+settings in \code{.bbi_args} or \code{bbi.yaml}. \strong{The exception to this are
+bootstrap runs (\code{bbi_nmboot_model} objects).} For bootstrap runs, this
+defaults to \code{FALSE} and does \emph{not} respect any setting passed via
+\code{.bbi_args} or a \code{bbi.yaml} config file. To overwrite existing bootstrap
+output, a user must pass \code{TRUE} through this argument.}
 }
 \description{
 Run the model via \pkg{cmdstanr}, selecting the \code{CmdStanModel} method based
