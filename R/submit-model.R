@@ -61,9 +61,9 @@ submit_model.bbi_nmbayes_model <- function(
     .bbi_args = .bbi_args,
     .overwrite = TRUE,
     .config_path = .config_path,
-    .wait = .wait,
-    # Regardless of the mode for the main sampling (triggered by run_chains),
-    # this upfront initialization should always be done locally.
+    # Always generate the inits synchronously, regardless of the
+    # caller-specified values for .wait and .mode.
+    .wait = TRUE,
     .mode = "local",
     .dry_run = FALSE)
 

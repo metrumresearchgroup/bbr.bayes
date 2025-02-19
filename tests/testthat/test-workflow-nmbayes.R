@@ -101,3 +101,16 @@ test_that("nmbayes: summary_log() captures runs correctly", {
   expect_setequal(basename(log_df[[ABS_MOD_PATH]]),
                   c("1100", "1101", "1102"))
 })
+
+test_that("nmbayes: submit_model() generates inits synchronously", {
+  mod_parent <- read_model(file.path("model", "nonmem", "bayes", "1101"))
+  mod <- copy_model_from(mod_parent)
+  # Note: this serves as a regression test that the model submission to generate
+  # init.chn happens synchronously. It's possible for any given run of this test
+  # to miss a regression because an asynchronous init submission _could_ create
+  # init.chn before the check below fires, but that should be very unlikely.
+  res <- submit_model(mod, .mode = "sge", .wait = FALSE, .dry_run = TRUE)
+  checkmate::expect_file_exists(file.path(get_output_dir(mod), "init.chn"))
+  expect_length(res, 1)
+  expect_contains(res[[1]][["cmd_args"]], "sge")
+})
