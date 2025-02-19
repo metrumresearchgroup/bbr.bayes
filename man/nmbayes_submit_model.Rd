@@ -10,7 +10,7 @@
   .bbi_args = NULL,
   .mode = getOption("bbr.bbi_exe_mode"),
   ...,
-  .overwrite = NULL,
+  .overwrite = FALSE,
   .config_path = NULL,
   .wait = TRUE,
   .dry_run = FALSE

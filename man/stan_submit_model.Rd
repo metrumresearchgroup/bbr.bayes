@@ -11,7 +11,7 @@
   .bbi_args = NULL,
   .mode = c("local"),
   ...,
-  .overwrite = NULL
+  .overwrite = FALSE
 )
 
 \method{submit_model}{bbi_stan_gq_model}(
@@ -19,7 +19,7 @@
   .bbi_args = NULL,
   .mode = c("local"),
   ...,
-  .overwrite = NULL
+  .overwrite = FALSE
 )
 }
 \arguments{
