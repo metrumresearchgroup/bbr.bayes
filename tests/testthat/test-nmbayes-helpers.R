@@ -91,3 +91,23 @@ test_that("chain_paths_impl() optionally checks existence: some missing", {
     chain_paths_impl(mod, extension = ".ext", check_exists = "all_or_none"),
     "Missing")
 })
+
+test_that("rename_nm_as_rvar works", {
+  cases <- list(
+    list(input = "THETA3", want = "THETA[3]"),
+    list(input = "THETA33", want = "THETA[33]"),
+    list(input = "THETA01", want = "THETA[01]"),
+    list(input = "OMEGA(1,1)", want = "OMEGA[1,1]"),
+    list(input = "OMEGA(12,13)", want = "OMEGA[12,13]"),
+    list(
+      input = c("THETA55", "SIGMA(60,1)"),
+      want = c("THETA[55]", "SIGMA[60,1]")
+    )
+  )
+  for (case in cases) {
+    expect_identical(
+      rename_nm_as_rvar(!!case$input),
+      !!case$want
+    )
+  }
+})

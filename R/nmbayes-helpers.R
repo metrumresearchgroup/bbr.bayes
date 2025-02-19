@@ -118,6 +118,6 @@ fread_peek_at_columns <- function(file, skip = 1) {
 #'
 #' @noRd
 rename_nm_as_rvar <- function(name) {
-  stringr::str_replace(name, "(.*)([0-9]+)$", "\\1[\\2]") %>%
+  stringr::str_replace(name, "(.*?)([0-9]+)$", "\\1[\\2]") %>%
     stringr::str_replace("(.*)\\(([,0-9]+)\\)$", "\\1[\\2]")
 }
