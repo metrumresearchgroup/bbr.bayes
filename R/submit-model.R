@@ -8,6 +8,10 @@
 #' `METHOD=NUTS` runs).
 #'
 #' @name nmbayes_submit_model
+#' @param .overwrite Whether to overwrite an existing output directory. Note
+#'   that, unlike the submission method for regular `bbi_nonmem_model` objects,
+#'   this method does not inspect `.bbi_args` or `bbi.yaml` when the value is
+#'   `NULL`; any value other than `TRUE` is treated the same as `FALSE`.
 #' @param .dry_run Do not submit the sampling runs; just report what command
 #'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
 #'   is executed to generate the initialization values regardless of this value.
@@ -107,6 +111,10 @@ submit_model.bbi_nmbayes_model <- function(
 #' @param .mode Mode of model submission. Stan models currently only support
 #'   local execution.
 #' @param ... Additional arguments (ignored for all Stan models).
+#' @param .overwrite Whether to overwrite an existing output directory. Note
+#'   that, unlike the submission method for regular `bbi_nonmem_model` objects,
+#'   this method does not inspect `.bbi_args` or `bbi.yaml` when the value is
+#'   `NULL`; any value other than `TRUE` is treated the same as `FALSE`.
 #' @seealso [bbr_stan] for a high-level description of how Stan models are
 #'   structured
 NULL

@@ -30,14 +30,10 @@ option. This option defaults to "sge" on Linux and "local" otherwise.}
 
 \item{...}{args passed through to \code{bbi_exec()}}
 
-\item{.overwrite}{Logical to specify whether or not to overwrite existing
-model output from a previous run. If \code{NULL}, the default, will defer to
-setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will override any
-settings in \code{.bbi_args} or \code{bbi.yaml}. \strong{The exception to this are
-bootstrap runs (\code{bbi_nmboot_model} objects).} For bootstrap runs, this
-defaults to \code{FALSE} and does \emph{not} respect any setting passed via
-\code{.bbi_args} or a \code{bbi.yaml} config file. To overwrite existing bootstrap
-output, a user must pass \code{TRUE} through this argument.}
+\item{.overwrite}{Whether to overwrite an existing output directory. Note
+that, unlike the submission method for regular \code{bbi_nonmem_model} objects,
+this method does not inspect \code{.bbi_args} or \code{bbi.yaml} when the value is
+\code{NULL}; any value other than \code{TRUE} is treated the same as \code{FALSE}.}
 
 \item{.config_path}{Path to a bbi configuration file. If \code{NULL}, the
 default, will attempt to use a \code{bbi.yaml} in the same directory as the
