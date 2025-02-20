@@ -8,6 +8,10 @@
 #' `METHOD=NUTS` runs).
 #'
 #' @name nmbayes_submit_model
+#' @param .overwrite Whether to overwrite an existing output directory. Note
+#'   that, unlike the submission method for regular `bbi_nonmem_model` objects,
+#'   this method does not inspect `.bbi_args` or `bbi.yaml` when the value is
+#'   `NULL`; any value other than `TRUE` is treated the same as `FALSE`.
 #' @param .dry_run Do not submit the sampling runs; just report what command
 #'   would be executed via the returned object. **Note**: The METHOD=CHAIN model
 #'   is executed to generate the initialization values regardless of this value.
@@ -23,7 +27,7 @@ submit_model.bbi_nmbayes_model <- function(
   .bbi_args = NULL,
   .mode = getOption("bbr.bbi_exe_mode"),
   ...,
-  .overwrite = NULL,
+  .overwrite = FALSE,
   .config_path = NULL,
   .wait = TRUE,
   .dry_run = FALSE
@@ -107,6 +111,10 @@ submit_model.bbi_nmbayes_model <- function(
 #' @param .mode Mode of model submission. Stan models currently only support
 #'   local execution.
 #' @param ... Additional arguments (ignored for all Stan models).
+#' @param .overwrite Whether to overwrite an existing output directory. Note
+#'   that, unlike the submission method for regular `bbi_nonmem_model` objects,
+#'   this method does not inspect `.bbi_args` or `bbi.yaml` when the value is
+#'   `NULL`; any value other than `TRUE` is treated the same as `FALSE`.
 #' @seealso [bbr_stan] for a high-level description of how Stan models are
 #'   structured
 NULL
@@ -118,7 +126,7 @@ submit_model.bbi_stan_model <- function(
   .bbi_args = NULL,
   .mode = c("local"),
   ...,
-  .overwrite = NULL
+  .overwrite = FALSE
 ) {
   rlang::check_dots_empty()
   if (!is.null(.bbi_args)) {
@@ -136,7 +144,7 @@ submit_model.bbi_stan_model <- function(
 #' @rdname stan_submit_model
 #' @export
 submit_model.bbi_stan_gq_model <- function(.mod, .bbi_args = NULL, .mode = c("local"),
-                                           ..., .overwrite = NULL) {
+                                           ..., .overwrite = FALSE) {
   rlang::check_dots_empty()
   if (!is.null(.bbi_args)) {
     stop(".bbi_args must be NULL for model_type=stan_gq")
@@ -170,7 +178,7 @@ submit_model.bbi_stan_gq_model <- function(.mod, .bbi_args = NULL, .mode = c("lo
 submit_stan_model_cmdstanr <- function(.mod,
                                        .method = c("sample", "generate_quantities"),
                                        .mode = c("local"), # TODO: add sge mode for cmdstanr
-                                       .overwrite = NULL) {
+                                       .overwrite = FALSE) {
 
   # check against YAML
   check_yaml_in_sync(.mod)

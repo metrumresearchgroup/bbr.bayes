@@ -17,9 +17,9 @@
 otherwise.
 }
 \description{
-This function implements the \code{\link[bbr:check_nonmem_finished]{bbr::check_nonmem_finished()}} method for NONMEM
+This function implements the \code{\link[bbr:model_status]{bbr::check_nonmem_finished()}} method for NONMEM
 Bayes models. To decide if a model is finished, it runs
-\code{\link[bbr:check_nonmem_finished]{bbr::check_nonmem_finished()}} on each of the chain submodels.
+\code{\link[bbr:model_status]{bbr::check_nonmem_finished()}} on each of the chain submodels.
 }
 \details{
 As with regular NONMEM models, the model is \emph{not} considered finished if the

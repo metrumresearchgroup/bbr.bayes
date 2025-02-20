@@ -10,7 +10,7 @@
   .bbi_args = NULL,
   .mode = getOption("bbr.bbi_exe_mode"),
   ...,
-  .overwrite = NULL,
+  .overwrite = FALSE,
   .config_path = NULL,
   .wait = TRUE,
   .dry_run = FALSE
@@ -24,16 +24,16 @@ formatted like \code{list("nm_version" = "nm74gf_nmfe", "json" = T, "threads" = 
 not support changing the output directory (including through the model or
 global YAML files).}
 
-\item{.mode}{Either \code{"sge"}, the default, to submit model(s) to the grid or
-\code{"local"} for local execution. This can be passed directly to this argument
-or set globally with \code{options("bbr.bbi_exe_mode")}.}
+\item{.mode}{Mode for model submission: "local", "sge", or "slurm". If
+unspecified, the value is set to the value of the \code{bbr.bbi_exe_mode}
+option. This option defaults to "sge" on Linux and "local" otherwise.}
 
 \item{...}{args passed through to \code{bbi_exec()}}
 
-\item{.overwrite}{Logical to specify whether or not to overwrite existing
-model output from a previous run. If \code{NULL}, the default, will defer to
-setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will override any
-settings in \code{.bbi_args} or \code{bbi.yaml}.}
+\item{.overwrite}{Whether to overwrite an existing output directory. Note
+that, unlike the submission method for regular \code{bbi_nonmem_model} objects,
+this method does not inspect \code{.bbi_args} or \code{bbi.yaml} when the value is
+\code{NULL}; any value other than \code{TRUE} is treated the same as \code{FALSE}.}
 
 \item{.config_path}{Path to a bbi configuration file. If \code{NULL}, the
 default, will attempt to use a \code{bbi.yaml} in the same directory as the

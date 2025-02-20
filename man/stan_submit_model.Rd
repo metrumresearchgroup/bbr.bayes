@@ -11,7 +11,7 @@
   .bbi_args = NULL,
   .mode = c("local"),
   ...,
-  .overwrite = NULL
+  .overwrite = FALSE
 )
 
 \method{submit_model}{bbi_stan_gq_model}(
@@ -19,7 +19,7 @@
   .bbi_args = NULL,
   .mode = c("local"),
   ...,
-  .overwrite = NULL
+  .overwrite = FALSE
 )
 }
 \arguments{
@@ -33,10 +33,10 @@ local execution.}
 
 \item{...}{Additional arguments (ignored for all Stan models).}
 
-\item{.overwrite}{Logical to specify whether or not to overwrite existing
-model output from a previous run. If \code{NULL}, the default, will defer to
-setting in \code{.bbi_args} or \code{bbi.yaml}. If \emph{not} \code{NULL} will override any
-settings in \code{.bbi_args} or \code{bbi.yaml}.}
+\item{.overwrite}{Whether to overwrite an existing output directory. Note
+that, unlike the submission method for regular \code{bbi_nonmem_model} objects,
+this method does not inspect \code{.bbi_args} or \code{bbi.yaml} when the value is
+\code{NULL}; any value other than \code{TRUE} is treated the same as \code{FALSE}.}
 }
 \description{
 Run the model via \pkg{cmdstanr}, selecting the \code{CmdStanModel} method based
