@@ -26,7 +26,12 @@ local_stan_bern_model <- function(clean = TRUE, .local_envir = parent.frame()) {
   tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)
   mdir <- file.path(tdir, "model", "stan")
   fs::dir_create(mdir)
-  copy_model_from(STAN_MOD3, file.path(mdir, "bern"))
+
+  mod <- read_model(
+    system.file("model", "stan", "bern", package = "bbr.bayes", mustWork = TRUE)
+  )
+  copy_model_from(mod, file.path(mdir, "bern"))
+
   withr::local_dir(tdir, .local_envir = .local_envir)
 }
 

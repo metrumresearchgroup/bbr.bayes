@@ -1,6 +1,9 @@
 ## Adapted from test-install.R from the cmdstanr package
 
-torsten_test_tarball_url_default <- paste0(TORSTEN_URL_BASE, "torsten_v0.89.1.tar.gz")
+torsten_version <- "0.91.0" # version used for actual installation
+torsten_test_tarball_url_default <- paste0(
+  TORSTEN_URL_BASE, "v", torsten_version, ".tar.gz"
+)
 torsten_test_tarball_url <- Sys.getenv("TORSTEN_TEST_TARBALL_URL")
 if (!nzchar(torsten_test_tarball_url)) {
   torsten_test_tarball_url <- torsten_test_tarball_url_default
@@ -70,10 +73,6 @@ test_that("install_torsten() errors if invalid version or URL", {
     ),
     "cmdstanr supports installing from .tar.gz archives only"
   )
-  expect_error(
-    install_torsten_maybe_skip(dir = tdir, quiet = TRUE, version = "0"),
-    "matches multiple"
-  )
 })
 
 test_that("install_torsten() overwrite check works", {
@@ -104,18 +103,21 @@ test_that("install_torsten() overwrite check works", {
 
 test_that("install_torsten() works with version and release_url", {
   expect_identical(
-    get_torsten_download_url_maybe_skip(version = "0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(version = torsten_version, release_url = NULL),
     torsten_test_tarball_url_default
   )
 
   expect_identical(
-    get_torsten_download_url_maybe_skip(version = "torsten_v0.89.1", release_url = NULL),
+    get_torsten_download_url_maybe_skip(
+      version = paste0("torsten_v", torsten_version),
+      release_url = NULL
+    ),
     torsten_test_tarball_url_default
   )
 
   expect_warning(
     res <- get_torsten_download_url_maybe_skip(
-      version = "0.89.1",
+      version = torsten_version,
       # the URL is intentionally invalid to test that the version has higher priority
       release_url = paste0(TORSTEN_URL_BASE, "torsten_v0.89.3.tar.gz")
     ),
@@ -136,5 +138,35 @@ test_that("install_torsten() works with version and release_url", {
   v_latest <- url_to_version(
     get_torsten_download_url_maybe_skip(version = NULL, release_url = NULL)
   )
-  expect_true(v_latest > url_to_version(torsten_test_tarball_url_default))
+  # Ideally the torsten_test_tarball_url_default version would not be the latest
+  # version so that get_torsten_download_url() and
+  # get_torsten_download_url(version = N) would return different results (i.e.
+  # we could use ">" rather than ">=" below). However, at the moment (2025-02),
+  # the latest version is 0.91.0 and earlier ones fail to build on ubuntu-24.04.
+  expect_true(v_latest >= url_to_version(torsten_test_tarball_url_default))
+})
+
+test_that("expand_torsten_version() works", {
+  for (v in c("torsten_v1.2.3", "torsten_1.2.3", "v1.2.3", "1.2.3")) {
+    expect_identical(
+      expand_torsten_version(!!v),
+      c(
+        "torsten_v1.2.3",
+        "torsten_1.2.3",
+        "v1.2.3",
+        "1.2.3"
+      )
+    )
+  }
+  for (v in c("torsten_v1.2.3rc0", "torsten_1.2.3rc0", "v1.2.3rc0", "1.2.3rc0")) {
+    expect_identical(
+      expand_torsten_version(!!v),
+      c(
+        "torsten_v1.2.3rc0",
+        "torsten_1.2.3rc0",
+        "v1.2.3rc0",
+        "1.2.3rc0"
+      )
+    )
+  }
 })
