@@ -112,12 +112,12 @@ fread_peek_at_columns <- function(file, skip = 1) {
 
 #' Rename NONMEM variables for rvar compatibility
 #'
-#' NONMEM uses labels like `THETA1` and `OMEGA(1,1)`for its flattened variables.
+#' NONMEM uses labels like `THETA1` and `OMEGA(1,1)` for its flattened variables.
 #' \pkg{posterior}, on the other hand, constructs its random variable data type
 #' with labels that use square brackets, e.g., `THETA[1]` or `OMEGA[1,1]`.
 #'
 #' @noRd
-rename_nm_as_rvar  <- function(name) {
-  stringr::str_replace(name, "(.*)([0-9]+)$", "\\1[\\2]") %>%
+rename_nm_as_rvar <- function(name) {
+  stringr::str_replace(name, "(.*?)([0-9]+)$", "\\1[\\2]") %>%
     stringr::str_replace("(.*)\\(([,0-9]+)\\)$", "\\1[\\2]")
 }
