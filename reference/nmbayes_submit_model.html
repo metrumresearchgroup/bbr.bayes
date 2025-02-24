@@ -5,7 +5,7 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -19,7 +19,7 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bbr.bayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
       </span>
     </div>
 
@@ -30,7 +30,7 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -46,14 +46,14 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/metrumresearchgroup/bbr.bayes" class="external-link">
     <span class="fa fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
@@ -70,13 +70,13 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for bbi_nmbayes_model</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'bbi_nmbayes_model'</span></span>
 <span><span class="fu">submit_model</span><span class="op">(</span></span>
 <span>  <span class="va">.mod</span>,</span>
 <span>  .bbi_args <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  .mode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"bbr.bbi_exe_mode"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  .overwrite <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  .config_path <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  .wait <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  .dry_run <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -85,47 +85,49 @@ METHOD=NUTS runs)."><meta property="og:image" content="https://metrumresearchgro
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>.mod</dt>
+
+
+<dl><dt id="arg--mod">.mod<a class="anchor" aria-label="anchor" href="#arg--mod"></a></dt>
 <dd><p>The model object to submit.</p></dd>
 
 
-<dt>.bbi_args</dt>
+<dt id="arg--bbi-args">.bbi_args<a class="anchor" aria-label="anchor" href="#arg--bbi-args"></a></dt>
 <dd><p>A named list specifying arguments to pass to bbi
 formatted like <code>list("nm_version" = "nm74gf_nmfe", "json" = T, "threads" = 4)</code>. Run <code><a href="https://metrumresearchgroup.github.io/bbr/reference/print_bbi_args.html" class="external-link">print_bbi_args()</a></code> to see valid arguments. Note that bbr does
 not support changing the output directory (including through the model or
 global YAML files).</p></dd>
 
 
-<dt>.mode</dt>
-<dd><p>Either <code>"sge"</code>, the default, to submit model(s) to the grid or
-<code>"local"</code> for local execution. This can be passed directly to this argument
-or set globally with <code>options("bbr.bbi_exe_mode")</code>.</p></dd>
+<dt id="arg--mode">.mode<a class="anchor" aria-label="anchor" href="#arg--mode"></a></dt>
+<dd><p>Mode for model submission: "local", "sge", or "slurm". If
+unspecified, the value is set to the value of the <code>bbr.bbi_exe_mode</code>
+option. This option defaults to "sge" on Linux and "local" otherwise.</p></dd>
 
 
-<dt>...</dt>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>args passed through to <code>bbi_exec()</code></p></dd>
 
 
-<dt>.overwrite</dt>
-<dd><p>Logical to specify whether or not to overwrite existing
-model output from a previous run. If <code>NULL</code>, the default, will defer to
-setting in <code>.bbi_args</code> or <code>bbi.yaml</code>. If <em>not</em> <code>NULL</code> will override any
-settings in <code>.bbi_args</code> or <code>bbi.yaml</code>.</p></dd>
+<dt id="arg--overwrite">.overwrite<a class="anchor" aria-label="anchor" href="#arg--overwrite"></a></dt>
+<dd><p>Whether to overwrite an existing output directory. Note
+that, unlike the submission method for regular <code>bbi_nonmem_model</code> objects,
+this method does not inspect <code>.bbi_args</code> or <code>bbi.yaml</code> when the value is
+<code>NULL</code>; any value other than <code>TRUE</code> is treated the same as <code>FALSE</code>.</p></dd>
 
 
-<dt>.config_path</dt>
+<dt id="arg--config-path">.config_path<a class="anchor" aria-label="anchor" href="#arg--config-path"></a></dt>
 <dd><p>Path to a bbi configuration file. If <code>NULL</code>, the
 default, will attempt to use a <code>bbi.yaml</code> in the same directory as the
 model.</p></dd>
 
 
-<dt>.wait</dt>
+<dt id="arg--wait">.wait<a class="anchor" aria-label="anchor" href="#arg--wait"></a></dt>
 <dd><p>If <code>TRUE</code>, the default, wait for the bbi process to return
 before this function call returns. If <code>FALSE</code> function will return while
 bbi process runs in the background.</p></dd>
 
 
-<dt>.dry_run</dt>
+<dt id="arg--dry-run">.dry_run<a class="anchor" aria-label="anchor" href="#arg--dry-run"></a></dt>
 <dd><p>Do not submit the sampling runs; just report what command
 would be executed via the returned object. <strong>Note</strong>: The METHOD=CHAIN model
 is executed to generate the initialization values regardless of this value.</p></dd>
@@ -149,15 +151,15 @@ models are structured</p></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

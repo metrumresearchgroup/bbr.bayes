@@ -1,135 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/404.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-nmbayes.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/index.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/add_file_to_model_dir.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_nmbayes.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/build_data.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/build_stan_bbi_config.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/chain_paths.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/check_stan_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/check_up_to_date_stan_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/copy_model_as_nmbayes.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/copy_model_as_stan_gq.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/find_stan_gq_children.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/get_stan_gq_parent.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/import_stan_init.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/install_torsten.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_diff.bbi_stan_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_summary.bbi_nmbayes_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_summary.bbi_stan_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/modify_stan_gq_parent.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nm_join_bayes.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_check_nonmem_finished.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_submit_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_tail.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/open_stan_file.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/read_fit_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/safe_call_sourced.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/safe_source_function.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/save_fit_stanmod.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/scaffold_missing_stan_files.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/shrinkage.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_summary_log.html</loc>
-  </url>
-  <url>
-    <loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stanargs.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/404.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/LICENSE-text.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/LICENSE.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-nmbayes.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/getting-started-stan.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/articles/index.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/authors.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/index.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/news/index.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/add_file_to_model_dir.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_as_draws.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_nmbayes.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/bbr_stan.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/build_data.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/build_stan_bbi_config.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/chain_paths.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/check_stan_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/check_up_to_date_stan_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/copy_model_as_nmbayes.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/copy_model_as_stan_gq.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/find_stan_gq_children.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/get_stan_gq_parent.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/import_stan_init.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/index.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/install_torsten.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_diff.bbi_stan_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_summary.bbi_nmbayes_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/model_summary.bbi_stan_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/modify_stan_gq_parent.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nm_join_bayes.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_check_nonmem_finished.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_submit_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/nmbayes_tail.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/open_stan_file.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/pipe.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/read_fit_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/safe_call_sourced.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/safe_source_function.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/save_fit_stanmod.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/scaffold_missing_stan_files.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/shrinkage.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_submit_model.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stan_summary_log.html</loc></url>
+<url><loc>https://metrumresearchgroup.github.io/bbr.bayes/reference/stanargs.html</loc></url>
 </urlset>
+
