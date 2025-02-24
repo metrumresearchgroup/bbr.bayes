@@ -1,7 +1,7 @@
 Type: Package
 Package: bbr.bayes
 Title: Bayesian modeling with BBR
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Seth",
              family = "Green",
@@ -24,7 +24,7 @@ Authors@R:
              email = "kyleb@metrumrg.com",
              comment = c(ORCID = "0000-0001-7252-5656")))
 Description: This package extends the BBR package for Bayesian modeling.
-    It adds supports for running 'Stan' models via the 'CmdStanR' interface and
+    It adds support for running 'Stan' models via the 'CmdStanR' interface and
     for running NONMEM models with Bayesian estimation methods via 'bbi'.
 License: MIT + file LICENSE
 URL: https://metrumresearchgroup.github.io/bbr.bayes, https://github.com/metrumresearchgroup/bbr.bayes

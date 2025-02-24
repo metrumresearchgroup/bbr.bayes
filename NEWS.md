@@ -1,3 +1,29 @@
+# bbr.bayes 0.2.2
+
+## Bug fixes
+
+* For `nmbayes` models, the `posterior::as_draws()` method
+  (`?bbr_as_draws`) and `read_fit_model()` rename variables for
+  compatibility with `?posterior::draws_rvars`.  This logic mishandled
+  `THETA` names with multiple digits (e.g., `THETA10`).  (#163)
+
+* The `submit_model()` method for `nmbayes` (`?nmbayes_submit_model`)
+  did not generate initial values synchronously when a caller passed
+  `FALSE` for `.wait`, leading to a race between creating the initial
+  values and the subsequent model runs reading those values.  (#162)
+
+* The documentation of the `submit_model()` methods for `nmbayes`
+  (`?nmbayes_submit_model`) and `stan` (`?stan_submit_model`) models
+  inherited their `.overwrite` description from `bbr::submit_model()`,
+  which inaccurately described their handling.  (#161)
+
+* `install_torsten()` aborts if the caller specifies a `version`
+  argument that doesn't uniquely identify an available version.  It
+  incorrectly aborted when the specified version was valid but a
+  sub-string of another available version (e.g., "v0.91.0" could not
+  be selected because a "v0.91.0rc2" release exists).  (#159)
+
+
 # bbr.bayes 0.2.1
 
 ## Changes
