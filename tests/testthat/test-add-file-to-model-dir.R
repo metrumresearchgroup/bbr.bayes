@@ -1,5 +1,7 @@
 context("adding files to Stan models")
 
+skip_if_no_cmdstan()
+
 test_that("add_stanmod_file() works correctly for scaffold", {
   mod_name <- "testmod_add_stanmod_file1"
   suppressMessages(

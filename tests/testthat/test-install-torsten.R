@@ -14,6 +14,7 @@ if (!nzchar(torsten_test_tarball_url)) {
 }
 
 reset_cmdstan_path <- function(envir = parent.frame()) {
+  skip_if_no_cmdstan()
   oldpath <- cmdstanr::cmdstan_path()
   withr::defer(cmdstanr::set_cmdstan_path(oldpath), envir = envir)
 }

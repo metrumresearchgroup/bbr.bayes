@@ -1,5 +1,7 @@
 context("checking Stan model integrity")
 
+skip_if_no_cmdstan()
+
 test_that("check_stan_model messages missing files", {
   tdir <- local_test_dir()
   for (model_type in c("stan", "stan_gq")) {

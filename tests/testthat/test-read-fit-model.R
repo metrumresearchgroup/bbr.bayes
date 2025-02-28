@@ -83,6 +83,8 @@ test_that("stan gq: read_fit_model() works correctly", {
 })
 
 test_that("stan: read_fit_model() signals custom error on missing RDS", {
+  skip_if_no_cmdstan()
+
   tdir <- local_test_dir()
   mod <- new_model(tdir, .model_type = "stan")
   expect_error(read_fit_model(mod), class = "bbr.bayes_read_fit_error")
