@@ -8,6 +8,9 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+'
       - '[0-9]+.[0-9]+.[0-9]+.[0-9]+'
   pull_request:
+  schedule:
+    # Monday at 04:41
+    - cron: '41 4 * * 1'
 
 env:
   BBI_VERSION: v3.4.0
@@ -39,6 +42,7 @@ jobs:
             r: release
     env:
       R_KEEP_PKG_SOURCE: yes
+      BBR_BAYES_TESTS_SKIP_TORSTEN: yes
     steps:
       - uses: actions/checkout@v4
       - uses: metrumresearchgroup/actions/mpn-latest@v1
@@ -67,6 +71,11 @@ jobs:
           upgrade: ${{ matrix.config.r == '4.0.5' && 'FALSE' || 'TRUE' }}
       - name: Install cmdstan
         uses: ./.github/actions/setup-cmdstan
+      - name: Enable install_torsten tests for Cron job
+        if: github.event_name == 'schedule'
+        shell: bash
+        run: |
+          echo 'BBR_BAYES_TESTS_SKIP_TORSTEN=' >>"$GITHUB_ENV"
       - uses: r-lib/actions/check-r-package@v2
       - name: Check pkgdown
         shell: Rscript {0}

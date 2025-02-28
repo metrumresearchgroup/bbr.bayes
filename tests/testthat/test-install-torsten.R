@@ -1,3 +1,7 @@
+if (!identical(Sys.getenv("BBR_BAYES_TESTS_SKIP_TORSTEN", ""), "")) {
+  testthat::skip("BBR_BAYES_TESTS_SKIP_TORSTEN is set")
+}
+
 ## Adapted from test-install.R from the cmdstanr package
 
 torsten_version <- "0.91.0" # version used for actual installation
