@@ -1,3 +1,4 @@
+skip_if_no_cmdstan()
 
 test_that("gq_parent helpers abort if model type is not stan_gq", {
   mod <- bbr::new_model(local_test_dir(), .model_type = "stan")

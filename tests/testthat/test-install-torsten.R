@@ -1,3 +1,7 @@
+if (!identical(Sys.getenv("BBR_BAYES_TESTS_SKIP_TORSTEN", ""), "")) {
+  testthat::skip("BBR_BAYES_TESTS_SKIP_TORSTEN is set")
+}
+
 ## Adapted from test-install.R from the cmdstanr package
 
 torsten_version <- "0.91.0" # version used for actual installation
@@ -10,6 +14,7 @@ if (!nzchar(torsten_test_tarball_url)) {
 }
 
 reset_cmdstan_path <- function(envir = parent.frame()) {
+  skip_if_no_cmdstan()
   oldpath <- cmdstanr::cmdstan_path()
   withr::defer(cmdstanr::set_cmdstan_path(oldpath), envir = envir)
 }

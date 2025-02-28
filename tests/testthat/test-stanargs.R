@@ -1,3 +1,5 @@
+skip_if_no_cmdstan()
+
 test_that("set_stanargs modifies file", {
   for (mod in list(STAN_MOD1, STAN_GQ_MOD)) {
     tdir <- local_test_dir()

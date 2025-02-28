@@ -1,5 +1,6 @@
 
 skip_long_tests("skipping long-running Stan reproducibility tests")
+skip_if_no_cmdstan()
 
 local_stan_bern_model()
 
