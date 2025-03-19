@@ -5,6 +5,12 @@ skip_if_no_bbi <- function() {
   }
 }
 
+skip_if_no_cmdstan <- function() {
+  if (is.null(cmdstanr::cmdstan_version(error_on_NA = FALSE))) {
+    testthat::skip("Requires cmdstan installation")
+  }
+}
+
 # A short stretch of jsonlite versions use 17 significant digits instead of 15
 # when `digits = NA`. The data in this test suite was generated with 15-digit
 # precision.

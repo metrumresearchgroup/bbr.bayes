@@ -50,6 +50,8 @@ test_that("stan: new_model() errors without .model_type", {
 })
 
 test_that("stan: new_model() works", {
+  skip_if_no_cmdstan()
+
   mod_name <- "testmod_new_model2"
   expect_message(
     .m <- new_model(file.path(STAN_MODEL_DIR, mod_name), .model_type = "stan"),
@@ -64,6 +66,8 @@ test_that("stan: new_model() works", {
 })
 
 test_that("stan_gq: new_model() works", {
+  skip_if_no_cmdstan()
+
   tdir <- local_test_dir()
   expect_message(
     m <- new_model(file.path(tdir, "gq"), .model_type = "stan_gq"),

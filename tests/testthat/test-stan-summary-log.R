@@ -1,5 +1,6 @@
 
 skip_long_tests("skipping long-running summary_log() tests")
+skip_if_no_cmdstan()
 
 local_model_tempdir <- function(clean = TRUE, .local_envir = parent.frame()) {
   tdir <- local_test_dir(clean = clean, .local_envir = .local_envir)

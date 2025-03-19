@@ -1,4 +1,3 @@
-# TODO: Investigate whether it's worthwhile to implement caching.
 name: Setup cmdstan
 description: Install cmdstan
 runs:
@@ -8,6 +7,20 @@ runs:
       shell: bash
       run: |
         echo "CMDSTAN_PATH=${HOME}/.cmdstan" >>"$GITHUB_ENV"
+    - name: Determine OS Version
+      id: find-os
+      shell: bash
+      run:
+        echo "os_id=$(lsb_release -is || :)-$(lsb_release -rs || :)" >"$GITHUB_OUTPUT"
+    - name: Cache cmdstan
+      id: cache-cmdstan
+      uses: actions/cache@v4
+      with:
+        path: ~/.cmdstan
+        key: cmdstan-${{ env.OS_ID }}
+      env:
+        OS_ID: ${{ steps.find-os.outputs.os_id }}
     - name: Install cmdstan
+      if: ${{ steps.cache-cmdstan.outputs.cache-hit != 'true' }}
       shell: Rscript {0}
       run: cmdstanr::install_cmdstan()
