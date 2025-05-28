@@ -80,6 +80,8 @@ jobs:
         run: |
           echo 'BBR_BAYES_TESTS_SKIP_TORSTEN=' >>"$GITHUB_ENV"
       - uses: r-lib/actions/check-r-package@v2
+        with:
+          error-on: ${{ matrix.config.r == 'release' && '"note"' || '"warning"' }}
       - name: Check pkgdown
         shell: Rscript {0}
         run: pkgdown::check_pkgdown()
