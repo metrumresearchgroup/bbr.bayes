@@ -38,10 +38,9 @@
 #'   draws entirely, set `summary_fns` to an empty list.
 #'
 #' @param summary_fns A list of summary or diagnostic functions passed to
-#'   [posterior::summarize_draws()][draws_summary]. The result will be included
-#'   as a new column, `{variable}_{name}`, where "name" is determined by the
-#'   names of the returned vector or otherwise by the name of the `summary_fns`
-#'   item.
+#'   [posterior::summarize_draws()]. The result will be included as a new
+#'   column, `{variable}_{name}`, where "name" is determined by the names of the
+#'   returned vector or otherwise by the name of the `summary_fns` item.
 #'
 #'   With the default value of `NULL`, the following functions are used:
 #'   [mean()], [stats::median()], [posterior::quantile2()], [posterior::rhat()],

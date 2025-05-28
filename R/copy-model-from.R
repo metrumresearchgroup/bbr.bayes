@@ -11,9 +11,10 @@
 #'   a `bbi_nmbayes_model` subclass; in that case, use [bbr::copy_model_from()]
 #'   to copy the model in the standard way.
 #' @param .update_model_file Whether to update the newly created model file. If
-#'   `TRUE`, the model will be adjusted by [copy_model_from()]. In addition, any
-#'   existing estimation records will be deleted, and the two estimation records
-#'   required for nmbayes models will be added along with a comment.
+#'   `TRUE`, the model will be adjusted by [bbr::copy_model_from()]. In
+#'   addition, any existing estimation records will be deleted, and the two
+#'   estimation records required for nmbayes models will be added along with a
+#'   comment.
 #' @return A `bbi_nmbayes_model` object for the new model.
 #' @seealso [bbr_nmbayes] for a high-level description of how NONMEM Bayes
 #'   models are structured in bbr

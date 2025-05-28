@@ -29,8 +29,8 @@ this function solely for the side effect of writing the data to disk.
 \description{
 Some types of models carry around code that builds the input data for the
 modeling, instead of relying on a single static file on disk. When necessary,
-\strong{this function is called internally by \code{\link[=submit_model]{submit_model()}}} to build the data
-for running the model, but they can also be called manually by users for
+\strong{this function is called internally by \code{\link[bbr:submit_model]{bbr::submit_model()}}} to build the
+data for running the model, but they can also be called manually by users for
 other purposes.
 }
 \details{

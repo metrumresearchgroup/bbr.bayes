@@ -39,10 +39,9 @@ function returns a named vector). To disable extracting and summarizing the
 draws entirely, set \code{summary_fns} to an empty list.}
 
 \item{summary_fns}{A list of summary or diagnostic functions passed to
-\link[=draws_summary]{posterior::summarize_draws()}. The result will be included
-as a new column, \verb{\{variable\}_\{name\}}, where "name" is determined by the
-names of the returned vector or otherwise by the name of the \code{summary_fns}
-item.
+\code{\link[posterior:draws_summary]{posterior::summarize_draws()}}. The result will be included as a new
+column, \verb{\{variable\}_\{name\}}, where "name" is determined by the names of the
+returned vector or otherwise by the name of the \code{summary_fns} item.
 
 With the default value of \code{NULL}, the following functions are used:
 \code{\link[=mean]{mean()}}, \code{\link[stats:median]{stats::median()}}, \code{\link[posterior:quantile2]{posterior::quantile2()}}, \code{\link[posterior:rhat]{posterior::rhat()}},

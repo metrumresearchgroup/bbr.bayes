@@ -36,7 +36,7 @@ in the draws constructed for bbi_nmbayes_model objects.}
 \item \strong{NONMEM Bayes}: Returns a \pkg{posterior} draws object.
 \item \strong{Stan}: Returns a \code{cmdstanr} fit object of class \code{"CmdStanMCMC"}. See the
 \code{?cmdstanr::CmdStanMCMC} docs for methods and information on this object.
-\emph{Note: currently \link{model_summary}\code{.bbi_stan_model()} calls this under the
+\emph{Note: currently \code{\link[=model_summary.bbi_stan_model]{model_summary.bbi_stan_model()}} calls this under the
 hood because it contains methods to summarize model outputs and no
 similar methods exist yet in \code{bbr} for Stan.}
 }

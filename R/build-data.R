@@ -2,8 +2,8 @@
 #'
 #' Some types of models carry around code that builds the input data for the
 #' modeling, instead of relying on a single static file on disk. When necessary,
-#' **this function is called internally by [submit_model()]** to build the data
-#' for running the model, but they can also be called manually by users for
+#' **this function is called internally by [bbr::submit_model()]** to build the
+#' data for running the model, but they can also be called manually by users for
 #' other purposes.
 #'
 #' @details **Currently, only `bbi_stan_model` objects have this implemented.**
