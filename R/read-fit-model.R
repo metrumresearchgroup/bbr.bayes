@@ -9,7 +9,7 @@
 #'
 #'   * **Stan**: Returns a `cmdstanr` fit object of class `"CmdStanMCMC"`. See the
 #'     `?cmdstanr::CmdStanMCMC` docs for methods and information on this object.
-#'     _Note: currently [model_summary]`.bbi_stan_model()` calls this under the
+#'     _Note: currently [model_summary.bbi_stan_model()] calls this under the
 #'     hood because it contains methods to summarize model outputs and no
 #'     similar methods exist yet in `bbr` for Stan._
 #'

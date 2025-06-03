@@ -47,9 +47,10 @@ tags passed to \code{.add_tags} argument. If \code{TRUE} inherit any tags from
 \code{.parent_mod}, with any tags passed to \code{.add_tags} appended.}
 
 \item{.update_model_file}{Whether to update the newly created model file. If
-\code{TRUE}, the model will be adjusted by \code{\link[=copy_model_from]{copy_model_from()}}. In addition, any
-existing estimation records will be deleted, and the two estimation records
-required for nmbayes models will be added along with a comment.}
+\code{TRUE}, the model will be adjusted by \code{\link[bbr:copy_model_from]{bbr::copy_model_from()}}. In
+addition, any existing estimation records will be deleted, and the two
+estimation records required for nmbayes models will be added along with a
+comment.}
 
 \item{.overwrite}{If \code{FALSE}, the default,  function will error if a model
 file already exists at specified \code{.new_model} path. If \code{TRUE} any existing
