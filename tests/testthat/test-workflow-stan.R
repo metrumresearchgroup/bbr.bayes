@@ -90,6 +90,16 @@ test_that("stan: supports posterior as_draws methods", {
   expect_true("eta" %in% posterior::variables(posterior::as_draws_rvars(mod)))
 })
 
+test_that("stan: sample CSVs are named as {modelid}-{chain}.csv", {
+  mod <- read_model(file.path(MODEL_DIR_STAN_TEST, STAN_MOD_ID2))
+  fit <- read_fit_model(mod)
+  files <- fit$output_files()
+  expect_identical(
+    basename(files),
+    paste0(get_model_id(mod), "-", seq_along(files), ".csv")
+  )
+})
+
 test_that("stan: run_log() captures runs correctly", {
   log_df <- run_log(MODEL_DIR_STAN_TEST)
   expect_equal(nrow(log_df), 2L)

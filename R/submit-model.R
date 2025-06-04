@@ -218,6 +218,7 @@ submit_stan_model_cmdstanr <- function(.mod,
   print(stanargs)
 
   stanargs[["output_dir"]] <- get_output_dir(.mod)
+  stanargs[["output_basename"]] <- get_model_id(.mod)
   stanargs[["data"]] <- standata_json_path
 
   standata_list <- build_data(.mod, .out_path = standata_json_path)
