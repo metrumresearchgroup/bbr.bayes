@@ -1,3 +1,14 @@
+# bbr.bayes 0.3.0
+
+## Changes
+
+* `CmdStanModel$sample` writes samples to
+  `{model}-{timestamp}-{chain}-{rand}.csv` by default.  The
+  `submit_model()` method for `stan` models (`?stan_submit_model`) now
+  overrides that default to drop the timestamp and random characters
+  so that the file name is consistent across runs.  (#167)
+
+
 # bbr.bayes 0.2.2
 
 ## Bug fixes
