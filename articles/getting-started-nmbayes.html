@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started with bbr.bayes and NONMEM Bayes • bbr.bayes</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -38,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bbr.bayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -196,7 +195,7 @@ Bayes model from an existing model, either a regular NONMEM model
 <span><span class="va">mod1100</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy_model_as_nmbayes.html">copy_model_as_nmbayes</a></span><span class="op">(</span><span class="va">mod100</span>, <span class="fl">1100</span>, .inherit_tags <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag</a></span><span class="op">(</span><span class="st">"FOCE"</span>, <span class="st">"BAYES"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/RtmpbjU2ec/nmbayes-vignette-744910f7bf48/model/nonmem/bayes/1100.ctl</span></span>
+<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/RtmpZ5Tam3/nmbayes-vignette-393d06f36494f/model/nonmem/bayes/1100.ctl</span></span>
 <span></span>
 <span><span class="va">mod100</span><span class="op">$</span><span class="va">model_type</span></span>
 <span><span class="co">#&gt; [1] "nonmem"</span></span>
@@ -235,7 +234,7 @@ and iterate on a model</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1101</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/RtmpbjU2ec/nmbayes-vignette-744910f7bf48/model/nonmem/bayes/1101.ctl</span></span>
+<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/RtmpZ5Tam3/nmbayes-vignette-393d06f36494f/model/nonmem/bayes/1101.ctl</span></span>
 <span></span>
 <span><span class="co"># Edit control stream...</span></span>
 <span></span>
@@ -414,7 +413,7 @@ is implemented (see above).</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
       </footer>
