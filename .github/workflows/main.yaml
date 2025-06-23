@@ -31,6 +31,8 @@ jobs:
             # actuar is a suggested package for distributional. actuar
             # v3.1-3 requires R 4.1 (through use of log1mexp).
             actuar_pkg: 'url::https://packagemanager.posit.co/cran/latest/src/contrib/Archive/actuar/actuar_3.1-2.tar.gz'
+            # gh 1.5.0 requires R 4.1.
+            gh_pkg: 'url::https://mpn.metworx.com/snapshots/stable/2025-05-22/src/contrib/gh_1.4.1.tar.gz'
             # scales 1.4.0 requires at least R 4.1.
             scales_pkg: 'url::https://mpn.metworx.com/snapshots/stable/2025-04-23/src/contrib/scales_1.3.0.tar.gz'
           - os: ubuntu-22.04
@@ -70,6 +72,7 @@ jobs:
             ${{ env.BBR_PKG }}
             ${{ matrix.config.distributional_pkg }}
             ${{ matrix.config.actuar_pkg }}
+            ${{ matrix.config.gh_pkg }}
             ${{ matrix.config.scales_pkg }}
           upgrade: ${{ matrix.config.r == '4.0.5' && 'FALSE' || 'TRUE' }}
       - name: Install cmdstan
