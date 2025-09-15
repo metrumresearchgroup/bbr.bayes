@@ -269,5 +269,7 @@ test_that("nm_join_bayes_quick() supports .superset=TRUE", {
   data <- read_mod_data()
 
   expect_equal(res$NUM, data$NUM)
-  expect_in(names(data), names(res))
+  # Note: expect_in was introduced in testthat v3.1.9. Avoid it until the CI no
+  # longer uses an MPN snapshot before 2023-06-29.
+  expect_length(setdiff(names(data), names(res)), 0)
 })
