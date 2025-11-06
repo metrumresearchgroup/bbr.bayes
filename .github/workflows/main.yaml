@@ -63,11 +63,6 @@ jobs:
             any::pkgdown
             any::rcmdcheck
             ${{ env.BBR_PKG }}
-            ${{ matrix.config.distributional_pkg }}
-            ${{ matrix.config.actuar_pkg }}
-            ${{ matrix.config.gh_pkg }}
-            ${{ matrix.config.purrr_pkg }}
-            ${{ matrix.config.scales_pkg }}
           upgrade: ${{ matrix.config.r == '4.0.5' && 'FALSE' || 'TRUE' }}
       - name: Install cmdstan
         uses: ./.github/actions/setup-cmdstan
