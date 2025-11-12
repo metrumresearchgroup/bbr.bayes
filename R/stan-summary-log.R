@@ -61,6 +61,7 @@ stan_summary_log <- function(.base_dir,
                              variables = "lp__",
                              summary_fns = NULL) {
   mods <- find_models(.base_dir, .recurse, .include) %>%
+    unname() %>%
     purrr::keep(~ inherits(.x, STAN_MOD_CLASS))
   fits <- purrr::map(mods, try_read_model)
   tibble::tibble(
