@@ -1,3 +1,12 @@
+# bbr.bayes 0.3.1
+
+## Changes
+
+* `find_stan_gq_children()` and `stan_summary_log()` have been
+   adjusted to prevent a change in stringr 1.6.0 from affecting
+   details of their return values.  (#169)
+
+
 # bbr.bayes 0.3.0
 
 ## Changes
