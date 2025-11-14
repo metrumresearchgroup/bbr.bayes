@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bbr.bayes</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -195,7 +195,7 @@ Bayes model from an existing model, either a regular NONMEM model
 <span><span class="va">mod1100</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copy_model_as_nmbayes.html">copy_model_as_nmbayes</a></span><span class="op">(</span><span class="va">mod100</span>, <span class="fl">1100</span>, .inherit_tags <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/modify_tags.html" class="external-link">replace_tag</a></span><span class="op">(</span><span class="st">"FOCE"</span>, <span class="st">"BAYES"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/RtmpZ5Tam3/nmbayes-vignette-393d06f36494f/model/nonmem/bayes/1100.ctl</span></span>
+<span><span class="co">#&gt; replacing 100 with 1100 in /tmp/Rtmpe63E8f/nmbayes-vignette-29e495deae374/model/nonmem/bayes/1100.ctl</span></span>
 <span></span>
 <span><span class="va">mod100</span><span class="op">$</span><span class="va">model_type</span></span>
 <span><span class="co">#&gt; [1] "nonmem"</span></span>
@@ -234,7 +234,7 @@ and iterate on a model</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mod1101</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/copy_model_from.html" class="external-link">copy_model_from</a></span><span class="op">(</span><span class="va">mod1100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://metrumresearchgroup.github.io/bbr/reference/update_model_id.html" class="external-link">update_model_id</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/RtmpZ5Tam3/nmbayes-vignette-393d06f36494f/model/nonmem/bayes/1101.ctl</span></span>
+<span><span class="co">#&gt; replacing 1100 with 1101 in /tmp/Rtmpe63E8f/nmbayes-vignette-29e495deae374/model/nonmem/bayes/1101.ctl</span></span>
 <span></span>
 <span><span class="co"># Edit control stream...</span></span>
 <span></span>
@@ -413,7 +413,7 @@ is implemented (see above).</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

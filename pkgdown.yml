@@ -1,10 +1,10 @@
 pandoc: '3.3'
-pkgdown: 2.1.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   getting-started-nmbayes: getting-started-nmbayes.html
   getting-started-stan: getting-started-stan.html
-last_built: 2025-06-12T21:17Z
+last_built: 2025-11-14T19:23Z
 urls:
   reference: https://metrumresearchgroup.github.io/bbr.bayes/reference
   article: https://metrumresearchgroup.github.io/bbr.bayes/articles
