@@ -65,9 +65,12 @@ test_that("find_stan_gq_children() maps stan to stan_gq models", {
 
   tdir <- local_test_dir()
 
-  expect_warning(res <- find_stan_gq_children(STAN_MOD3, .base_dir = tdir),
-                 # From bbr:::find_models()
-                 "excluded by filter")
+  expect_warning(
+    res <- find_stan_gq_children(STAN_MOD3, .base_dir = tdir),
+    # From bbr:::find_models()
+    "no valid model yaml files",
+    ignore.case = TRUE
+  )
   expect_identical(res, list())
 
   m_gq1 <- copy_model_from(STAN_GQ_MOD, file.path(tdir, "m_gq1"))

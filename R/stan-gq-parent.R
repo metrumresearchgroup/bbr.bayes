@@ -151,5 +151,6 @@ find_stan_gq_children <- function(.mod,
   }
 
   find_models(.base_dir = .base_dir, .recurse = .recurse, .include = NULL) %>%
+    unname() %>%
     purrr::keep(is_child)
 }
