@@ -109,7 +109,8 @@ copy_model_from.bbi_stan_model <- function(
   .star = NULL,
   .inherit_tags = FALSE,
   .update_model_file = TRUE,
-  .overwrite = FALSE
+  .overwrite = FALSE,
+  ...
 ) {
   copy_stan_model_impl(
     STAN_MODEL_REQ_FILES,
@@ -133,7 +134,8 @@ copy_model_from.bbi_stan_gq_model <- function(.parent_mod,
                                               .star = NULL,
                                               .inherit_tags = FALSE,
                                               .update_model_file = TRUE,
-                                              .overwrite = FALSE) {
+                                              .overwrite = FALSE,
+                                              ...) {
   mod <- copy_stan_model_impl(
     STAN_GQ_MODEL_REQ_FILES,
     .parent_mod = .parent_mod,
