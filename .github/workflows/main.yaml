@@ -35,6 +35,7 @@ jobs:
           - label: bbr-main
             os: ubuntu-latest
             r: release
+            bbr_revision: main
     env:
       R_KEEP_PKG_SOURCE: yes
       BBR_BAYES_TESTS_SKIP_TORSTEN: yes
@@ -52,11 +53,13 @@ jobs:
           extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ env.MPN_LATEST }}'
         env:
           RSPM: ${{ matrix.config.rspm }}
-      - name: Configure bbr main packages source
-        if: matrix.config.label == 'bbr-main'
+      - name: Configure bbr source
+        if: matrix.config.bbr_revision != ''
         shell: bash
         run: |
-          echo "BBR_PKG=github::metrumresearchgroup/bbr@main" >>"$GITHUB_ENV"
+          echo "BBR_PKG=github::metrumresearchgroup/bbr@${{ env.BBR_REV }}" >>"$GITHUB_ENV"
+        env:
+          BBR_REV: ${{ matrix.config.bbr_revision }}
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
