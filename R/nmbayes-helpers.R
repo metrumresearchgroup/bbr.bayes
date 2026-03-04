@@ -1,7 +1,7 @@
 #' Return a nmbayes model's submodel directories
 #'
 #' Each directory corresponds to a chain and is expected to be named in the
-#' "{id}-{chain}" format created by [run_chains()].
+#' "{id}-{chain}" format created by `run_chains()`.
 #'
 #' @param .mod A bbi_nmbayes_model object.
 #' @return A character vector of absolute paths to the submodels, sorted in
