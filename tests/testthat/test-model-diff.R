@@ -2,7 +2,7 @@
 ### NONMEM Bayes
 
 test_that("nmbayes: model_diff() happy path based_on", {
-  mod2 <- copy_model_from(NMBAYES_MOD1, "1100-test")
+  mod2 <- copy_model_from(NMBAYES_MOD1, "1100-test", .update_id = FALSE)
   on.exit(cleanup_model(mod2))
   res <- model_diff(mod2)
   expect_true(inherits(res, "Diff"))
@@ -14,7 +14,7 @@ test_that("nmbayes: model_diff() happy path based_on", {
 })
 
 test_that("nmbayes: model_diff() happy path .mod2 arg", {
-  mod2 <- copy_model_from(NMBAYES_MOD1, "1100-test")
+  mod2 <- copy_model_from(NMBAYES_MOD1, "1100-test", .update_id = FALSE)
   on.exit(cleanup_model(mod2))
   res <- model_diff(NMBAYES_MOD1, mod2)
   expect_true(inherits(res, "Diff"))
