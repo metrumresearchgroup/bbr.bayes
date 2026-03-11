@@ -18,23 +18,30 @@ env:
 jobs:
   check:
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.os }} R ${{ matrix.config.r }} ${{ matrix.config.label }}
+    name: ${{ matrix.config.os }} R ${{ matrix.config.r }}
     strategy:
       fail-fast: false
       matrix:
         config:
+          # TODO: When bbr is released, update bbr_revision=1.15.0 for
+          #       each build except latest, which should be
+          #       bbr_revision=main.
+          #
+          # TODO: When bbr 1.15.0 is in latest MPN, remove
+          #       bbr_revision from all builds except the
+          #       bbr_revision=main one.
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
           - os: ubuntu-22.04
             r: 4.3.3
+            bbr_revision: main
           - os: ubuntu-22.04
             r: 4.4.2
+            bbr_revision: main
           - os: ubuntu-latest
             r: release
-          - label: bbr-main
-            os: ubuntu-latest
-            r: release
+            bbr_revision: main
     env:
       R_KEEP_PKG_SOURCE: yes
       BBR_BAYES_TESTS_SKIP_TORSTEN: yes
@@ -52,11 +59,13 @@ jobs:
           extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ env.MPN_LATEST }}'
         env:
           RSPM: ${{ matrix.config.rspm }}
-      - name: Configure bbr main packages source
-        if: matrix.config.label == 'bbr-main'
+      - name: Configure bbr source
+        if: matrix.config.bbr_revision != ''
         shell: bash
         run: |
-          echo "BBR_PKG=github::metrumresearchgroup/bbr@main" >>"$GITHUB_ENV"
+          echo "BBR_PKG=github::metrumresearchgroup/bbr@${{ env.BBR_REV }}" >>"$GITHUB_ENV"
+        env:
+          BBR_REV: ${{ matrix.config.bbr_revision }}
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
