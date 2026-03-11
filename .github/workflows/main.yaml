@@ -33,6 +33,7 @@ jobs:
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
+            bbr_revision: main
           - os: ubuntu-22.04
             r: 4.3.3
             bbr_revision: main
