@@ -173,7 +173,6 @@ To create a NONMEM Bayes model from a regular NONMEM model, use
 ```{r}
 mod100 <- read_model(file.path(MODEL_DIR, 100))
 mod1100 <- copy_model_as_nmbayes(mod100, 1100, .inherit_tags = TRUE) %>%
-  update_model_id() %>%
   replace_tag("FOCE", "BAYES")
 
 mod100$model_type
@@ -199,8 +198,7 @@ To create a NONMEM Bayes from another one, use `copy_model_from()`,
 just as you would in `bbr` to [copy and iterate on a model][gsbc].
 
 ```{r}
-mod1101 <- copy_model_from(mod1100) %>%
-  update_model_id()
+mod1101 <- copy_model_from(mod1100)
 
 # Edit control stream...
 

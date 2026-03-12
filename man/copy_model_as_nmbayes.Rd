@@ -13,7 +13,8 @@ copy_model_as_nmbayes(
   .star = NULL,
   .inherit_tags = FALSE,
   .update_model_file = TRUE,
-  .overwrite = FALSE
+  .overwrite = FALSE,
+  .update_id = TRUE
 )
 }
 \arguments{
@@ -55,6 +56,11 @@ comment.}
 \item{.overwrite}{If \code{FALSE}, the default,  function will error if a model
 file already exists at specified \code{.new_model} path. If \code{TRUE} any existing
 file at \code{.new_model} will be overwritten silently.}
+
+\item{.update_id}{Whether to call \code{\link[bbr:update_model_id]{update_model_id()}} to replace occurrences
+of \verb{{parent_mod}.{suffix}} with the ID of the new model. To override or
+extend the default suffixes, set this argument to \code{FALSE} and follow up
+with a direct call to \code{\link[bbr:update_model_id]{update_model_id()}}.}
 }
 \value{
 A \code{bbi_nmbayes_model} object for the new model.

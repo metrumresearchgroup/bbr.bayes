@@ -25,8 +25,7 @@ local_model_tempdir <- function(clean = TRUE, .local_envir = parent.frame()) {
                 mdir)
 
   bbr::read_model(file.path(mdir, "1100")) %>%
-    copy_model_from("1101") %>%
-    bbr::update_model_id()
+    copy_model_from("1101", .update_id = TRUE)
 }
 
 local_model_tempdir()

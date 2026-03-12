@@ -27,7 +27,8 @@ copy_model_as_nmbayes <- function(.parent_mod,
                                   .star = NULL,
                                   .inherit_tags = FALSE,
                                   .update_model_file = TRUE,
-                                  .overwrite = FALSE) {
+                                  .overwrite = FALSE,
+                                  .update_id = TRUE) {
   if (!requireNamespace("nmrec", quietly = TRUE)) {
     stop("nmbayes functionality requires nmrec package.")
   }
@@ -48,7 +49,8 @@ copy_model_as_nmbayes <- function(.parent_mod,
     .star = .star,
     .inherit_tags = .inherit_tags,
     .update_model_file = .update_model_file,
-    .overwrite = .overwrite
+    .overwrite = .overwrite,
+    .update_id = .update_id
   )
 
   mod[[YAML_MOD_TYPE]] <- "nmbayes"
@@ -109,7 +111,8 @@ copy_model_from.bbi_stan_model <- function(
   .star = NULL,
   .inherit_tags = FALSE,
   .update_model_file = TRUE,
-  .overwrite = FALSE
+  .overwrite = FALSE,
+  ...
 ) {
   copy_stan_model_impl(
     STAN_MODEL_REQ_FILES,
@@ -133,7 +136,8 @@ copy_model_from.bbi_stan_gq_model <- function(.parent_mod,
                                               .star = NULL,
                                               .inherit_tags = FALSE,
                                               .update_model_file = TRUE,
-                                              .overwrite = FALSE) {
+                                              .overwrite = FALSE,
+                                              ...) {
   mod <- copy_stan_model_impl(
     STAN_GQ_MODEL_REQ_FILES,
     .parent_mod = .parent_mod,
