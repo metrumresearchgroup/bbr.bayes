@@ -23,23 +23,19 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # TODO: When bbr is released, update bbr_revision=1.15.0 for
-          #       each build except latest, which should be
-          #       bbr_revision=main.
-          #
           # TODO: When bbr 1.15.0 is in latest MPN, remove
           #       bbr_revision from all builds except the
           #       bbr_revision=main one.
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-22.04
             r: 4.3.3
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-22.04
             r: 4.4.2
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-latest
             r: release
             bbr_revision: main
