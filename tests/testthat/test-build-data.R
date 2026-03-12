@@ -46,7 +46,7 @@ test_that("build_data.bbi_stan_model errors with flawed -standata.R", {
       # external file.
       expect_error(
         build_data(new_mod),
-        regexp = "Calling `make_standata.+FAILED.+fxa.data.csv' does not exist"
+        regexp = "Calling `make_standata.+FAILED.+fxa.data.csv.+does not exist"
       )
     }
 
