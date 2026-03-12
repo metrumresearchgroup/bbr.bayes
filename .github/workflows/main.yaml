@@ -25,7 +25,8 @@ jobs:
         config:
           # TODO: When bbr 1.15.0 is in latest MPN, remove
           #       bbr_revision from all builds except the
-          #       bbr_revision=main one.
+          #       bbr_revision=main one.  Also drop bbr source step
+          #       from release job.
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
@@ -103,6 +104,12 @@ jobs:
           r-version: release
           use-public-rspm: true
           extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ env.MPN_LATEST }}'
+      - name: Configure bbr source
+        shell: bash
+        run: |
+          echo "BBR_PKG=github::metrumresearchgroup/bbr@${{ env.BBR_REV }}" >>"$GITHUB_ENV"
+        env:
+          BBR_REV: 1.15.0
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgpub
