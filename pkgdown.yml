@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   getting-started-nmbayes: getting-started-nmbayes.html
   getting-started-stan: getting-started-stan.html
-last_built: 2025-11-14T19:23Z
+last_built: 2026-03-13T16:41Z
 urls:
   reference: https://metrumresearchgroup.github.io/bbr.bayes/reference
   article: https://metrumresearchgroup.github.io/bbr.bayes/articles
