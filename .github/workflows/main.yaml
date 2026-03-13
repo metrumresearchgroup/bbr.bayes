@@ -112,7 +112,9 @@ jobs:
           BBR_REV: 1.15.0
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgpub
+          extra-packages: |
+            any::pkgpub
+            ${{ env.BBR_PKG }}
       - name: Install cmdstan
         uses: ./.github/actions/setup-cmdstan
       - uses: metrumresearchgroup/actions/publish-r-release@v1
