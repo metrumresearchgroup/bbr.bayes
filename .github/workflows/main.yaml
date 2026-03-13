@@ -23,23 +23,20 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # TODO: When bbr is released, update bbr_revision=1.15.0 for
-          #       each build except latest, which should be
-          #       bbr_revision=main.
-          #
           # TODO: When bbr 1.15.0 is in latest MPN, remove
           #       bbr_revision from all builds except the
-          #       bbr_revision=main one.
+          #       bbr_revision=main one.  Also drop bbr source step
+          #       from release job.
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-22.04
             r: 4.3.3
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-22.04
             r: 4.4.2
-            bbr_revision: main
+            bbr_revision: 1.15.0
           - os: ubuntu-latest
             r: release
             bbr_revision: main
@@ -107,9 +104,17 @@ jobs:
           r-version: release
           use-public-rspm: true
           extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ env.MPN_LATEST }}'
+      - name: Configure bbr source
+        shell: bash
+        run: |
+          echo "BBR_PKG=github::metrumresearchgroup/bbr@${{ env.BBR_REV }}" >>"$GITHUB_ENV"
+        env:
+          BBR_REV: 1.15.0
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgpub
+          extra-packages: |
+            any::pkgpub
+            ${{ env.BBR_PKG }}
       - name: Install cmdstan
         uses: ./.github/actions/setup-cmdstan
       - uses: metrumresearchgroup/actions/publish-r-release@v1

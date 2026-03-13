@@ -1,3 +1,16 @@
+# bbr.bayes 0.4.0
+
+`bbr.bayes` now requires `bbr` 1.15.0 or later.
+
+## Changes
+
+ * `copy_model_from` methods have been updated for compatibility with `bbr`
+   1.15.0.  (#172)
+
+ * `copy_model_as_nmbayes()` gained an `.update_id` argument that it relays to
+   `bbr::copy_model_from()`.  (#172)
+
+
 # bbr.bayes 0.3.1
 
 ## Changes
