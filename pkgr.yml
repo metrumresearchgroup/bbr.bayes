@@ -8,7 +8,7 @@ Packages:
 
 Repos:
   - CRAN: https://cran.rstudio.com
-  - MPN: https://mpn.metworx.com/snapshots/stable/2025-05-22 # bbr, cmdstanr, nmrec
+  - MPN: https://mpn.metworx.com/snapshots/stable/2026-03-20 # bbr, cmdstanr, nmrec
 
 Customizations:
   Packages:
