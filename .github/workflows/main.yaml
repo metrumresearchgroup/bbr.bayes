@@ -26,6 +26,9 @@ jobs:
           - os: ubuntu-22.04
             r: 4.0.5
             rspm: 'https://packagemanager.posit.co/cran/__linux__/jammy/2023-01-25'
+            mpn: 2026-02-19
+            cran_override: 'https://mpn.metworx.com/snapshots/stable/2026-02-19'
+            bbr_revision: 1.15.0
           - os: ubuntu-22.04
             r: 4.3.3
           - os: ubuntu-22.04
@@ -47,8 +50,9 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
-          extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ env.MPN_LATEST }}'
+          extra-repositories: 'https://mpn.metworx.com/snapshots/stable/${{ matrix.config.mpn || env.MPN_LATEST }}'
         env:
+          CRAN: ${{ matrix.config.cran_override }}
           RSPM: ${{ matrix.config.rspm }}
       - name: Configure bbr source
         if: matrix.config.bbr_revision != ''
